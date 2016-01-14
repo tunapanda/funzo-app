@@ -15,6 +15,7 @@ for (var dev in ifaces) {
 module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'funzo-app',
+    podModulePrefix: 'funzo-app/pods',
     environment: environment,
     baseURL: '/',
     defaultLocationType: 'auto',
