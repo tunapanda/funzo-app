@@ -12,6 +12,9 @@ module.exports = function(defaults) {
     },
     fingerprint: {
       exclude: ['assets/workspace']
+    },
+    jscsOptions: {
+      enabled: true
     }
   });
 
