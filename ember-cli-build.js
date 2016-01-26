@@ -18,8 +18,9 @@ module.exports = function(defaults) {
     }
   });
 
-  app.import("bower_components/material-design-lite/material.css");
-  app.import("bower_components/material-design-lite/material.js");
+  // app.import("bower_components/materialize/dist/css/materialize.css");
+  app.import("bower_components/materialize/dist/js/materialize.js");
+  app.import("bower_components/materialize/font/roboto/Roboto-Regular.woff2");
 
   app.import("bower_components/h5p-standalone/dist/js/h5p-standalone-main.js");
 
