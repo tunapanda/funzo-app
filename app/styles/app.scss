@@ -58,3 +58,18 @@ input[type=password].pin-digit {
   font-size: 6em;
   text-align: center;
 }
+
+.small input[type=password].pin-digit {
+  width: 20px;
+  height: 30px;
+  font-size: 1em;
+  margin: 5px;
+}
+
+.input-field input[type=text].invalid + label:after {
+  display: none;
+}
+
+.input-field input[type=text].invalid:focus + label:after {
+  display: block;
+}

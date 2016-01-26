@@ -1,16 +1,17 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('h5p-standalone', 'Integration | Component | h5p standalone', {
+moduleForComponent('nav-bar', 'Integration | Component | nav bar', {
   integration: true
 });
 
 test('it renders', function(assert) {
-
+  
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });" + EOL + EOL +
 
-  this.render(hbs`{{h5p-standalone}}`);
+  this.render(hbs`{{nav-bar}}`);
 
-  assert.equal(this.$().text().trim(), '');
+  assert.ok(this.$('nav'));
+
 });

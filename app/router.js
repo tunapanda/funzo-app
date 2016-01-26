@@ -6,13 +6,16 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('login');
+  this.route('login', function() {
+    this.route('pin', { path: '/pin/:user_id' });
+  });
   this.route('register');
   this.route('course', function() {
     this.route('module', function() {
       this.route('lesson');
     });
   });
+  this.route('settings');
 });
 
 export default Router;
