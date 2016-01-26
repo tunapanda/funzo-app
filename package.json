@@ -39,6 +39,9 @@
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
     "ember-hammertime": "1.0.1",
+    "ember-pouch": "3.1.0",
+    "ember-simple-auth": "1.0.1",
+    "ember-validations": "~2.0.0-alpha.4",
     "liquid-fire": "^0.22.0"
   }
 }

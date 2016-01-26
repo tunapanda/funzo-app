@@ -1,8 +1,18 @@
+import Ember from 'ember';
 import DS from 'ember-data';
+import { Model } from 'ember-pouch';
 
-export default DS.Model.extend({
-  course: DS.attr(),
-  module: DS.attr(),
-  lesson: DS.attr(),
-  xAPIStatement: DS.attr()
+export default Model.extend({
+  firstName: DS.attr(),
+  lastName: DS.attr(),
+  fullName: Ember.computed('firstName', 'lastName', function() {
+    return this.get('firstName') + ' ' + this.get('lastName');
+  }),
+  pin: DS.attr(),
+  isAuthenticated: DS.attr({ defaultValue: false }),
+  isTeacher: DS.attr('boolean'),
+  course: DS.hasMany('course'),
+  module: DS.hasMany('module'),
+  lesson: DS.hasMany('lesson'),
+  xAPIStatement: DS.hasMany('x-api-statement')
 });

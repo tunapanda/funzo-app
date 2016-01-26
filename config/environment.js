@@ -40,6 +40,10 @@ module.exports = function(environment) {
         enabled: false,
         platform: 'android'
       }
+    },
+    
+    emberPouch: {
+      localDb: 'funzo'
     }
   };
 

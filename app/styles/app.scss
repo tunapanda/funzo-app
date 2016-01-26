@@ -10,6 +10,12 @@
   }
 }
 
+#qunit-tests {
+  * {
+    -webkit-user-select: initial;
+  }
+}
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -31,4 +37,39 @@
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+}
+
+$roboto-font-path: "../materialize/font/roboto/";
+$icons-font-path: "../materialize/font/material-design-icons/";
+
+@import "../../bower_components/Materialize/sass/materialize";
+
+.user-list {
+  max-height: 84px * 3;
+  overflow-y: scroll;
+}
+
+input[type=password].pin-digit {
+  width: 20%;
+  display: inline-block;
+  margin: 0 1.5% 0;
+  border: 1px solid #9e9e9e;
+  height: 150px;
+  font-size: 6em;
+  text-align: center;
+}
+
+.small input[type=password].pin-digit {
+  width: 20px;
+  height: 30px;
+  font-size: 1em;
+  margin: 5px;
+}
+
+.input-field input[type=text].invalid + label:after {
+  display: none;
+}
+
+.input-field input[type=text].invalid:focus + label:after {
+  display: block;
 }
