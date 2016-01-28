@@ -3,6 +3,6 @@ import { Model } from 'ember-pouch';
 
 export default Model.extend({
   title: DS.attr(),
-  location: DS.attr(),
+  permalink: DS.attr(),
   course: DS.belongsTo('course')
 });

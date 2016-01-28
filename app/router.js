@@ -10,8 +10,8 @@ Router.map(function() {
     this.route('pin', { path: '/pin/:user_id' });
   });
   this.route('register');
-  this.route('course', function() {
-    this.route('module', function() {
+  this.route('course', { path: '/course/:course_id' }, function() {
+    this.route('module', { path: '/module/:module_id' }, function() {
       this.route('lesson');
     });
   });

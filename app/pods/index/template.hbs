@@ -1,3 +1,3 @@
 {{#each model as |course|}}
-  {{course.name}}
+  {{#link-to 'course' course}}{{course.title}}{{/link-to}}
 {{/each}}
