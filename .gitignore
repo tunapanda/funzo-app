@@ -44,4 +44,4 @@ cordova/platforms/wp8/*.suo
 cordova/platforms/wp8/*.csproj.user
 
 # funzo
-public/assets/workspace
+public/courses

@@ -1,3 +1,22 @@
-{{#if currentUser.isTeacher}}
-  {{login-user-select}}
-{{/if}}
+<div class="container">
+  {{#if currentUser.model.isTeacher}}
+    You're a teacher
+    <h2>Manage Users</h2>
+    {{login-user-select users=model.users editable=true}}
+
+    <h2>Add A Course</h2>
+    <div class="row">
+      <form class="col s12">
+        <div class="row">
+          <div class="input-field col s10">
+            <input id="course_url" type="text" class="validate" value={{mut courseUrl}}>
+            <label for="course_url">Course URL (tar.gz)</label>
+          </div>
+           <div class="col s2">
+            <button class="btn-large waves-effect waves-light">Add</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  {{/if}}
+</div>

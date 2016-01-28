@@ -39,9 +39,10 @@ export default Ember.Controller.extend(EmberValidations, {
     register() {
       this.set('submitted', true);
       this.validate().then(() => {
-        return this.get('session').authenticate('authenticator:local', { id: this.get('model.id'), pin: this.get('pin') });
-      }, () => {})
-      .then(() => this.transitionToRoute('index'));
+        return this.get('model').save();
+      })
+      .then(() => this.get('session').authenticate('authenticator:local', { id: this.get('model.id'), pin: this.get('model.pin') }))
+      .then(() => this.transitionToRoute('index'), (err) => { console.error(err); });
     }
   }
 });
