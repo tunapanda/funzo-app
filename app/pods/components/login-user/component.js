@@ -1,18 +1,20 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  tagName: Ember.computed('editable', function() {
-    return this.get('editable') ? 'div' : 'a';
-  }),
+  currentUser: Ember.inject.service('currentUser'),
+  session: Ember.inject.service('session'),
+  
+  editable: false,
+  
   classNames: ['collection-item', 'avatar'],
   classNameBindings: ['user.isSelected:active'],
   
   canDelete: Ember.computed('editable', 'user.isAuthenticated', function() {
-    return this.get('editable') && !this.get('user.isAuthenticated');
+    return this.get('session.isAuthenticated') && this.get('editable') && (this.get('user.id') !== this.get('currentUser.model.id'));
   }),
   
   click() {
-    if(this.get('editable')) {
+    if(!this.get('editable')) {
       this.sendAction('userSelected', this.get('user'));
     }
   },
