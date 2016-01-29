@@ -5,5 +5,5 @@ export default Model.extend({
   title: DS.attr(),
   permalink: DS.attr(),
   subject: DS.attr(),
-  modules: DS.hasMany('module')
+  modules: DS.hasMany('module', { async: true })
 });

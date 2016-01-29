@@ -1,3 +1,5 @@
+<ul>
 {{#each model as |course|}}
-  {{#link-to 'course' course}}{{course.title}}{{/link-to}}
+  <li>{{#link-to 'course' course}}{{course.title}}{{/link-to}}</li>
 {{/each}}
+</ul>

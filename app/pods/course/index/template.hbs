@@ -1,0 +1,6 @@
+<h1>{{model.title}}</h1> Yo
+<ul>
+{{#each model.modules as |module|}}
+  <li>{{#link-to 'course.module' model module}}{{module.title}}{{/link-to}}</li>
+{{/each}}
+</ul>
