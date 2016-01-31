@@ -13,6 +13,5 @@ export default Model.extend({
   isTeacher: DS.attr('boolean'),
   course: DS.hasMany('course'),
   module: DS.hasMany('module'),
-  lesson: DS.hasMany('lesson'),
   xAPIStatement: DS.hasMany('x-api-statement')
 });
