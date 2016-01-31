@@ -29,7 +29,13 @@ module.exports = function(defaults) {
   app.import('bower_components/tincan/build/tincan.js');
 
   app.import('bower_components/materialize/dist/js/materialize.js');
+
   app.import('bower_components/materialize/font/roboto/Roboto-Regular.woff2');
+  app.import('bower_components/materialize/font/roboto/Roboto-Regular.woff');
+  app.import('bower_components/materialize/font/roboto/Roboto-Regular.ttf');
+  app.import('bower_components/materialize/font/roboto/Roboto-Light.woff2');
+  app.import('bower_components/materialize/font/roboto/Roboto-Light.woff');
+  app.import('bower_components/materialize/font/roboto/Roboto-Light.ttf');
 
   app.import('bower_components/h5p-standalone/dist/js/h5p-standalone-main.js');
 

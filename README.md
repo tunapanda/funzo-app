@@ -25,6 +25,7 @@ You will need the following things properly installed on your computer.
 * change into the new directory
 * `npm install`
 * `bower install`
+* `bower install tunapanda/funzo-CSE-1000 --save` the demo course
 
 ## Running / Development
 
