@@ -1,8 +1,12 @@
 # Funzo-app
 
-This is a preview of ember and H5P running as an app inside Phonegap/Cordova
+This is a preview of ember and H5P running as an app inside Phonegap/Cordova.
 
-See [here](https://github.com/tunapanda/funzo-app/wiki/Development-Guide) for information on how to contribute
+See [here](https://github.com/tunapanda/funzo-app/wiki/Development-Guide) for information on how to contribute.
+
+Courses during development are added via bower E.G. `bower install tunapanda/funzo-CSE-1000 --save`.
+
+Prefix any new courses with `funzo` to ensure they are added during the build process.
 
 ## Prerequisites
 
@@ -50,4 +54,3 @@ Generate the APKs, these can only be used for development not distribution becau
 * Development Browser Extensions
   * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
   * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
-
