@@ -26,6 +26,8 @@ module.exports = function(defaults) {
   });
 
   // app.import('bower_components/materialize/dist/css/materialize.css');
+  app.import('bower_components/tincan/build/tincan.js');
+
   app.import('bower_components/materialize/dist/js/materialize.js');
   app.import('bower_components/materialize/font/roboto/Roboto-Regular.woff2');
 

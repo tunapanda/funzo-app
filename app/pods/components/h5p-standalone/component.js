@@ -1,4 +1,4 @@
-/* global H5P, H5PIntegration */
+/* global H5P */
 import Ember from 'ember';
 
 export default Ember.Component.extend({
@@ -13,7 +13,7 @@ export default Ember.Component.extend({
         h5pContent: `/courses/${this.get('coursePath')}/modules/${this.get('modulePath')}`
       });
       H5P.externalDispatcher.on('xAPI', this.xAPI.bind(this));
-    })
+    });
   },
 
   xAPI(event) {

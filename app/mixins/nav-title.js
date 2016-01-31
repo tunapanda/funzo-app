@@ -6,8 +6,8 @@ export default Ember.Mixin.create({
   // activate() {
   //   this.set('nav.title', this.get('navBarTitle'));
   // },
-  
-  onNavBarTitle: Ember.observer('navBarTitle', function() {
+
+  afterModel() {
     this.set('nav.title', this.get('navBarTitle'));
-  }).on('init')
+  }
 });

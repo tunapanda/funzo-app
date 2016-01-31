@@ -4,7 +4,7 @@
     <h2>Manage Users</h2>
     {{login-user-select users=model.users editable=true}}
 
-    <h2>Add A Course</h2>
+    {{!-- <h2>Add A Course</h2>
     <div class="row">
       <form class="col s12">
         <div class="row">
@@ -17,7 +17,18 @@
           </div>
         </div>
       </form>
-    </div>
+    </div> --}}
+
+    <h2>Sync</h2>
+    <p>There are <strong>{{statementCount}}</strong>, statements in the store. <strong>{{unsyncedStatementCount}}</strong> need to be synced.</p>
+    {{#if syncable}}
+      <button class="btn-large waves-effect waves-light" {{action "syncStatements"}}>Sync Now</button>
+    {{/if}}
+
+    <h2>Development Settings</h2>
+    <button class="btn-large waves-effect waves-light" type="button" {{action 'deleteAllCourse'}}>Delete All Courses</button>
+    <button class="btn-large waves-effect waves-light" type="button" {{action 'deleteAllStatements'}}>Delete All xAPI Statements</button>
+
   {{/if}}
 
 </div>
