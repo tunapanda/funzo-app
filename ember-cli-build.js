@@ -11,7 +11,7 @@ module.exports = function(defaults) {
       enabled: false
     },
     fingerprint: {
-      exclude: ['assets/workspace']
+      exclude: ['courses']
     },
     jscsOptions: {
       enabled: true
