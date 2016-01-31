@@ -1,6 +1,14 @@
-<h1>{{model.title}}</h1> Yo
-<ul>
+<div class="row">
 {{#each model.modules as |module|}}
-  <li>{{#link-to 'course.module' model module}}{{module.title}}{{/link-to}}</li>
+    <div class="col s12 m6">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">{{module.title}}</span>
+        </div>
+        <div class="card-action">
+          {{#link-to 'course.module' model module}}Open Module{{/link-to}}
+        </div>
+      </div>
+    </div>
 {{/each}}
-</ul>
+</div>
