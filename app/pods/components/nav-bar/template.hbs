@@ -4,10 +4,10 @@
     <ul id="nav-mobile" class="left">
       <li><a href="#" {{action 'back'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
     </ul>
-    
+
     <a class="brand-logo left">{{nav.title}}</a>
-    
-    <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+    <ul id="nav-mobile" class="right">
       {{#if session.isAuthenticated}}
         <li><a href="#" class="dropdown-button" data-activates="account-dropdown"><i class="material-icons">account_circle</i></a></li>
       {{/if}}
