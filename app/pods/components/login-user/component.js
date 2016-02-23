@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   
   editable: false,
   
-  classNames: ['collection-item', 'avatar'],
+  classNames: ['list-group-item'],
   classNameBindings: ['user.isSelected:active'],
   
   canDelete: Ember.computed('editable', 'user.isAuthenticated', function() {

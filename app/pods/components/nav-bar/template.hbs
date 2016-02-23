@@ -1,22 +1,24 @@
-<nav>
-  <div class="nav-wrapper">
+<nav class="navbar">
+  <div class="container-fluid">
 
-    <ul id="nav-mobile" class="left">
+    <ul class="nav navbar-nav">
       <li><a href="#" {{action 'back'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
     </ul>
 
-    <a class="brand-logo left">{{nav.title}}</a>
+    <a class="navbar-brand">{{nav.title}}</a>
 
-    <ul id="nav-mobile" class="right">
+    <ul class="nav navbar-nav navbar-right">
       {{#if session.isAuthenticated}}
-        <li><a href="#" class="dropdown-button" data-activates="account-dropdown"><i class="material-icons">account_circle</i></a></li>
+        <li class="dropdown">
+          <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">account_circle</i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#!">profile</a></li>
+            <li class="divider"></li>
+            <li><a href="#!" {{action 'logout'}}>logout</a></li>
+          </ul>
+        </li>
       {{/if}}
       <li>{{#link-to 'settings'}}<i class="material-icons">settings</i>{{/link-to}}</li>
     </ul>
   </div>
   </nav>
-<ul id="account-dropdown" class="dropdown-content">
-  <li><a href="#!">profile</a></li>
-  <li class="divider"></li>
-  <li><a href="#!" {{action 'logout'}}>logout</a></li>
-</ul>

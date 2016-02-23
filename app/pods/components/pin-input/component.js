@@ -4,10 +4,14 @@ export default Ember.Component.extend({
   didInsertElement() {
     this.$('.digit-1').focus();
     this.$('.pin-digit').on('keypress', (e) => Ember.run(() => {
+      if (e.target.value.length > 0) {
+        e.preventDefault();
+      }
       Ember.$(e.target).next().focus();
     })).on('keydown', (e) => Ember.run(() => {
       let key = e.keyCode || e.charCode;
-      if ((key === 8 || key === 46) && e.target.value.length === 0) {
+      if ((key === 8 || key === 46) && (e.target.value.length === 0 || Ember.$(e.target).hasClass('last-digit'))) {
+        e.target.value = '';
         return Ember.$(e.target).prev().focus();
       }
     }));

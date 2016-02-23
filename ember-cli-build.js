@@ -17,6 +17,12 @@ module.exports = function(defaults) {
     },
     jscsOptions: {
       enabled: true
+    },
+    sassOptions: {
+      includePaths: [
+        'bower_components/bootstrap-sass/assets/stylesheets',
+        'bower_components/bootstrap-material-design/sass'
+      ]
     }
   });
 
@@ -28,7 +34,10 @@ module.exports = function(defaults) {
   // app.import('bower_components/materialize/dist/css/materialize.css');
   app.import('bower_components/tincan/build/tincan.js');
 
-  app.import('bower_components/Materialize/dist/js/materialize.js');
+  // app.import('bower_components/Materialize/dist/js/materialize.js');
+  app.import('bower_components/bootstrap/dist/js/bootstrap.js');
+  app.import('bower_components/bootstrap-material-design/dist/js/material.js');
+  app.import('bower_components/bootstrap-material-design/dist/js/ripples.js');
 
   app.import('bower_components/Materialize/font/roboto/Roboto-Regular.woff2');
   app.import('bower_components/Materialize/font/roboto/Roboto-Regular.woff');
@@ -51,6 +60,7 @@ module.exports = function(defaults) {
   // modules that you would like to import into your application
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
+  // return app.toTree();
 
   return mergeTrees([app.toTree(), course]);
 };

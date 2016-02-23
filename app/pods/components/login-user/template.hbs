@@ -1,6 +1,15 @@
-<i class="material-icons circle">{{#if user.isTeacher}}supervisor_account{{else}}account_circle{{/if}}</i>
-<span class="title">{{user.fullName}}</span>
-{{#if user.isTeacher}}<p>Teacher</p>{{/if}}
-{{#if canDelete}}
-  <a href="#" class="secondary-content" {{action 'delete'}}><i class="material-icons">mode_edit</i></a>
-{{/if}}
+<div class="row-picture">
+  {{!-- {{#link-to 'login/pin' user}} --}}
+  <i class="material-icons circle">{{#if user.isTeacher}}supervisor_account{{else}}account_circle{{/if}}</i>
+  {{!-- {{/link-to}} --}}
+</div>
+
+<div class="row-content">
+  <div class="list-group-item-heading">{{user.fullName}}</div>
+  <div class="list-group-item-text">
+    {{#if user.isTeacher}}<p>Teacher</p>{{/if}}
+    {{#if canDelete}}
+      <a href="#" class="secondary-content" {{action 'delete'}}><i class="material-icons">mode_edit</i></a>
+    {{/if}}
+  </div>
+</div>

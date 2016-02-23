@@ -1,8 +1,9 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-  classNames: ['collection', 'user-list'],
-  
+  classNames: ['list-group', 'user-list'],
+  tagName: 'ul',
+
   sortedUsers: Ember.computed.sort('users', 'sortBy'),
   
   sortBy: ['firstName'],

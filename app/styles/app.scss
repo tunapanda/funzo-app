@@ -42,14 +42,22 @@
 $roboto-font-path: "../materialize/font/roboto/";
 $icons-font-path: "../materialize/font/material-design-icons/";
 
-@import "../../bower_components/Materialize/sass/materialize";
+$grid-float-breakpoint: 0px;
+
+@import "bootstrap";
+@import "bootstrap-material-design";
 
 .user-list {
   max-height: 84px * 3;
   overflow-y: scroll;
+
+  .list-group-item {
+    cursor: pointer;
+  }
 }
 
-input[type=password].pin-digit {
+input[type=number].pin-digit {
+  -webkit-text-security: disc;
   width: 20%;
   display: inline-block;
   margin: 0 1.5% 0;
@@ -57,10 +65,16 @@ input[type=password].pin-digit {
   height: 150px;
   font-size: 6em;
   text-align: center;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 
-.small input[type=password].pin-digit {
-  width: 20px;
+.small input[type=number].pin-digit {
+  width: 30px;
   height: 30px;
   font-size: 1em;
   margin: 5px;

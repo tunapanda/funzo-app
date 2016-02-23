@@ -1,26 +1,23 @@
 <div class="container">
   <div class="row">
-    <form class="col s12"  {{action 'register' on='submit'}}>
+    <form class="col-md-12"  {{action 'register' on='submit'}}>
       <div class="row">
-        <div class="input-field col s6">
-          {{input id="first_name" type="text" value=model.firstName classBinding=":validate errors.model.firstName:invalid"}}
-          <label for="first_name" data-error="{{errors.model.firstName.[0]}}">First Name</label>
+        <div class="form-group col-md-6">
+        <label for="first_name" data-error="{{errors.model.firstName.[0]}}">First Name</label>
+          {{input id="first_name" type="text" value=model.firstName classBinding=":form-control :validate errors.model.firstName:invalid"}}
         </div>
-        <div class="input-field col s6">
-          {{input id="last_name" type="text" value=model.lastName classBinding=":validate errors.model.lastName:invalid"}}
-          <label for="last_name" data-error="{{errors.model.lastName.[0]}}">Last Name</label>
+        <div class="form-group col-md-6">
+        <label for="last_name" data-error="{{errors.model.lastName.[0]}}">Last Name</label>
+          {{input id="last_name" type="text" value=model.lastName classBinding=":form-control :validate errors.model.lastName:invalid"}}
         </div>
       </div>
-      <div class="row">
-        <div class="input-field col s12">
-          {{pin-input pin=(mut model.pin) class="small" id="pin"}}
-          <label for="pin" class="active">PIN</label>
-        </div>
+      <div class="form-group">
+        <label for="pin" class="active">PIN</label>
+        {{pin-input pin=(mut model.pin) class="small" id="pin"}}
       </div>
-      <div class="row">
-        <div class="input-field col s12">
-          {{input type="submit" class="waves-effect waves-light btn-large" value="Submit"}}
-        </div>
+      <div class="form-group">
+
+          {{input type="submit" class="btn btn-primary btn-raised btn-lg" value="Submit"}}
       </div>
     </form>
   </div>
