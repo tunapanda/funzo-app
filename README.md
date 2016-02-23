@@ -1,5 +1,7 @@
 # Funzo-app
 
+[![Join the chat at https://gitter.im/tunapanda/funzo-app](https://badges.gitter.im/tunapanda/funzo-app.svg)](https://gitter.im/tunapanda/funzo-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is a preview of ember and H5P running as an app inside Phonegap/Cordova.
 
 See [here](https://github.com/tunapanda/funzo-app/wiki/Development-Guide) for information on how to contribute.
