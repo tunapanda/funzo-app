@@ -14,7 +14,7 @@ export default Ember.Component.extend({
   }),
   
   click() {
-    if(!this.get('editable')) {
+    if (!this.get('editable')) {
       this.sendAction('userSelected', this.get('user'));
     }
   },

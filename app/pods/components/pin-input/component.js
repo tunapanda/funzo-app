@@ -13,11 +13,11 @@ export default Ember.Component.extend({
     }));
   },
 
-  _pin: Ember.observer('digit1', 'digit2', 'digit3', 'digit4', function () {
+  _pin: Ember.observer('digit1', 'digit2', 'digit3', 'digit4', function() {
     let digits = this.getProperties('digit1', 'digit2', 'digit3', 'digit4');
     let value = Object.keys(digits).reduce((prev, val) => prev + (digits[val] || ''), '');
     this.set('pin', value);
-  }),
+  })
 
   // numbersOnly: Ember.observer('digit1', 'digit2', 'digit3', 'digit4', function () {
   //   if (this.get('digit1') && !this.get('digit1').match(/^[0-9]$/)) {

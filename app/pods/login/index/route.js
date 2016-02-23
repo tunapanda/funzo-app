@@ -10,6 +10,6 @@ export default Ember.Route.extend(UnauthenticatedRouteMixin, {
     userSelected(model) {
       this.trigger('userSelected', model);
       this.transitionTo('login.pin', model);
-    },
+    }
   }
 });

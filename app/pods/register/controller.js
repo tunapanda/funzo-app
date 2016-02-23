@@ -42,11 +42,13 @@ export default Ember.Controller.extend(EmberValidations, {
         return this.store.findAll('user');
       })
       .then((users) => {
-        if (users.get('length') === 1) this.set('model.isTeacher', true);
+        if (users.get('length') === 1) {
+          this.set('model.isTeacher', true);
+        }
         return this.get('model').save();
       })
       .then(() => this.get('session').authenticate('authenticator:local', { id: this.get('model.id'), pin: this.get('model.pin') }))
-      .then(() => this.transitionToRoute('index'), (err) => { console.error(err); });
+      .then(() => this.transitionToRoute('index'), (err) => console.error(err));
     }
   }
 });

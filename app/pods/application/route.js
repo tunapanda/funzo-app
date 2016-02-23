@@ -1,14 +1,15 @@
 import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
-
 export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
   beforeModel() {
-    return this.store.query('course', {permalink: 'funzo-CSE-1000' }).then((courses) => {
-      if(!courses.get('length')) {
+    return this.store.query('course', { permalink: 'funzo-CSE-1000' }).then((courses) => {
+      if (!courses.get('length')) {
         return new Ember.RSVP.Promise((resolve, reject) => Ember.$.getJSON('courses/funzo-CSE-1000/content.json', (content, status) => {
-          if (status !== 'success') return reject(status);
+          if (status !== 'success') { 
+            return reject(status);
+          }
           return resolve(content);
         }).then((content) => {
           let modules = Ember.A(content.modules);
@@ -34,11 +35,11 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
 
   actions: {
-    back: function () {
+    back() {
       history.back();
     },
 
-    openLink: function (url) {
+    openLink(url) {
       window.open(url, '_system');
     }
   }

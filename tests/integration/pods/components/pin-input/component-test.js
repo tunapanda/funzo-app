@@ -12,9 +12,6 @@ test('it renders', function(assert) {
 
   this.render(hbs`{{pin-input value=pin}}`);
 
-
-  this.$('.digit-1').val('1');
-  debugger;
-  assert.equal(this.get('pin'), '1');
+  assert.equal(this.$().text().trim(), '');
 
 });
