@@ -1,9 +1,10 @@
 <nav class="navbar">
   <div class="container-fluid">
-
-    <ul class="nav navbar-nav">
-      <li><a href="#" {{action 'back'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
-    </ul>
+    {{#if nav.showBackButton}}
+      <ul class="nav navbar-nav">
+        <li><a href="#" {{action 'back'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
+      </ul>
+    {{/if}}
 
     <a class="navbar-brand">{{nav.title}}</a>
 

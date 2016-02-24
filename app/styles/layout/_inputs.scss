@@ -1,0 +1,32 @@
+input[type=number].pin-digit {
+  -webkit-text-security: disc;
+  width: 20%;
+  display: inline-block;
+  margin: 0 1.5% 0;
+  border: 1px solid #9e9e9e;
+  height: 150px;
+  font-size: 6em;
+  text-align: center;
+  color: #222222;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.small input[type=number].pin-digit {
+  width: 30px;
+  height: 30px;
+  font-size: 1em;
+  margin: 5px;
+}
+
+.input-field input[type=text].invalid + label:after {
+  display: none;
+}
+
+.input-field input[type=text].invalid:focus + label:after {
+  display: block;
+}
