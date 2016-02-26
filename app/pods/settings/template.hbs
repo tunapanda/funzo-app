@@ -1,6 +1,9 @@
 <div class="container">
   {{#if currentUser.model.isTeacher}}
-    You're a teacher
+    <div>
+      <strong>Teacher Account</strong>
+    </div>
+    <button class="btn btn-lg btn-primary btn-raised" {{action 'addCourse'}}>Add A Course</button>
     <h2>Manage Users</h2>
     {{login-user-select users=model.users editable=true}}
 
@@ -26,9 +29,8 @@
     {{/if}}
 
     <h2>Development Settings</h2>
-    <button class="btn-large waves-effect waves-light" type="button" {{action 'deleteAllCourse'}}>Delete All Courses</button>
-    <button class="btn-large waves-effect waves-light" type="button" {{action 'deleteAllStatements'}}>Delete All xAPI Statements</button>
+    <button class="btn btn-lg btn-primary btn-raised" type="button" {{action 'deleteAllCourse'}}>Delete All Courses</button>
+    <button class="btn btn-lg btn-primary btn-raised" type="button" {{action 'deleteAllStatements'}}>Delete All xAPI Statements</button>
 
   {{/if}}
-
 </div>

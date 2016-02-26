@@ -15,6 +15,7 @@ export default Ember.Controller.extend({
 
   courseUrl: 'https://github.com/tunapanda/funzo-CSE-1000/archive/master.zip',
   currentUser: Ember.inject.service('currentUser'),
+  modal: Ember.inject.service('bootstrap-modal'),
 
   statementCount: Ember.computed.alias('model.statements.length'),
 
@@ -25,6 +26,11 @@ export default Ember.Controller.extend({
   syncable: Ember.computed.bool('unsyncedStatementCount'),
 
   actions: {
+    addCourse() {
+      this.set('modal.component', 'add-course');
+
+      Ember.$('.modal').modal('show');
+    },
     syncStatements() {
       let statements = this.get('unsyncedStatements').map((statement) => statement.get('content'));
 
