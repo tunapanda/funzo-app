@@ -10,7 +10,7 @@ export default Ember.Component.extend({
       H5P.jQuery('.h5p-container').h5p({
         frameJs: 'assets/h5p-standalone-frame.js',
         frameCss: 'assets/h5p.css',
-        h5pContent: `courses/${this.get('coursePath')}/modules/${this.get('modulePath')}`
+        h5pContent: `${this.get('location')}${this.get('coursePath')}/modules/${this.get('modulePath')}`
       });
       H5P.externalDispatcher.on('xAPI', this.xAPI.bind(this));
     });

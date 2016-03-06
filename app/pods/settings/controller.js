@@ -10,8 +10,72 @@ var tincan = new TinCan({
   }]
 });
 
+function toArray(list) {
+  return Array.prototype.slice.call(list || [], 0);
+}
+
+// Call the reader.readEntries() until no more results are returned.
+function readFolder(dir) {
+  return new Ember.RSVP.Promise(function(res, rej) {
+    let reader = dir.createReader();
+    let entries = [];
+    let readEntries = function() {
+      reader.readEntries(function(results) {
+        if (!results.length) {
+          res(entries.sort());
+        } else {
+          entries = entries.concat(toArray(results));
+          readEntries();
+        }
+      }, rej);
+    };
+    readEntries();
+  });
+}
+
+function loadCourse(coursesPath, name, store) {
+  return store.query('course', { permalink: name }).then((courses) => {
+    if (!courses.get('length')) {
+      return new Ember.RSVP.Promise((resolve, reject) => Ember.$.getJSON(`${coursesPath}${name}/content.json`, (content, status) => {
+        if (status !== 'success') {
+          return reject(status);
+        }
+        return resolve(content);
+      }).then((content) => {
+        let modules = Ember.A(content.modules);
+        delete content.modules;
+        content.location = coursesPath;
+        let course = store.createRecord('course', content);
+
+        return course.save().then(() => {
+          modules = modules.map((module) => {
+            module.course = course;
+            return store.createRecord('module', module);
+          });
+
+          return Ember.RSVP.all(modules.invoke('save'));
+        }).then((modules) => {
+          course.get('modules').pushObjects(modules);
+          return course.save();
+        });
+      }));
+    }
+    return Ember.RSVP.resolve();
+  });
+}
+
 export default Ember.Controller.extend({
   tincan: tincan,
+
+  init() {
+    if (window.cordova) {
+      if (window.cordova.file.externalRootDirectory) {
+        this.set('SDCourseDirectory', `${window.cordova.file.externalRootDirectory}FUNZO/courses/`);
+      }
+      this.set('internalCourseDirectory', `${window.cordova.file.dataDirectory}courses/`);
+    }
+    return this._super(...arguments);
+  },
 
   courseUrl: 'https://github.com/tunapanda/funzo-CSE-1000/archive/master.zip',
   currentUser: Ember.inject.service('currentUser'),
@@ -50,6 +114,40 @@ export default Ember.Controller.extend({
     },
     deleteAllStatements() {
       this.store.findAll('x-api-statement').then((statements) => statements.invoke('destroyRecord'));
+    },
+    loadSDCourses() {
+      if (!window.cordova) {
+        return alert('only works in app');
+      }
+
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        console.log('loading courses from %s', this.get('SDCourseDirectory'));
+        window.resolveLocalFileSystemURL(this.get('SDCourseDirectory'), resolve, reject);
+      })
+      .then((dir) => readFolder(dir))
+      .then((fileList => {
+        fileList.forEach((course) => this.loadCourse(course));
+      })).catch((err) => {
+        console.log(err);
+        if (err.code === 1) {
+          alert('SD /FUNZO/courses directory does not exist');
+        }
+      });
+    },
+    importSDCourses() {
+      if (!window.cordova) {
+        return alert('only works in app');
+      }
+
+      return new Ember.RSVP.Promise((resolve, reject) => window.resolveLocalFileSystemURL(this.get('SDCourseDirectory'), resolve, reject))
+      .then((dir) => readFolder(dir))
+      .then(fileList => {
+        fileList.forEach((course) => course.copyTo(this.set('internalCourseDirectory')));
+      });
     }
+  },
+
+  loadCourse(courseDir) {
+    return loadCourse(this.get('SDCourseDirectory'), courseDir.name, this.store);
   }
 });
