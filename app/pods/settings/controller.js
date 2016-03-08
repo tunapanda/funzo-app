@@ -33,6 +33,19 @@ function readFolder(dir) {
   });
 }
 
+function createDirectory(dest, folder) {
+  return new Ember.RSVP.Promise((resolve, reject) => {
+    window.resolveLocalFileSystemURL(dest, function(dir) {
+      dir.getDirectory(folder, { create: true }, function(file) {
+        if (file) {
+          return resolve(file);
+        }
+        return reject();
+      });
+    });
+  });
+}
+
 function loadCourse(coursesPath, name, store) {
   return store.query('course', { permalink: name }).then((courses) => {
     if (!courses.get('length')) {
@@ -60,6 +73,7 @@ function loadCourse(coursesPath, name, store) {
         });
       }));
     }
+    console.log('course \'%s\' already loaded', name);
     return Ember.RSVP.resolve();
   });
 }
@@ -73,6 +87,7 @@ export default Ember.Controller.extend({
         this.set('SDCourseDirectory', `${window.cordova.file.externalRootDirectory}FUNZO/courses/`);
       }
       this.set('internalCourseDirectory', `${window.cordova.file.dataDirectory}courses/`);
+      createDirectory(window.cordova.file.dataDirectory, `courses`);
     }
     return this._super(...arguments);
   },
@@ -140,9 +155,23 @@ export default Ember.Controller.extend({
       }
 
       return new Ember.RSVP.Promise((resolve, reject) => window.resolveLocalFileSystemURL(this.get('SDCourseDirectory'), resolve, reject))
-      .then((dir) => readFolder(dir))
-      .then(fileList => {
-        fileList.forEach((course) => course.copyTo(this.set('internalCourseDirectory')));
+      .then((dir) => Ember.RSVP.hash({
+        fileList: readFolder(dir),
+        dest: new Ember.RSVP.Promise((resolve, reject) => window.resolveLocalFileSystemURL(this.get('internalCourseDirectory'), resolve, reject))
+      }))
+      .then(result => {
+        return Ember.RSVP.all(result.fileList.map((course) => {
+          return new Ember.RSVP.Promise((resolve, reject) => course.copyTo(result.dest, null, resolve, (err) => err.code === 9 ? resolve() : reject()));
+        }));
+      })
+      .then((fileList => {
+        fileList.forEach((course) => course && this.loadCourse(course));
+      }))
+      .catch((err) => {
+        console.log(err);
+        if (err.code === 1) {
+          alert('SD /FUNZO/courses directory does not exist');
+        }
       });
     }
   },
