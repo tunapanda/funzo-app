@@ -1,4 +1,4 @@
-/* global FileTransfer, BackgroundTransfer */
+/* global BackgroundTransfer */
 import Ember from 'ember';
 
 export default Ember.Component.extend({
@@ -21,7 +21,6 @@ export default Ember.Component.extend({
       if (!window.cordova) {
         return alert('only works in app');
       }
-      let uri = encodeURI(this.get('url'));
       let courseID = Math.random().toString(36).substring(7);
       let destDir = window.cordova.file.externalDataDirectory || window.cordova.file.dataDirectory;
       let zipDest = `${destDir}tmp/${courseID}.zip`;

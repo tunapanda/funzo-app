@@ -15,7 +15,7 @@ export default Ember.Component.extend({
       // if (this.get('activityPath')) {
       //   H5P.jQuery(`#${this.get('activityPath')} .h5p-container`).h5p({ frameJs, frameCss, h5pContent });
       // } else {
-        H5P.jQuery(`.h5p-container`).h5p({ frameJs, frameCss, h5pContent });
+      H5P.jQuery(`.h5p-container`).h5p({ frameJs, frameCss, h5pContent });
       // }
 
       H5P.externalDispatcher.on('xAPI', this.xAPI.bind(this));

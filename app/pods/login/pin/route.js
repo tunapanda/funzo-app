@@ -6,5 +6,5 @@ export default Ember.Route.extend(NavBarTitleMixin, UnauthenticatedRouteMixin, {
   navBarTitle: 'Login > PIN',
   activate() {
     this.set('showBackButton', true);
-  },
+  }
 });

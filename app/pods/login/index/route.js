@@ -11,7 +11,7 @@ export default Ember.Route.extend(NavBarTitleMixin, UnauthenticatedRouteMixin, {
   model() {
     return this.store.findAll('user');
   },
-  
+
   actions: {
     userSelected(model) {
       this.trigger('userSelected', model);
