@@ -1,0 +1,21 @@
+<div>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    {{#each model.activities as |activity|}}
+      <li role="presentation"><a href="#{{activity.permalink}}" class="{{if activity.active 'active'}}" aria-controls={{activity.permalink}} role="tab" data-toggle="tab" {{action 'selectTab' activity.permalink}}>{{activity.title}}</a></li>
+    {{/each}}
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    {{#each model.activities as |activity|}}
+      <div role="tabpanel" class="tab-pane h5p-tab-pane {{if activity.active 'active'}}" id={{activity.permalink}}>
+        {{#if activity.active}}
+          {{h5p-standalone coursePath=model.course.permalink modulePath=model.permalink activityPath=activity.permalink action='xAPIEvent'}}
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+
+</div>

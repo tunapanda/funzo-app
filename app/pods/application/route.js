@@ -12,22 +12,58 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           }
           return resolve(content);
         }).then((content) => {
-          let modules = Ember.A(content.modules);
+          let modules = content.modules;
           delete content.modules;
 
-          let course = this.store.createRecord('course', content);
+          let modulePermalinks = modules.map((module) => module.permalink);
 
-          return course.save().then(() => {
-            modules = modules.map((module) => {
-              module.course = course;
-              return this.store.createRecord('module', module);
-            });
+          let activitys = [];
 
-            return Ember.RSVP.all(modules.invoke('save'));
-          }).then((modules) => {
-            course.get('modules').pushObjects(modules);
-            return course.save();
+          modules.forEach((module) => {
+            if (module.activities) {
+              activitys.push(...module.activities);
+              let activityPermalinks = module.activities.map((activity) => activity.permalink);
+              module.activities = activityPermalinks;
+            } else {
+              module.activities = [];
+            }
           });
+
+          let course = content;
+
+          course.modules = modulePermalinks;
+
+          let hash = {
+            course,
+            modules,
+            activitys
+          };
+
+          return Ember.RSVP.resolve(this.store.pushPayload(hash));
+
+          // let modules = Ember.A(content.modules);
+          // delete content.modules;
+
+          // let course = this.store.createRecord('course', content);
+
+          // return course.save().then(() => {
+          //   modules = modules.map((module) => {
+          //     module.course = course;
+          //     let activities = module.activities;
+
+          //     activities.map((activity) => {
+          //       activity = this.store.createRecord('activity', activity);
+          //       activity.
+          //     });
+
+          //     return this.store.createRecord('module', module);
+          //   });
+
+          //   return Ember.RSVP.all(modules.invoke('save'));
+          // }).then((modules) => {
+          //   course.get('modules').pushObjects(modules);
+          //   return course.save();
+          // });
         }));
       }
       return Ember.RSVP.resolve();

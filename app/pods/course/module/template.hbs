@@ -1,1 +1,19 @@
-{{h5p-standalone coursePath=model.course.permalink modulePath=model.permalink action='xAPIEvent'}}
+{{#if hasActivities}}
+  <div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      {{#each model.activities as |activity|}}
+        <li>{{#link-to 'course.module.activity' model.course model activity class=activity.active}}{{activity.title}}{{/link-to}}</li>
+      {{/each}}
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      {{outlet}}
+    </div>
+
+  </div>
+{{else}}
+  {{h5p-standalone coursePath=model.course.permalink modulePath=model.permalink action='xAPIEvent'}}
+{{/if}}

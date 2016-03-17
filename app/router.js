@@ -11,7 +11,9 @@ Router.map(function() {
   });
   this.route('register');
   this.route('course', { path: '/course/:course_id' }, function() {
-    this.route('module', { path: '/module/:module_id' });
+    this.route('module', { path: '/module/:module_id' }, function() {
+      this.route('activity', { path: '/activity/:activity_id' });
+    });
   });
   this.route('settings');
 });

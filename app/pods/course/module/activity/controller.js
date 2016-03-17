@@ -2,9 +2,6 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   currentUser: Ember.inject.service('currentUser'),
-
-  hasActivities: Ember.computed.bool('model.activities.length'),
-
   actions: {
     xAPIEvent(event) {
       event.data.statement.actor.account = {

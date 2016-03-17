@@ -8,7 +8,7 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, NavBarTitleMixin, {
   model() {
     let findCourse = this.store.findAll('course');
     
-    findCourse.then((courses) => courses.forEach((model) => model.set('modules', this.store.query('module', { course: model.get('id') }))));
+    // findCourse.then((courses) => courses.forEach((model) => model.set('modules', this.store.query('module', { course: model.get('id') }))));
     return findCourse;
   }
 });
