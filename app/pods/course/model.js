@@ -5,5 +5,6 @@ export default Model.extend({
   title: DS.attr(),
   permalink: DS.attr(),
   subject: DS.attr(),
-  modules: DS.hasMany('module', { async: true })
+  modules: DS.hasMany('module', { async: true }),
+  location: DS.attr({ defaultValue: '' })
 });

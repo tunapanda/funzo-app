@@ -7,7 +7,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     return this.store.query('course', { permalink: 'funzo-CSE-1000' }).then((courses) => {
       if (!courses.get('length')) {
         return new Ember.RSVP.Promise((resolve, reject) => Ember.$.getJSON('courses/funzo-CSE-1000/content.json', (content, status) => {
-          if (status !== 'success') { 
+          if (status !== 'success') {
             return reject(status);
           }
           return resolve(content);

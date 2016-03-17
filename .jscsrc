@@ -16,6 +16,7 @@
   "disallowSpacesInsideParentheses": true,
   "disallowSpacesInCallExpression": true,
   "disallowTrailingComma": true,
+  "disallowTrailingWhitespace": true,
   "requireBlocksOnNewline": true,
   "requireCamelCaseOrUpperCaseIdentifiers": true,
   "requireCapitalizedConstructors": true,
