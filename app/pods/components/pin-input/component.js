@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   didInsertElement() {
-    this.$('.digit-1').focus();
     this.$('.pin-digit').on('keypress', (e) => Ember.run(() => {
       if (e.target.value.length > 0) {
         e.preventDefault();

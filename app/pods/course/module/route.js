@@ -2,7 +2,9 @@ import Ember from 'ember';
 import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, {
+  showBackButton: true,
   afterModel(model) {
-    this.set('nav.title', model.get('title'));
+    this.set('navBarTitle', model.get('title'));
+    return this._super(...arguments);
   }
 });

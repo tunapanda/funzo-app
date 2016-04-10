@@ -16,6 +16,7 @@ Router.map(function() {
     });
   });
   this.route('settings');
+  this.route('profile');
 });
 
 export default Router;

@@ -8,3 +8,10 @@ $text-color: #ffffff;
 // $headings-color: $text-color;
 
 $input-color: #222222;
+$input-bg: #fff;
+
+@media (min-width: 0px) {
+  .navbar-left {
+    margin-left: -15px !important;
+  }
+}

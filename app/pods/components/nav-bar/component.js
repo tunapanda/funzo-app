@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   session: Ember.inject.service('session'),
   nav: Ember.inject.service('nav'),
 
-  showBackButton: true,
+  showBackButton: Ember.computed.alias('nav.showBackButton'),
 
   actions: {
     back() {

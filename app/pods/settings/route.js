@@ -3,7 +3,8 @@ import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, {
   navBarTitle: 'Settings',
-
+  showBackButton: true,
+  
   model() {
     return Ember.RSVP.hash({
       users: this.store.findAll('user'),

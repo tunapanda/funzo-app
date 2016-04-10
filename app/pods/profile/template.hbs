@@ -1,0 +1,39 @@
+
+<div class="container">
+  <div class="row">
+  {{#if errorMessage}}
+      <div class="alert alert-danger">
+        {{errorMessage}}
+      </div>
+    {{/if}}
+  </div>
+  <div class="row">
+    <form class="col-md-12"  {{action 'modify' on='submit'}}>
+      <div class="row">
+        <div class="form-group col-xs-6">
+        <label for="first_name" data-error="{{errors.model.firstName.[0]}}">First Name</label>
+          {{input id="first_name" type="text" value=model.firstName classBinding=":form-control :validate errors.model.firstName:invalid"}}
+        </div>
+        <div class="form-group col-xs-6">
+        <label for="last_name" data-error="{{errors.model.lastName.[0]}}">Last Name</label>
+          {{input id="last_name" type="text" value=model.lastName classBinding=":form-control :validate errors.model.lastName:invalid"}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-xs-6">
+          <label for="pin" class="active">Old PIN</label>
+          {{pin-input pin=(mut oldpin) class="small" id="oldpin"}}
+        </div>
+
+        <div class="form-group col-xs-6">
+          <label for="pin" class="active">New PIN</label>
+          {{pin-input pin=(mut newpin) class="small" id="newpin"}}
+        </div>
+      </div>
+      <div class="form-group">
+
+          {{input type="submit" class="btn btn-primary btn-raised btn-lg" value="Submit"}}
+      </div>
+    </form>
+  </div>
+</div>

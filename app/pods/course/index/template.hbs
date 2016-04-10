@@ -6,7 +6,7 @@
           <span class="card-title">{{module.title}}</span>
         </div>
         <div class="panel-footer">
-          {{#link-to 'course.module' model module}}Open Module{{/link-to}}
+          {{#link-to 'course.module.activity' model module module.activities.firstObject}}Open Module{{/link-to}}
         </div>
       </div>
     </div>
