@@ -3,6 +3,24 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var mergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
+var Fs = require('fs');
+
+// Create an index of books available at build-time
+var booksPath = "public/books";
+var bookList = Fs.readdirSync(booksPath).map(function(d) {
+	var bookPath = booksPath + "/" + d;
+	if ( ! Fs.statSync(bookPath).isDirectory() ) {
+		// TODO: filter out nulls
+		return;
+	}
+	var raw = Fs.readFileSync(bookPath+"/"+"book.json");
+	// TODO: catch exceptions and filter out invalid JSON
+	return JSON.parse(raw);
+});
+Fs.writeFileSync(
+	booksPath + "/local_books.json",
+	JSON.stringify(bookList)
+);
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
@@ -31,6 +49,11 @@ module.exports = function(defaults) {
     destDir: 'courses/'
   });
 
+  /*var books = new Funnel('bower_components', {
+    include: ['books/**'],
+    destDir: ''
+  });*/	
+
   // app.import('bower_components/materialize/dist/css/materialize.css');
   app.import('bower_components/tincan/build/tincan.js');
 
@@ -47,7 +70,7 @@ module.exports = function(defaults) {
   app.import('bower_components/Materialize/font/roboto/Roboto-Light.ttf');
 
   app.import('bower_components/h5p-standalone/dist/js/h5p-standalone-main.js');
-
+  
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //
