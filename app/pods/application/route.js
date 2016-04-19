@@ -38,6 +38,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             modules,
             activitys
           };
+          console.log("HASH");
+          console.log(hash);
 
           return Ember.RSVP.resolve(this.store.pushPayload(hash));
 
@@ -67,6 +69,31 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         }));
       }
       return Ember.RSVP.resolve();
+    }).then(function() {
+    	return new Ember.RSVP.Promise((resolve, reject) =>
+    		Ember.$.getJSON(
+				'books/local_books.json',
+				function(content,status) {
+					if (status !== 'success') {
+						return reject(status);
+					}
+					return resolve(content);
+				}).then((content) => {
+				console.log(content);
+				console.log(content.constructor.name);
+				content.forEach(function(book,i,a) {
+					// TODO: check whether an entry with this
+					// permalink is in the DB, and add one if not
+					var sections = book.sections;
+					delete book.sections;
+					console.log("Boooook!: " + book.title);
+					
+					// these are just to avoid warnings about
+					// unused vars for now;
+					[].concat(a,i, sections);
+				});
+			})
+		);
     });
   },
 

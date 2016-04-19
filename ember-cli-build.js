@@ -6,19 +6,27 @@ var Funnel = require('broccoli-funnel');
 var Fs = require('fs');
 
 // Create an index of books available at build-time
-var booksPath = "public/books";
-var bookList = Fs.readdirSync(booksPath).map(function(d) {
-	var bookPath = booksPath + "/" + d;
-	if ( ! Fs.statSync(bookPath).isDirectory() ) {
+var booksDir = "public/books";
+var bookList = new Array;
+bookList = Fs.readdirSync(booksDir).map(function(d) {
+	var bookDir = booksDir + "/" + d;
+	if ( ! Fs.statSync(bookDir).isDirectory() ) {
 		// TODO: filter out nulls
 		return;
 	}
-	var raw = Fs.readFileSync(bookPath+"/"+"book.json");
+	
 	// TODO: catch exceptions and filter out invalid JSON
-	return JSON.parse(raw);
-});
+	var bookInfo = JSON.parse(
+		Fs.readFileSync(bookDir+"/"+"book.json")
+	);
+	bookInfo.permalink = "book/" + d;
+	return bookInfo;
+}).filter(function(e) { return typeof(e) != "undefined" });
+//console.log("BOOK:");
+//console.log(bookList);
+                                     
 Fs.writeFileSync(
-	booksPath + "/local_books.json",
+	booksDir + "/local_books.json",
 	JSON.stringify(bookList)
 );
 
