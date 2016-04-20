@@ -20,6 +20,12 @@ bookList = Fs.readdirSync(booksDir).map(function(d) {
 		Fs.readFileSync(bookDir+"/"+"book.json")
 	);
 	bookInfo.permalink = "book/" + d;
+	if (typeof(bookInfo.sections) !== "undefined") {
+		bookInfo.sections.forEach(function(s,i) {
+			s.id = i+1;
+			s.book = bookInfo.permalink;
+		});
+	}
 	return bookInfo;
 }).filter(function(e) { return typeof(e) != "undefined" });
 //console.log("BOOK:");

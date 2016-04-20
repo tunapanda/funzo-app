@@ -4,7 +4,8 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
   beforeModel() {
-    return this.store.query('course', { permalink: 'funzo-CSE-1000' }).then((courses) => {
+    var self = this
+    return self.store.query('course', { permalink: 'funzo-CSE-1000' }).then((courses) => {
       if (!courses.get('length')) {
         return new Ember.RSVP.Promise((resolve, reject) => Ember.$.getJSON('courses/funzo-CSE-1000/content.json', (content, status) => {
           if (status !== 'success') {
@@ -70,30 +71,48 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       }
       return Ember.RSVP.resolve();
     }).then(function() {
-    	return new Ember.RSVP.Promise((resolve, reject) =>
-    		Ember.$.getJSON(
-				'books/local_books.json',
-				function(content,status) {
-					if (status !== 'success') {
-						return reject(status);
-					}
-					return resolve(content);
-				}).then((content) => {
-				console.log(content);
-				console.log(content.constructor.name);
-				content.forEach(function(book,i,a) {
-					// TODO: check whether an entry with this
-					// permalink is in the DB, and add one if not
-					var sections = book.sections;
-					delete book.sections;
-					console.log("Boooook!: " + book.title);
-					
-					// these are just to avoid warnings about
-					// unused vars for now;
-					[].concat(a,i, sections);
-				});
-			})
-		);
+      return new Ember.RSVP.Promise((resolve, reject) =>
+        Ember.$.getJSON(
+        'books/local_books.json',
+        function(content,status) {
+          if (status !== 'success') {
+            return reject(status);
+          }
+          return resolve(content);
+        }).then((content) => {
+        console.log(content);
+        console.log(content.constructor.name);
+        var db_content = new Array;
+        content.forEach(function(book) {
+          // check whether an entry with this
+          // permalink is in the DB, and add one if not
+          console.log("Boooook!: " + book.title);
+          var sections = book.sections;
+          delete book.sections;
+          self.store.query('book', { permalink: book.permalink }).then((books) => {
+            if (!books.get('length')) {
+              if (typeof(db_content.get("book")) === "undefined") {
+                db_content["book"] = new Array;   
+              }
+              db_content.concat(book);
+            }
+          });
+          sections.forEach(function(section) {
+              self.store.query('section', { permalink: section.permalink }).then((sections) => {
+                if (!sections.get('length')) {
+                  if (typeof(db_content.get("section")) === "undefined") {
+                    db_content["section"] = new Array;    
+                  }
+                  db_content["section"].concat(section);
+                }
+              });
+          });
+          console.log("DBC");
+          console.log(db_content);
+          return Ember.RSVP.resolve(this.store.pushPayload(db_content));
+        });
+      })
+    );
     });
   },
 
