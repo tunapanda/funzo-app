@@ -6,7 +6,7 @@ var Funnel = require('broccoli-funnel');
 var Fs = require('fs');
 
 // Create an index of books available at build-time
-var booksDir = "public/books";
+var booksDir = "public/content/book";
 var bookList = new Array;
 bookList = Fs.readdirSync(booksDir).map(function(d) {
 	var bookDir = booksDir + "/" + d;

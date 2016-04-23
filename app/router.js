@@ -25,6 +25,10 @@ Router.map(function() {
       path: '/section/:section_id'
     });
   });
+
+  this.route('foo', {
+    path: '/foo/:bar/:baz'
+  });
 });
 
 export default Router;

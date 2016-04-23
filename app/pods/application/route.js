@@ -1,11 +1,8 @@
 import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
-export default Ember.Route.extend(ApplicationRouteMixin, {
-  session: Ember.inject.service('session'),
-  beforeModel() {
-    var self = this
-    return self.store.query('course', { permalink: 'funzo-CSE-1000' }).then((courses) => {
+var update_courses = function(app) {
+  return app.store.query('course', { permalink: 'funzo-CSE-1000' }).then((courses) => {
       if (!courses.get('length')) {
         return new Ember.RSVP.Promise((resolve, reject) => Ember.$.getJSON('courses/funzo-CSE-1000/content.json', (content, status) => {
           if (status !== 'success') {
@@ -39,15 +36,13 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             modules,
             activitys
           };
-          console.log("HASH");
-          console.log(hash);
 
-          return Ember.RSVP.resolve(this.store.pushPayload(hash));
+          return Ember.RSVP.resolve(app.store.pushPayload(hash));
 
           // let modules = Ember.A(content.modules);
           // delete content.modules;
 
-          // let course = this.store.createRecord('course', content);
+          // let course = app.store.createRecord('course', content);
 
           // return course.save().then(() => {
           //   modules = modules.map((module) => {
@@ -55,11 +50,11 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           //     let activities = module.activities;
 
           //     activities.map((activity) => {
-          //       activity = this.store.createRecord('activity', activity);
+          //       activity = app.store.createRecord('activity', activity);
           //       activity.
           //     });
 
-          //     return this.store.createRecord('module', module);
+          //     return app.store.createRecord('module', module);
           //   });
 
           //   return Ember.RSVP.all(modules.invoke('save'));
@@ -70,50 +65,65 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         }));
       }
       return Ember.RSVP.resolve();
-    }).then(function() {
-      return new Ember.RSVP.Promise((resolve, reject) =>
-        Ember.$.getJSON(
-        'books/local_books.json',
-        function(content,status) {
-          if (status !== 'success') {
-            return reject(status);
-          }
-          return resolve(content);
-        }).then((content) => {
-        console.log(content);
-        console.log(content.constructor.name);
-        var db_content = new Array;
-        content.forEach(function(book) {
-          // check whether an entry with this
-          // permalink is in the DB, and add one if not
-          console.log("Boooook!: " + book.title);
-          var sections = book.sections;
-          delete book.sections;
-          self.store.query('book', { permalink: book.permalink }).then((books) => {
-            if (!books.get('length')) {
-              if (typeof(db_content.get("book")) === "undefined") {
-                db_content["book"] = new Array;   
-              }
-              db_content.concat(book);
-            }
-          });
-          sections.forEach(function(section) {
-              self.store.query('section', { permalink: section.permalink }).then((sections) => {
-                if (!sections.get('length')) {
-                  if (typeof(db_content.get("section")) === "undefined") {
-                    db_content["section"] = new Array;    
-                  }
-                  db_content["section"].concat(section);
-                }
-              });
-          });
-          console.log("DBC");
-          console.log(db_content);
-          return Ember.RSVP.resolve(this.store.pushPayload(db_content));
-        });
-      })
-    );
     });
+};
+
+var update_books = function(app) {
+  console.log("Updating books...");
+  return new Ember.RSVP.Promise((resolve, reject) =>
+    Ember.$.getJSON('books/local_books.json', function(content,status) {
+      if (status !== 'success') {
+        console.log("REEEEJECTED!  " + status);
+        return reject(status);
+      }
+      return resolve(content);
+      console.log("contents!");
+      console.log(content);
+      console.log(content.constructor.name);
+      var db_content = [];
+      content.forEach(function(book) {
+        // check whether an entry with app
+        // permalink is in the DB, and add one if not
+        console.log("Boo0ook!: " + book.title);
+        console.log(book);
+        var sections = book.sections;
+        delete book.sections;
+        app.store.query('book', { permalink: book.permalink }).then((books) => {
+            console.log("Query returned " + books);
+            console.log(books);
+          if (!books.get('length')) {
+            if (typeof(db_content.get("book")) === "undefined") {
+              db_content["book"] = [];   
+            }
+            db_content.concat(book);
+          }
+        });
+        sections.forEach(function(section) {
+            app.store.query('section', { permalink: section.permalink }).then((sections) => {
+              if (!sections.get('length')) {
+                if (typeof(db_content.get("section")) === "undefined") {
+                  db_content["section"] = [];    
+                }
+                db_content["section"].concat(section);
+              }
+            });
+        });
+        console.log("DBC");
+        console.log(db_content);
+        app.store.pushPayload(db_content);
+      });
+    })
+  );
+};
+
+export default Ember.Route.extend(ApplicationRouteMixin, {
+  session: Ember.inject.service('session'),
+  beforeModel() {
+    var res = Ember.RSVP.hash({
+       //update_books: update_books(this),
+       update_courses: update_courses(this)
+    });
+    return res;
   },
 
   actions: {
