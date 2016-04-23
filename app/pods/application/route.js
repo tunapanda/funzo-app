@@ -71,12 +71,11 @@ var update_courses = function(app) {
 var update_books = function(app) {
   console.log("Updating books...");
   return new Ember.RSVP.Promise((resolve, reject) =>
-    Ember.$.getJSON('books/local_books.json', function(content,status) {
+    Ember.$.getJSON('content/book/local_books.json', function(content,status) {
       if (status !== 'success') {
         console.log("REEEEJECTED!  " + status);
         return reject(status);
       }
-      return resolve(content);
       console.log("contents!");
       console.log(content);
       console.log(content.constructor.name);
@@ -84,7 +83,7 @@ var update_books = function(app) {
       content.forEach(function(book) {
         // check whether an entry with app
         // permalink is in the DB, and add one if not
-        console.log("Boo0ook!: " + book.title);
+        console.log("Boo000ook!: " + book.title);
         console.log(book);
         var sections = book.sections;
         delete book.sections;
@@ -111,6 +110,7 @@ var update_books = function(app) {
         console.log("DBC");
         console.log(db_content);
         app.store.pushPayload(db_content);
+        return db_content;
       });
     })
   );
@@ -120,7 +120,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
   beforeModel() {
     var res = Ember.RSVP.hash({
-       //update_books: update_books(this),
+       update_books: update_books(this),
        update_courses: update_courses(this)
     });
     return res;

@@ -5,5 +5,5 @@ export default Model.extend({
   title: DS.attr('text'),
   permalink: DS.attr('text'),
   subject: DS.attr('text'),
-  sections: DS.hasMany('section', { async: true })
+  sections: DS.hasMany('book/section', { async: true })
 });
