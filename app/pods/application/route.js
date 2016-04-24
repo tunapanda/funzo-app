@@ -118,13 +118,13 @@ var update_books = function(app) {
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
-  beforeModel() {
-    var res = Ember.RSVP.hash({
-       update_books: update_books(this),
-       update_courses: update_courses(this)
-    });
-    return res;
-  },
+  // beforeModel() {
+  //   var res = Ember.RSVP.hash({
+  //      //update_books: update_books(this),
+  //      update_courses: update_courses(this)
+  //   });
+  //   return res;
+  // },
 
   actions: {
     back() {

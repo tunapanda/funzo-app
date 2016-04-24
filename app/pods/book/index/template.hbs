@@ -1,2 +1,7 @@
-Boook index
-{{outlet}}
+<h1>{{model.title}}</h1>
+<h3>Sections</h3>
+<ul>
+{{#each model.sections as |section|}}
+  <li>{{#link-to 'book.section' model section}}{{section.title}}{{/link-to}}</li>
+{{/each}}
+</ul>

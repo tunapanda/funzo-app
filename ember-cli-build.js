@@ -3,38 +3,22 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var mergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
-var Fs = require('fs');
+var fs = require('fs');
 
 // Create an index of books available at build-time
-var booksDir = "public/content/book";
-var bookList = new Array;
-bookList = Fs.readdirSync(booksDir).map(function(d) {
-	var bookDir = booksDir + "/" + d;
-	if ( ! Fs.statSync(bookDir).isDirectory() ) {
-		// TODO: filter out nulls
-		return;
-	}
-	
-	// TODO: catch exceptions and filter out invalid JSON
-	var bookInfo = JSON.parse(
-		Fs.readFileSync(bookDir+"/"+"book.json")
-	);
-	bookInfo.permalink = "book/" + d;
-	if (typeof(bookInfo.sections) !== "undefined") {
-		bookInfo.sections.forEach(function(s,i) {
-			s.id = i+1;
-			s.book = bookInfo.permalink;
-		});
-	}
-	return bookInfo;
-}).filter(function(e) { return typeof(e) != "undefined" });
-//console.log("BOOK:");
-//console.log(bookList);
-                                     
-Fs.writeFileSync(
-	booksDir + "/local_books.json",
-	JSON.stringify(bookList)
-);
+var booksDir = 'public/content/books';
+var bookList = [];
+bookList = fs.readdirSync(booksDir).map(d => {
+  var bookDir = booksDir + '/' + d;
+  if (!fs.statSync(bookDir).isDirectory()) {
+    // TODO: filter out nulls
+    return;
+  }
+  // TODO: catch exceptions and filter out invalid JSON
+  return JSON.parse(fs.readFileSync(bookDir + '/book.json'));
+}).filter(e => e);
+
+fs.writeFileSync(booksDir + '/local_books.json', JSON.stringify(bookList));
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
@@ -63,10 +47,10 @@ module.exports = function(defaults) {
     destDir: 'courses/'
   });
 
-  /*var books = new Funnel('bower_components', {
-    include: ['books/**'],
-    destDir: ''
-  });*/	
+  // var books = new Funnel('bower_components', {
+  //   include: ['books/**'],
+  //   destDir: ''
+  // });
 
   // app.import('bower_components/materialize/dist/css/materialize.css');
   app.import('bower_components/tincan/build/tincan.js');
@@ -84,7 +68,7 @@ module.exports = function(defaults) {
   app.import('bower_components/Materialize/font/roboto/Roboto-Light.ttf');
 
   app.import('bower_components/h5p-standalone/dist/js/h5p-standalone-main.js');
-  
+
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //

@@ -1,12 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-    model: function(params) {
-      return {
-        "id": params.section_id,
-        "book_id": params.book_id,
-        "title": "Book " + params.book_id + ", Section " + params.section_id
-      };
-    }
+  model: function(params) {
+    return this.store.queryRecord('section', {book_id: this.paramsFor('book').book_id, section_id: params.section_id});
+  }
 });
 
