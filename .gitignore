@@ -46,4 +46,4 @@ cordova/platforms/wp8/*.suo
 cordova/platforms/wp8/*.csproj.user
 
 # funzo
-public/courses
+public/content/courses
