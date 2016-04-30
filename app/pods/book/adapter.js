@@ -2,7 +2,7 @@ import DS from 'ember-data';
 
 export default DS.RESTAdapter.extend({
   urlForFindAll() {
-    return 'local_books.json';
+    return 'content/books/local_books.json';
   },
 
   urlForFindRecord(permalink) {
@@ -10,7 +10,6 @@ export default DS.RESTAdapter.extend({
   },
 
   urlForFindHasMany(id, modelName, snapshot) {
-    debugger;
     this._super(id, modelName, snapshot);
   }
 });

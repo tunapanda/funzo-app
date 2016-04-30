@@ -1,17 +1,27 @@
-<div class="row">
-  {{#each model as |course|}}
-    <div class="col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          {{course.title}}
-        </div>
-        <div class="panel-body">
-          <p><strong>Subject:</strong> {{course.subject}}</p>
-        </div>
-        <div class="panel-footer">
-          {{#link-to 'course' course}}Open Course{{/link-to}}
+{{#if bookOnlyMode}}
+  <div class="row">
+    {{#each model.books as |book|}}
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        {{#link-to 'book' book}}<img class="img-responsive" src="content/books/{{book.id}}/cover.png" alt="">{{/link-to}}
+      </div>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="row">
+    {{#each model.courses as |course|}}
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            {{course.title}}
+          </div>
+          <div class="panel-body">
+            <p><strong>Subject:</strong> {{course.subject}}</p>
+          </div>
+          <div class="panel-footer">
+            {{#link-to 'course' course}}Open Course{{/link-to}}
+          </div>
         </div>
       </div>
-    </div>
-  {{/each}}
+    {{/each}}
 </div>
+{{/if}}

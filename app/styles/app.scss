@@ -28,3 +28,79 @@
 .h5p-container {
   min-height: 250px;
 }
+
+.book-cover {
+  max-width: 100%;
+}
+
+.book-content {
+  color: #000;
+  font-family: serif;
+
+  display: flex;
+  flex: 1 0 47%;
+  flex-wrap: wrap;
+  h1, h2, p {
+    font-family: serif;
+    flex: 1 0 100%;
+  }
+
+  h2 {
+    font-size: 2em;
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .page {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    padding: 2em;
+    margin: 0.5em;
+    background-color: #fff;
+
+    width: 47%;
+    height: 70vw;
+  }
+
+  .text-center-center {
+    text-align: center;
+    margin-top: 50%;
+  }
+
+  .text-left-bottom {
+    flex: 1;
+    align-self: flex-end;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .title-heading {
+    font-size: 5em;
+    font-weight: bold;
+  }
+
+  table {
+    width: 100%;
+    font-size: 0.9em;
+  }
+
+  .slick-next {
+    z-index: 100;
+    width: 50%;
+    height: 100%;
+    right: 0;
+  }
+
+  .slick-prev {
+    z-index: 100;
+    width: 50%;
+    height: 100%;
+    left: 0;
+  }
+}
+

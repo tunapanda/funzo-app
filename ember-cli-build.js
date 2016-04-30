@@ -69,6 +69,12 @@ module.exports = function(defaults) {
 
   app.import('bower_components/h5p-standalone/dist/js/h5p-standalone-main.js');
 
+  app.import('bower_components/slick-carousel/slick/slick.js');
+  app.import('bower_components/slick-carousel/slick/slick.css');
+  app.import('bower_components/slick-carousel/slick/slick-theme.css');
+
+  app.import('vendor/aes.js');
+
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //
