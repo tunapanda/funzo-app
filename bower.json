@@ -14,6 +14,7 @@
     "hammer-time": "1.0.0",
     "pouchdb": "^3.5.0",
     "relational-pouch": "^1.3.2",
+    "slick-carousel": "1.5.9",
     "Materialize": "materialize#~0.97.5",
     "tincan": "~0.41.0",
     "bootstrap": "~3.3.6",
