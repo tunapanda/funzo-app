@@ -7,11 +7,18 @@ export default Model.extend({
   title: DS.attr(),
   permalink: DS.attr(),
   content: DS.attr(),
+  encryption: DS.attr({defaultValue:"aes"}),
   html: Ember.computed('content', function() {
-    console.log("HTMLGen");
-    let decrypted = CryptoJS.AES.decrypt(this.get('content'), 'averysecurekey');
-    return Ember.String.htmlSafe(decrypted.toString(CryptoJS.enc.Utf8));
-    //return Ember.String.htmlSafe(this.get('content'));
+    let encryption = this.get('encryption');
+    if (typeof(encryption) === "string") {
+    	encryption = encryption.toLowerCase();
+    }
+    if (encryption === "aes") {
+		let decrypted = CryptoJS.AES.decrypt(this.get('content'), 'averysecurekey');
+		return Ember.String.htmlSafe(decrypted.toString(CryptoJS.enc.Utf8));
+	} else {
+		return Ember.String.htmlSafe(this.get('content'));
+	}
   }),
   paginated: DS.attr(),
   book: DS.belongsTo('book', { async: true })
