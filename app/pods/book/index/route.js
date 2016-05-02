@@ -9,8 +9,8 @@ export default Ember.Route.extend(NavBarTitleMixin, {
     // model.set('modules', this.store.query('module', { course: model.get('id') }));
   },
 
-  redirect(model) {
+  /*redirect(model) {
     // this._super(...arguments);
     return this.transitionTo('book.section', model, model.get('sections.firstObject'));
-  }
+  }*/
 });
