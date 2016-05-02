@@ -12,5 +12,6 @@ export default Model.extend({
     // return Ember.String.htmlSafe(decrypted);
     return Ember.String.htmlSafe(this.get('content'));
   }),
+  paginated: DS.attr(),
   book: DS.belongsTo('book', { async: true })
 });

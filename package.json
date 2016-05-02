@@ -37,7 +37,7 @@
     "ember-cli-sass": "5.3.0",
     "ember-cli-sri": "^2.0.0",
     "ember-cli-uglify": "^1.2.0",
-    "ember-data": "^2.3.0",
+    "ember-data": "^2.5.2",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
     "ember-hammertime": "1.0.1",
