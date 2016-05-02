@@ -33,4 +33,11 @@ export default function() {
     this.use('toLeft'),
     this.reverse('toRight')
   );
+
+  this.transition(
+    this.fromRoute('book.section'),
+    this.toRoute('book.section'),
+    this.use('toLeft'),
+    this.reverse('toRight')
+  );
 }

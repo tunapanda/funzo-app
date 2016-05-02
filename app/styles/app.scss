@@ -39,7 +39,12 @@
 
   display: flex;
   flex: 1 0 47%;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
+
+  margin-left: 0;
+
+  transition: margin-left 0.3s ease-in-out;
+
   h1, h2, p {
     font-family: serif;
     flex: 1 0 100%;
@@ -52,17 +57,36 @@
     font-weight: bold;
   }
 
+  p {
+    font-size: 1.2em;
+    text-align: justify;
+
+    &.overflow {
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
   .page {
     display: flex;
-    flex-wrap: wrap;
+    flex-shrink: 0;
     align-items: flex-start;
 
     padding: 2em;
-    margin: 0.5em;
+    margin: 7px;
     background-color: #fff;
 
     width: 47%;
     height: 70vw;
+  }
+
+  .page-content {
+    max-width: 100%;
+  }
+
+  img {
+    max-width: 50%;
+    height: auto;
   }
 
   .text-center-center {
