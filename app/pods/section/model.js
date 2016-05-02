@@ -8,9 +8,10 @@ export default Model.extend({
   permalink: DS.attr(),
   content: DS.attr(),
   html: Ember.computed('content', function() {
-    // let decrypted = CryptoJS.AES.decrypt(this.get('content'), 'averysecurekey');
-    // return Ember.String.htmlSafe(decrypted);
-    return Ember.String.htmlSafe(this.get('content'));
+    console.log("HTMLGen");
+    let decrypted = CryptoJS.AES.decrypt(this.get('content'), 'averysecurekey');
+    return Ember.String.htmlSafe(decrypted.toString(CryptoJS.enc.Utf8));
+    //return Ember.String.htmlSafe(this.get('content'));
   }),
   book: DS.belongsTo('book', { async: true })
 });
