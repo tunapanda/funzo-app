@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /tmp
+/public/content/books/local_books.json
 
 # dependencies
 /node_modules
