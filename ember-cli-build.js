@@ -60,13 +60,6 @@ module.exports = function(defaults) {
   app.import('bower_components/bootstrap-material-design/dist/js/material.js');
   app.import('bower_components/bootstrap-material-design/dist/js/ripples.js');
 
-  app.import('bower_components/Materialize/font/roboto/Roboto-Regular.woff2');
-  app.import('bower_components/Materialize/font/roboto/Roboto-Regular.woff');
-  app.import('bower_components/Materialize/font/roboto/Roboto-Regular.ttf');
-  app.import('bower_components/Materialize/font/roboto/Roboto-Light.woff2');
-  app.import('bower_components/Materialize/font/roboto/Roboto-Light.woff');
-  app.import('bower_components/Materialize/font/roboto/Roboto-Light.ttf');
-
   app.import('bower_components/h5p-standalone/dist/js/h5p-standalone-main.js');
 
   app.import('bower_components/slick-carousel/slick/slick.js');
