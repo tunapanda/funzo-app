@@ -13,7 +13,7 @@ export default Model.extend({
     if (typeof(encryption) === "string") {
     	encryption = encryption.toLowerCase();
     }
-    if (encryption === "aes") {
+    if (this.get('content') && encryption === "aes") {
 		let decrypted = CryptoJS.AES.decrypt(this.get('content'), 'averysecurekey');
 		return Ember.String.htmlSafe(decrypted.toString(CryptoJS.enc.Utf8));
 	} else {

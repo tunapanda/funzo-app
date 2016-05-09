@@ -33,12 +33,18 @@
   max-width: 100%;
 }
 
-.book-content {
+.book-container {
+  // margin: 20px;
+  overflow: hidden;
+
+  font-size: 14px;
+}
+.book-content, .paginator {
   color: #000;
   font-family: serif;
 
   display: flex;
-  flex: 1 0 47%;
+  flex: 1 0 50%;
   // flex-wrap: wrap;
 
   margin-left: 0;
@@ -73,11 +79,23 @@
     align-items: flex-start;
 
     padding: 2em;
-    margin: 7px;
+    margin: 10px;
     background-color: #fff;
+    box-sizing: border-box;
+    width: 50%;
+    height: 80vh;
 
-    width: 47%;
-    height: 70vw;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  @media (orientation: landscape) {
+    width: 50%;
+  }
+
+  @media (orientation: portrait) {
+    width: 100%;
   }
 
   .page-content {
@@ -126,5 +144,18 @@
     height: 100%;
     left: 0;
   }
+}
+
+.paginator {
+  position: absolute;
+  // margin-left: -10000px;
+
+  top: 0;
+  left:0;
+  display: block;
+  visibility: hidden;
+
+  pointer-events: none;
+  margin: 20px;
 }
 

@@ -1,9 +1,20 @@
-<div class="book-content">
-{{!-- {{#unless finishedPaginating}} --}}
-  {{html}}
-{{!-- {{else}}
-  {{#each pages as |page|}}
-    {{page}}
-  {{/else}}
-{{/unless}} --}}
+<div class="book-container" {{!-- {{action 'touchStart' on='touchStart'}}{{action 'touchEnd' on='touchEnd'}} {{action 'touchmove' on='touchmove'}} --}}>
+  <div class="book-content" style={{bookContentStyle}}>
+    {{!-- {{pagesHTML}} --}}
+    {{#each pages as |page|}}
+      <div class="page" style={{pageStyle}} {{action 'pageClick' page}}>
+        <div class="page-content">
+          {{page}}
+        </div>
+      </div>
+      {{else}}
+      <div class="page" style={{pageStyle}}>
+        <div class="page-content">
+        </div>
+      </div>
+    {{/each}}
+  </div>
+  <div class="paginator" style={{paginatorStyle}}>
+    {{html}}
+  </div>
 </div>
