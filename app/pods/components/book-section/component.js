@@ -70,7 +70,7 @@ export default Ember.Component.extend({
 
     this.set('touchStarted', false);
   },
-
+  
   actions: {
     pageClick(page) {
       console.log('page click');
@@ -92,6 +92,25 @@ export default Ember.Component.extend({
       }
 
     }
+  },
+
+  xAPI_emit(verb,object) {
+  	console.log ("TODO: log xAPI '" + verb + "' event for " + object);	  
+  },
+  
+  didInsertElement() {
+  	var c = this;
+  	Ember.$("a").each(function() {
+		var e = Ember.$(this);
+		if (e.attr("target") === undefined) {
+			e.attr("target","_blank");	
+		} 
+		console.log("This works... (" + e.attr("href") +")");
+  		e.click(function() {
+  			console.log("Why doesn't this work?");
+  			c.xAPI_emit("click", Ember.$(this).attr("href"));
+  		})
+  	})
   },
 
   didRender() {

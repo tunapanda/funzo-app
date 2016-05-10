@@ -2,7 +2,7 @@
   <div class="book-content" style={{bookContentStyle}}>
     {{!-- {{pagesHTML}} --}}
     {{#each pages as |page|}}
-      <div class="page" style={{pageStyle}} {{action 'pageClick' page}}>
+      <div class="page" style={{pageStyle}} {{!-- {{action 'pageClick' page}} --}}>
         <div class="page-content">
           {{page}}
         </div>
