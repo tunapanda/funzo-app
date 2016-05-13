@@ -1,6 +1,6 @@
-{{nav-bar back=(action 'back') logout=(action 'logout')}}
+{{nav-bar back=(action 'back') logout=(action 'logout') fixed=navbarFixed}}
 <main class="container-fluid">
-  {{liquid-outlet}}
+  <div class="row">{{liquid-outlet}}</div>
 </main>
 
 {{bootstrap-modal content=modal}}

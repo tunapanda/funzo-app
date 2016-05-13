@@ -1,20 +1,22 @@
-<div class="book-container" {{!-- {{action 'touchStart' on='touchStart'}}{{action 'touchEnd' on='touchEnd'}} {{action 'touchmove' on='touchmove'}} --}}>
-  <div class="book-content" style={{bookContentStyle}}>
-    {{!-- {{pagesHTML}} --}}
-    {{#each pages as |page|}}
-      <div class="page" style={{pageStyle}} {{action 'pageClick' page}}>
-        <div class="page-content">
-          {{page}}
+  <div class="book-container">
+  <div class="book-navigation book-navigation-left"{{action 'navPrev'}}></div>
+  <div class="book-navigation book-navigation-right"{{action 'navNext'}}></div>
+    <div class="book-content" style={{bookContentStyle}}>
+      {{!-- {{pagesHTML}} --}}
+      {{#each pages as |page|}}
+        <div class="page" style={{pageStyle}}>
+          <div class="page-content">
+            {{page}}
+          </div>
         </div>
-      </div>
-      {{else}}
-      <div class="page" style={{pageStyle}}>
-        <div class="page-content">
+        {{else}}
+        <div class="page" style={{pageStyle}}>
+          <div class="page-content">
+          </div>
         </div>
-      </div>
-    {{/each}}
+      {{/each}}
+    </div>
+    <div class="paginator" style={{paginatorStyle}}>
+      {{html}}
+    </div>
   </div>
-  <div class="paginator" style={{paginatorStyle}}>
-    {{html}}
-  </div>
-</div>

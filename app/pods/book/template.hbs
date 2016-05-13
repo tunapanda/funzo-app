@@ -1,1 +1,15 @@
 {{outlet}}
+<div class="navbar navbar-fixed-bottom">
+  <div class="container-fluid">
+    <form class="navbar-form navbar-left" role="search">
+      <div class="form-group">
+        <label for="">Section:</label>
+        <select name="section" class="change-section form-control" {{action 'changeSection' on='change'}}>
+          {{#each model.sections as |section|}}
+            <option value="{{section.permalink}}">{{section.title}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </form>
+  </div>
+</div>

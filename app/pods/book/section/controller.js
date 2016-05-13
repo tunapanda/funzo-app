@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  app: Ember.inject.controller('application'),
+
   queryParams: ['subsection'],
   subsection: null,
 
@@ -18,6 +20,14 @@ export default Ember.Controller.extend({
       if (prevSection) {
         this.transitionToRoute('book.section', this.get('model.book'), prevSection);
       }
+    },
+
+    fixNavbar() {
+      this.get('app').set('navbarFixed', true);
+    },
+
+    unfixNavbar() {
+      this.get('app').set('navbarFixed', false);
     }
   }
 });

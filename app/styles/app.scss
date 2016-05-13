@@ -8,6 +8,10 @@
 
 @import "layout/inputs";
 
+body {
+  overflow: hidden;
+}
+
 .certel-logo {
   margin-bottom: 3em;
 }
@@ -32,6 +36,8 @@
 .book-cover {
   max-width: 100%;
 }
+
+$page-navigate-margins: 50px;
 
 .book-container {
   // margin: 20px;
@@ -78,28 +84,38 @@
     flex-shrink: 0;
     align-items: flex-start;
 
-    padding: 2em;
-    margin: 10px;
+    padding: $page-navigate-margins;
+    padding-top: 85px;
+    // margin: 10px;
     background-color: #fff;
     box-sizing: border-box;
     width: 50%;
-    height: 80vh;
+    height: 100vh;
 
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
+
+    &:nth-child(even) {
+      padding-right: 60px;
+      border-left: 1px solid #e8e8e8;
+    }
+
+    &:nth-child(odd) {
+      padding-left: 60px;
+    }
   }
 
-  @media (orientation: landscape) {
-    width: 50%;
-  }
+  // @media (orientation: landscape) {
+  //   width: 50%;
+  // }
 
-  @media (orientation: portrait) {
-    width: 100%;
-  }
+  // @media (orientation: portrait) {
+  //   width: 100%;
+  // }
 
   .page-content {
-    max-width: 100%;
+    width: 100%;
   }
 
   img {
@@ -157,5 +173,30 @@
 
   pointer-events: none;
   margin: 20px;
+}
+
+.navbar-fixed-top, .navbar-fixed-bottom {
+  opacity: 0;
+
+  transition: opacity 0.3s ease-in-out; 
+  &:hover, &.show {
+    opacity: 0.6;
+  }
+}
+
+.book-navigation {
+  position: absolute;
+  height: 100vh;
+  top: 0;
+
+  width: $page-navigate-margins;
+}
+
+.book-navigation-left {
+  left: 0;
+}
+
+.book-navigation-right {
+  right: 0;
 }
 

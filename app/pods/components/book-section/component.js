@@ -37,7 +37,7 @@ export default Ember.Component.extend({
   }),
 
   pageStyle: Ember.computed('containerWidth', 'pageCount', 'pagesPerScreen', function() {
-    let width = (this.get('containerWidth') - (20 * this.get('pagesPerScreen'))) / this.get('pagesPerScreen');
+    let width = this.get('containerWidth') / this.get('pagesPerScreen'); // - (20 * this.get('pagesPerScreen')))
     return Ember.String.htmlSafe(`width:${width}px;`);
   }),
 
@@ -72,30 +72,66 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    pageClick(page) {
-      console.log('page click');
-      let index = this.get('pages').lastIndexOf(page);
-      let pagesPerScreen = this.get('pagesPerScreen');
+    // pageClick(page) {
+    //   console.log('page click');
+    //   let index = this.get('pages').lastIndexOf(page);
+    //   let pagesPerScreen = this.get('pagesPerScreen');
 
-      if (pagesPerScreen === 2) {
-        if (index === 0) {
-          this.sendAction('prevSection');
-        } else if (index === this.get('pageCount') - 1) {
-          this.sendAction('nextSection');
-        } else if (index % 2 === 0) {
-          this.incrementProperty('pageIndex', -pagesPerScreen);
-        } else {
-          this.incrementProperty('pageIndex', pagesPerScreen);
-        }
+    //   if (pagesPerScreen === 2) {
+    //     if (index === 0) {
+    //       this.sendAction('prevSection');
+    //     } else if (index === this.get('pageCount') - 1) {
+    //       this.sendAction('nextSection');
+    //     } else if (index % 2 === 0) {
+    //       this.incrementProperty('pageIndex', -pagesPerScreen);
+    //     } else {
+    //       this.incrementProperty('pageIndex', pagesPerScreen);
+    //     }
+    //   } else {
+    //     this.incrementProperty('pageIndex', pagesPerScreen);
+    //   }
+
+    // }
+    navPrev() {
+      let pagesPerScreen = this.get('pagesPerScreen');
+      let lastIndex = pagesPerScreen === 1 ? this.get('pageCount') : this.get('pageCount') - 1;
+
+      if (this.get('pageIndex') === lastIndex) {
+        this.sendAction('nextSection');
+      } else {
+        this.incrementProperty('pageIndex', -pagesPerScreen);
+      }
+    },
+
+    navNext() {
+      let pagesPerScreen = this.get('pagesPerScreen');
+      let lastIndex = pagesPerScreen === 1 ? this.get('pageCount') : this.get('pageCount') - 1;
+
+      if (this.get('pageIndex') === lastIndex) {
+        this.sendAction('nextSection');
       } else {
         this.incrementProperty('pageIndex', pagesPerScreen);
       }
-
     }
+  },
+
+  didInsertElement() {
+    this.attrs.fixNavbar();
+
+    Ember.$('.book-container').click((e) => {
+      if (e.target.tagname !== 'A' && !Ember.$(e.target).hasClass('book-navigation')) {
+        Ember.$('.navbar').toggleClass('show');
+      }
+    });
+  },
+
+  willDestroyElement() {
+    this.attrs.unfixNavbar();
   },
 
   didRender() {
     Ember.run.scheduleOnce('afterRender', this, 'calcContainerWidth');
+    Ember.$('.change-section').val(this.get('permalink'));
   },
 
   // Where is all starts
