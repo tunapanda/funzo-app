@@ -105,7 +105,7 @@ export default Ember.Component.extend({
 
     navNext() {
       let pagesPerScreen = this.get('pagesPerScreen');
-      let lastIndex = pagesPerScreen === 1 ? this.get('pageCount') : this.get('pageCount') - 1;
+      let lastIndex = this.get('pageCount') / pagesPerScreen;
 
       if (this.get('pageIndex') === lastIndex) {
         this.sendAction('nextSection');
@@ -169,7 +169,7 @@ export default Ember.Component.extend({
         content = paginator.children();
       }
 
-      // add an extra page if there's an on number of pages on the 2 page layout
+      // add an extra page if there's an odd number of pages on the 2 page layout
       if (this.get('pagesPerScreen') === 2 && this.get('pages.length') % 2 !== 0) {
         this.get('pages').addObject('');
       }
@@ -208,33 +208,6 @@ export default Ember.Component.extend({
     newPage += '</div>';
 
     return newPage;
-
-    // page.children().each((i, p) => {
-    //   let $p = Ember.$(p);
-    //   let height = $p.height();
-    //   if (height < maxHeight && $p.position().top + height > maxHeight) {
-    //     // if (count === 0 && $p[0].tagName === 'P' && !$p.find('img').length) {
-    //     //   let $p2 = $p.clone();
-    //     //   toMove.push($p2);
-
-    //     //   $p.addClass('overflow');
-    //     //   $p.wrapInner('<div class="overflow-content"></div>');
-
-    //     //   $p2.addClass('overflow');
-    //     //   $p2.wrapInner('<div class="overflow-content"></div>');
-
-    //     //   let space = $p.parent().parent().height() - $p.position().top + 28 + 7;
-    //     //   let lines = Math.round(space / $p.css('lineHeight').split('px')[0]);
-
-    //     //   $p.height(space);
-
-    //     //   $p2.find('.overflow-content').css('marginTop', `-${lines * 24}px`);
-    //     // } else {
-    //       toMove.push($p);
-    //     // }
-    //     count++;
-    //   }
-    // });
   },
 
   calcContainerWidth() {
