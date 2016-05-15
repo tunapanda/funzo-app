@@ -1,17 +1,7 @@
 /*jshint node:true*/
 /* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
-<<<<<<< HEAD
-// var mergeTrees = require('broccoli-merge-trees');
-// var Funnel = require('broccoli-funnel');
-var fs = require('fs');
 
-// Create an index of books available at build-time
-var coursesDir = 'public/content/courses';
-var bookList = fs.readdirSync(coursesDir).map(dir => {
-  var courseDir = `${coursesDir}/${dir}`;
-  if (!fs.statSync(courseDir).isDirectory()) {
-=======
 var mergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
 var fs = require('fs');
@@ -22,22 +12,14 @@ var bookList = [];
 bookList = fs.readdirSync(booksDir).map(d => {
   var bookDir = booksDir + '/' + d;
   if (!fs.statSync(bookDir).isDirectory()) {
->>>>>>> 41c380e6f98e4bc968c72e2b1866eeef15c90576
     // TODO: filter out nulls
     return;
   }
   // TODO: catch exceptions and filter out invalid JSON
-<<<<<<< HEAD
-  return JSON.parse(fs.readFileSync(courseDir + '/content.json'));
-}).filter(e => e);
-
-fs.writeFileSync(`${coursesDir}/index.json`, JSON.stringify(bookList));
-=======
   return JSON.parse(fs.readFileSync(bookDir + '/book.json'));
 }).filter(e => e);
 
 fs.writeFileSync(booksDir + '/local_books.json', JSON.stringify(bookList));
->>>>>>> 41c380e6f98e4bc968c72e2b1866eeef15c90576
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
