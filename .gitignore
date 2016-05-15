@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /tmp
+/public/content/books/local_books.json
 
 # dependencies
 /node_modules
@@ -16,6 +17,9 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
+*~
+*\#
+*.swp
 
 # iOS
 cordova/platforms/ios/build/
@@ -37,6 +41,7 @@ cordova/platforms/android/CordovaLib/gen
 cordova/platforms/android/CordovaLib/build
 cordova/platforms/android/CordovaLib/local.properties
 cordova/platforms/android/.gradle/2.2.1/taskArtifacts/
+cordova/platforms/android/CordovaLib/build/intermediates
 # wp8
 cordova/platforms/wp8/bin
 cordova/platforms/wp8/obj

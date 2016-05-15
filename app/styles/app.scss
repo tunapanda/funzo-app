@@ -8,6 +8,10 @@
 
 @import "layout/inputs";
 
+body {
+  overflow: hidden;
+}
+
 .certel-logo {
   margin-bottom: 3em;
 }
@@ -28,3 +32,171 @@
 .h5p-container {
   min-height: 250px;
 }
+
+.book-cover {
+  max-width: 100%;
+}
+
+$page-navigate-margins: 50px;
+
+.book-container {
+  // margin: 20px;
+  overflow: hidden;
+
+  font-size: 14px;
+}
+.book-content, .paginator {
+  color: #000;
+  font-family: serif;
+
+  display: flex;
+  flex: 1 0 50%;
+  // flex-wrap: wrap;
+
+  margin-left: 0;
+
+  transition: margin-left 0.3s ease-in-out;
+
+  h1, h2, p {
+    font-family: serif;
+    flex: 1 0 100%;
+  }
+
+  h2 {
+    font-size: 2em;
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 1.2em;
+    text-align: justify;
+
+    &.overflow {
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
+  .page {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-start;
+
+    padding: $page-navigate-margins;
+    padding-top: 85px;
+    // margin: 10px;
+    background-color: #fff;
+    box-sizing: border-box;
+    width: 50%;
+    height: 100vh;
+
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+
+    &:nth-child(even) {
+      padding-right: 60px;
+      border-left: 1px solid #e8e8e8;
+    }
+
+    &:nth-child(odd) {
+      padding-left: 60px;
+    }
+  }
+
+  // @media (orientation: landscape) {
+  //   width: 50%;
+  // }
+
+  // @media (orientation: portrait) {
+  //   width: 100%;
+  // }
+
+  .page-content {
+    width: 100%;
+  }
+
+  img {
+    max-width: 50%;
+    height: auto;
+  }
+
+  .text-center-center {
+    text-align: center;
+    margin-top: 50%;
+  }
+
+  .text-left-bottom {
+    flex: 1;
+    align-self: flex-end;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .title-heading {
+    font-size: 5em;
+    font-weight: bold;
+  }
+
+  table {
+    width: 100%;
+    font-size: 0.9em;
+  }
+
+  .slick-next {
+    z-index: 100;
+    width: 50%;
+    height: 100%;
+    right: 0;
+  }
+
+  .slick-prev {
+    z-index: 100;
+    width: 50%;
+    height: 100%;
+    left: 0;
+  }
+}
+
+.paginator {
+  position: absolute;
+  // margin-left: -10000px;
+
+  top: 0;
+  left:0;
+  display: block;
+  visibility: hidden;
+
+  pointer-events: none;
+  margin: 20px;
+}
+
+.navbar-fixed-top, .navbar-fixed-bottom {
+  opacity: 0;
+
+  transition: opacity 0.3s ease-in-out; 
+  &:hover, &.show {
+    opacity: 0.6;
+  }
+}
+
+.book-navigation {
+  position: absolute;
+  height: 100vh;
+  top: 0;
+
+  width: $page-navigate-margins;
+}
+
+.book-navigation-left {
+  left: 0;
+}
+
+.book-navigation-right {
+  right: 0;
+}
+

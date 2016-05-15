@@ -25,6 +25,18 @@ input[type=number].pin-digit {
   }
 }
 
+input.pin-fallback-input {
+  display: block;
+  -webkit-text-security: disc;
+  color: #222222;
+  width: 100%;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 .small input[type=number].pin-digit {
   width: 30px;
   height: 30px;
