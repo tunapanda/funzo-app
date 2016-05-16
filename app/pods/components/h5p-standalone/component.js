@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   currentUser: Ember.inject.service('currentUser'),
 
   didInsertElement() {
-    let h5pContent = `courses/${this.get('coursePath')}/modules/${this.get('modulePath')}`;
+    let h5pContent = `content/courses/${this.get('coursePath')}/modules/${this.get('modulePath')}`;
     h5pContent += `/${this.get('activityPath')}`;
 
     let frameJs = 'assets/h5p-standalone-frame.js';
