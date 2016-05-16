@@ -116,17 +116,11 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this.attrs.fixNavbar();
-
     Ember.$('.book-container').click((e) => {
       if (e.target.tagname !== 'A' && !Ember.$(e.target).hasClass('book-navigation')) {
         Ember.$('.navbar').toggleClass('show');
       }
     });
-  },
-
-  willDestroyElement() {
-    this.attrs.unfixNavbar();
   },
 
   didRender() {
