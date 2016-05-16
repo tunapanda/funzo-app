@@ -4,7 +4,8 @@ import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(AuthenticatedRouteMixin, NavBarTitleMixin, {
   navBarTitle: 'Course List',
-  
+  showBackButton: false,
+
   model() {
     return Ember.RSVP.hash({
       courses: this.store.findAll('course'),

@@ -2,18 +2,37 @@
   <div class="row">
     <form class="col-md-12"  {{action 'register' on='submit'}}>
       <div class="row">
-        <div class="form-group col-md-6">
-        <label for="first_name" data-error="{{errors.model.firstName.[0]}}">First Name</label>
-          {{input id="first_name" type="text" value=model.firstName classBinding=":form-control :validate errors.model.firstName:invalid"}}
+        <div class="col-md-6">
+          <div class="form-group {{if errors.model.firstName.length 'has-error'}}">
+            <label class="control-label" for="first_name">First Name</label>
+            {{input id="first_name" type="text" value=model.firstName class="form-control"}}
+            <span class="help-block">
+            {{#each errors.model.firstName as |error|}}
+              {{error}}
+            {{/each}}
+            </span>
+          </div>
         </div>
-        <div class="form-group col-md-6">
-        <label for="last_name" data-error="{{errors.model.lastName.[0]}}">Last Name</label>
-          {{input id="last_name" type="text" value=model.lastName classBinding=":form-control :validate errors.model.lastName:invalid"}}
+        <div class="col-md-6">
+          <div class="form-group {{if errors.model.lastName.length 'has-error'}}">
+          <label class="control-label" for="last_name" data-error="{{errors.model.lastName.[0]}}">Last Name</label>
+            {{input id="last_name" type="text" value=model.lastName class="form-control"}}
+            <span class="help-block">
+            {{#each errors.model.lastName as |error|}}
+              {{error}}
+            {{/each}}
+            </span>
+          </div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="pin" class="active">PIN</label>
-        {{pin-input pin=(mut model.pin) class="small" id="pin"}}
+      <div class="form-group {{if errors.model.lastName.length 'has-error'}}">
+        <label class="control-label" for="pin">PIN</label>
+        {{pin-input pin=(mut model.pin) id="pin"}}
+        <span class="help-block">
+        {{#each errors.model.pin as |error|}}
+          {{error}}
+        {{/each}}
+        </span>
       </div>
       <div class="form-group">
 
