@@ -8,29 +8,36 @@ export default Ember.Controller.extend(EmberValidations, {
   validations: {
     'model.firstName': {
       presence: {
-        if: 'submitted'
+        if: 'submitted',
+        message: 'First name is required.'
       },
       format: {
         with: /^[a-zA-Z ]+$/,
-        if: 'submitted'
+        if: 'submitted',
+        message: 'Must only be letters and spaces.'
       }
     },
     'model.lastName': {
       presence: {
-        if: 'submitted'
+        if: 'submitted',
+        message: 'Last name is required.'
       },
       format: {
         with: /^[a-zA-Z ]+$/,
-        if: 'submitted'
+        if: 'submitted',
+        message: 'Must only be letters and spaces.'
       }
     },
     'model.pin': {
       presence: {
-        if: 'submitted'
+        if: 'submitted',
+        message: 'A PIN is required.'
       },
       numericality: {
         onlyInteger: true,
-        greaterThan: 999 // at least 4 digits
+        greaterThan: 999, // at least 4 digits
+        if: 'submitted',
+        message: 'Must be at least 4 digits.'
       }
     }
   },
