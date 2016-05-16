@@ -12,5 +12,13 @@ export default Ember.Route.extend(NavBarTitleMixin, UnauthenticatedRouteMixin, {
 
   model() {
     return this.store.createRecord('user');
+  },
+
+  actions: {
+    willTransition() {
+      if (this.controller.get('model.isNew')) {
+        this.controller.get('model').deleteRecord();
+      }
+    }
   }
 });
