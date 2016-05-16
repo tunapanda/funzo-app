@@ -6,6 +6,8 @@ export default Ember.Route.extend(NavBarTitleMixin, UnauthenticatedRouteMixin, {
   session: Ember.inject.service('session'),
   store: Ember.inject.service('store'),
 
+  showBackButton: true,
+
   navBarTitle: 'Register',
 
   model() {
