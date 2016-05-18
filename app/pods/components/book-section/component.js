@@ -8,12 +8,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   pages: [''],
   pageIndex: 0,
-  pagesPerScreen: Ember.computed(function() {
-    if (window.innerHeight > window.innerWidth) {
-      return 1;
-    }
-    return 2;
-  }),
+  pagesPerScreen: 1,
+
   touchStarted: false,
 
   pageRenderChain: Ember.RSVP.resolve(),
@@ -121,11 +117,27 @@ export default Ember.Component.extend({
         Ember.$('.navbar').toggleClass('show');
       }
     });
+
+    Ember.$(window).on('onorientationchange', () => this.onScreenChange());
+    Ember.$(window).on('resize', () => this.onScreenChange());
+  },
+
+  onScreenChange() {
+    this.rerender();
+    this.$('.paginator').html(this.get('html').string);
+    // this.calcContainerWidth();
+    this.propertyDidChange('html');
   },
 
   didRender() {
-    Ember.run.scheduleOnce('afterRender', this, 'calcContainerWidth');
+    Ember.run.schedule('afterRender', this, 'calcContainerWidth');
     Ember.$('.change-section').val(this.get('permalink'));
+
+    if (window.innerHeight > window.innerWidth) {
+      this.set('pagesPerScreen', 1);
+    } else {
+      this.set('pagesPerScreen', 2);
+    }
   },
 
   // Where is all starts
