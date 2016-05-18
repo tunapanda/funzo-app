@@ -90,24 +90,25 @@ export default Ember.Component.extend({
     // }
     navPrev() {
       let pagesPerScreen = this.get('pagesPerScreen');
-      let lastIndex = pagesPerScreen === 1 ? this.get('pageCount') : this.get('pageCount') - 1;
 
-      if (this.get('pageIndex') === lastIndex) {
-        this.sendAction('nextSection');
+      if (this.get('pageIndex') === 0) {
+        this.sendAction('prevSection');
       } else {
         this.incrementProperty('pageIndex', -pagesPerScreen);
       }
+      console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
     },
 
     navNext() {
       let pagesPerScreen = this.get('pagesPerScreen');
-      let lastIndex = this.get('pageCount') / pagesPerScreen;
+      let lastIndex = this.get('pageCount') - 2;
 
       if (this.get('pageIndex') === lastIndex) {
         this.sendAction('nextSection');
       } else {
         this.incrementProperty('pageIndex', pagesPerScreen);
       }
+      console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
     }
   },
 
@@ -129,15 +130,18 @@ export default Ember.Component.extend({
     this.propertyDidChange('html');
   },
 
-  didRender() {
-    Ember.run.schedule('afterRender', this, 'calcContainerWidth');
-    Ember.$('.change-section').val(this.get('permalink'));
-
+  init() {
     if (window.innerHeight > window.innerWidth) {
       this.set('pagesPerScreen', 1);
     } else {
       this.set('pagesPerScreen', 2);
     }
+    return this._super();
+  },
+
+  didRender() {
+    Ember.run.schedule('afterRender', this, 'calcContainerWidth');
+    Ember.$('.change-section').val(this.get('permalink'));
   },
 
   // Where is all starts
@@ -151,8 +155,13 @@ export default Ember.Component.extend({
       // Skip pagination for sections like the frontmatter
       Ember.$(this.get('html').string).each((i, page) => {
         let pageContent = Ember.$(page).html();
-        this.get('pages').addObject(Ember.String.htmlSafe(pageContent));
+        if (pageContent) {
+          this.get('pages').addObject(Ember.String.htmlSafe(pageContent));
+        }
       });
+      if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
+        this.get('pages').addObject('');
+      }
     }
   }).on('init'),
 
@@ -176,7 +185,7 @@ export default Ember.Component.extend({
       }
 
       // add an extra page if there's an odd number of pages on the 2 page layout
-      if (this.get('pagesPerScreen') === 2 && this.get('pages.length') % 2 !== 0) {
+      if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
         this.get('pages').addObject('');
       }
     });
