@@ -5,9 +5,11 @@ export default Base.extend({
   store: Ember.inject.service('store'),
 
   restore(data) {
-    return new Ember.RSVP.Promise((resolve) => {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       return this.get('store').find('user', data.id).then((model) => {
         return resolve({ id: model.get('id') });
+      }, () => {
+        reject();
       });
     });
   },
