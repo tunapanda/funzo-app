@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 
+
 var update_courses = function(app) {
   return app.store.query('course', { permalink: 'funzo-CSE-1000' }).then((courses) => {
       if (!courses.get('length')) {
