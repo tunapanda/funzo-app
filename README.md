@@ -1,4 +1,4 @@
-# Funzo-app 0.1.1
+# Funzo-app 0.2.0
 
 [![Build Status](https://travis-ci.org/tunapanda/funzo-app.svg?branch=master)](https://travis-ci.org/tunapanda/funzo-app) [![Join the chat at https://gitter.im/tunapanda/funzo-app](https://badges.gitter.im/tunapanda/funzo-app.svg)](https://gitter.im/tunapanda/funzo-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -6,16 +6,13 @@ This is a preview of ember and H5P running as an app inside Phonegap/Cordova.
 
 See [here](https://github.com/tunapanda/funzo-app/wiki/Development-Guide) for information on how to contribute.
 
-Courses during development are added via bower E.G. `bower install tunapanda/funzo-CSE-1000 --save`.
-
-Prefix any new courses with `funzo` to ensure they are added during the build process.
+Courses during development are copied to `public/content/courses`, see https://https://github.com/tunapanda/funzo-CSE-1000 for an example course.
 
 ## Prerequisites
 
 You will need the following things properly installed on your computer.
 
 * [Git](http://git-scm.com/)
-* [Git-LFS](https://github.com/github/git-lfs)
 * [Node.js](http://nodejs.org/) (with NPM)
 * [Bower](http://bower.io/)
 * [Ember CLI](http://www.ember-cli.com/)
@@ -28,7 +25,6 @@ You will need the following things properly installed on your computer.
 * change into the new directory
 * `npm install`
 * `bower install`
-* `bower install git@github.com:tunapanda/funzo-CSE-1000 --save` the demo course (*be sure your github SSH key is loaded!*)
 
 ## Running / Development
 
