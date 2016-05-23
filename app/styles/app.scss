@@ -89,7 +89,7 @@ $page-navigate-margins: 50px;
     // margin: 10px;
     background-color: #fff;
     box-sizing: border-box;
-    width: 50%;
+    width: 100%;
     height: 100vh;
 
     cursor: pointer;
@@ -103,6 +103,10 @@ $page-navigate-margins: 50px;
 
     &:nth-child(odd) {
       padding-left: 60px;
+    }
+    
+    @media (min-width: $screen-md-min) {
+      width: 50%;
     }
   }
 
