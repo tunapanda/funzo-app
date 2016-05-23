@@ -1,6 +1,7 @@
 /*jshint node:true*/
 /* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+
 var mergeTrees = require('broccoli-merge-trees');
 var Funnel = require('broccoli-funnel');
 var fs = require('fs');
@@ -42,10 +43,10 @@ module.exports = function(defaults) {
     }
   });
 
-  var course = new Funnel('bower_components', {
-    include: ['funzo-*/**'],
-    destDir: 'courses/'
-  });
+  // var course = new Funnel('bower_components', {
+  //   include: ['funzo-*/**'],
+  //   destDir: 'courses/'
+  // });
 
   // var books = new Funnel('bower_components', {
   //   include: ['books/**'],
@@ -77,6 +78,6 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
   // return app.toTree();
-  // return app.toTree();
-  return mergeTrees([app.toTree(), course]);
+  return app.toTree();
+  // return mergeTrees([app.toTree(), course]);
 };
