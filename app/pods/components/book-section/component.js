@@ -44,7 +44,6 @@ export default Ember.Component.extend({
 
   touchMove(e) {
     let current = e.originalEvent.touches[0].pageX;
-    console.log(current);
     this.set('touchStarted', true);
     this.set('touchCurrentX', current);
   },
@@ -52,15 +51,14 @@ export default Ember.Component.extend({
   touchEnd() {
     let start = this.get('touchStartX');
     let current = this.get('touchCurrentX');
-    let pagesPerScreen = this.get('pagesPerScreen');
 
     if (this.get('touchStarted') && Math.abs(start - current) > 10) {
       if (start < current) {
         console.log('go back!');
-        this.incrementProperty('pageIndex', -pagesPerScreen);
+        this.navPrev();
       } else {
         console.log('go forward!');
-        this.incrementProperty('pageIndex', pagesPerScreen);
+        this.navNext();
       }
     }
 
@@ -68,48 +66,39 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    // pageClick(page) {
-    //   console.log('page click');
-    //   let index = this.get('pages').lastIndexOf(page);
-    //   let pagesPerScreen = this.get('pagesPerScreen');
-
-    //   if (pagesPerScreen === 2) {
-    //     if (index === 0) {
-    //       this.sendAction('prevSection');
-    //     } else if (index === this.get('pageCount') - 1) {
-    //       this.sendAction('nextSection');
-    //     } else if (index % 2 === 0) {
-    //       this.incrementProperty('pageIndex', -pagesPerScreen);
-    //     } else {
-    //       this.incrementProperty('pageIndex', pagesPerScreen);
-    //     }
-    //   } else {
-    //     this.incrementProperty('pageIndex', pagesPerScreen);
-    //   }
-
-    // }
     navPrev() {
-      let pagesPerScreen = this.get('pagesPerScreen');
-
-      if (this.get('pageIndex') === 0) {
-        this.sendAction('prevSection');
-      } else {
-        this.incrementProperty('pageIndex', -pagesPerScreen);
-      }
-      console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
+      this.navPrev();
     },
 
     navNext() {
-      let pagesPerScreen = this.get('pagesPerScreen');
-      let lastIndex = this.get('pageCount') - 2;
-
-      if (this.get('pageIndex') === lastIndex) {
-        this.sendAction('nextSection');
-      } else {
-        this.incrementProperty('pageIndex', pagesPerScreen);
-      }
-      console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
+      this.navNext();
     }
+  },
+
+  navPrev() {
+    let pagesPerScreen = this.get('pagesPerScreen');
+
+    if (this.get('pageIndex') === 0) {
+      this.$('.book-loading-overlay').show();
+      Ember.run.later(() => this.sendAction('prevSection'), 100);
+    } else {
+      this.incrementProperty('pageIndex', -pagesPerScreen);
+    }
+    console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
+  },
+
+  navNext() {
+    let pagesPerScreen = this.get('pagesPerScreen');
+    let lastIndex = this.get('pageCount') - pagesPerScreen;
+
+    if (this.get('pageIndex') === lastIndex) {
+      this.$('.book-loading-overlay').show();
+      Ember.run.later(() => this.sendAction('nextSection'), 100);
+
+    } else {
+      this.incrementProperty('pageIndex', pagesPerScreen);
+    }
+    console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
   },
 
   didInsertElement() {
@@ -142,6 +131,11 @@ export default Ember.Component.extend({
   didRender() {
     Ember.run.schedule('afterRender', this, 'calcContainerWidth');
     Ember.$('.change-section').val(this.get('permalink'));
+
+  },
+
+  didFinishRendering() {
+    Ember.$('.book-loading-overlay').hide();
   },
 
   // Where is all starts
@@ -158,6 +152,7 @@ export default Ember.Component.extend({
         if (pageContent) {
           this.get('pages').addObject(Ember.String.htmlSafe(pageContent));
         }
+        this.didFinishRendering();
       });
       if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
         this.get('pages').addObject('');
@@ -188,6 +183,7 @@ export default Ember.Component.extend({
       if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
         this.get('pages').addObject('');
       }
+      this.didFinishRendering();
     });
   },
 
