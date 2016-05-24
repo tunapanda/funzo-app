@@ -1,10 +1,20 @@
-.form-group input.form-control {
-  background: #fff;
-  padding: 7px;
-}
+// .form-group input.form-control {
+//   background: #fff;
+//   padding: 7px;
+// }
 
-.form-group .checkbox label, .form-group .radio label, .form-group label {
-    color: #ffffff;
+// .form-group.has-error .form-control {
+//     border-color: #a94442;
+//     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+//     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+// }
+
+// .form-group .checkbox label, .form-group .radio label, .form-group label {
+//     color: #ffffff;
+// }
+
+.form-group .help-block {
+    display: block !important;
 }
 
 input[type=number].pin-digit {
@@ -17,6 +27,21 @@ input[type=number].pin-digit {
   font-size: 6em;
   text-align: center;
   color: #222222;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+input.pin-fallback-input {
+  display: block;
+  -webkit-text-security: disc;
+  color: #222222;
+  width: 100%;
+  line-height: 1.8em;
+  border-radius: 0;
 
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {

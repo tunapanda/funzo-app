@@ -1,4 +1,6 @@
-{{input type="number" class="pin-digit digit-1" value=digit1}}
+{{!-- {{input type="number" class="pin-digit digit-1" value=digit1}}
 {{input type="number" class="pin-digit" value=digit2}}
 {{input type="number" class="pin-digit" value=digit3}}
 {{input type="number" class="pin-digit last-digit" value=digit4}}
+ --}}
+{{input type="number" min="1000" max="9999" value=pin class="form-control pin-fallback-input" inputmode="numeric" pattern="[0-9]*"}}

@@ -8,12 +8,8 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   pages: [''],
   pageIndex: 0,
-  pagesPerScreen: Ember.computed(function() {
-    if (window.innerHeight > window.innerWidth) {
-      return 1;
-    }
-    return 2;
-  }),
+  pagesPerScreen: 1,
+
   touchStarted: false,
 
   pageRenderChain: Ember.RSVP.resolve(),
@@ -37,7 +33,7 @@ export default Ember.Component.extend({
   }),
 
   pageStyle: Ember.computed('containerWidth', 'pageCount', 'pagesPerScreen', function() {
-    let width = (this.get('containerWidth') - (20 * this.get('pagesPerScreen'))) / this.get('pagesPerScreen');
+    let width = this.get('containerWidth') / this.get('pagesPerScreen'); // - (20 * this.get('pagesPerScreen')))
     return Ember.String.htmlSafe(`width:${width}px;`);
   }),
 
@@ -48,7 +44,6 @@ export default Ember.Component.extend({
 
   touchMove(e) {
     let current = e.originalEvent.touches[0].pageX;
-    console.log(current);
     this.set('touchStarted', true);
     this.set('touchCurrentX', current);
   },
@@ -56,15 +51,14 @@ export default Ember.Component.extend({
   touchEnd() {
     let start = this.get('touchStartX');
     let current = this.get('touchCurrentX');
-    let pagesPerScreen = this.get('pagesPerScreen');
 
     if (this.get('touchStarted') && Math.abs(start - current) > 10) {
       if (start < current) {
         console.log('go back!');
-        this.incrementProperty('pageIndex', -pagesPerScreen);
+        this.navPrev();
       } else {
         console.log('go forward!');
-        this.incrementProperty('pageIndex', pagesPerScreen);
+        this.navNext();
       }
     }
 
@@ -72,26 +66,66 @@ export default Ember.Component.extend({
   },
   
   actions: {
-    pageClick(page) {
-      console.log('page click');
-      let index = this.get('pages').lastIndexOf(page);
-      let pagesPerScreen = this.get('pagesPerScreen');
+    navPrev() {
+      this.navPrev();
+    },
 
-      if (pagesPerScreen === 2) {
-        if (index === 0) {
-          this.sendAction('prevSection');
-        } else if (index === this.get('pageCount') - 1) {
-          this.sendAction('nextSection');
-        } else if (index % 2 === 0) {
-          this.incrementProperty('pageIndex', -pagesPerScreen);
-        } else {
-          this.incrementProperty('pageIndex', pagesPerScreen);
-        }
-      } else {
-        this.incrementProperty('pageIndex', pagesPerScreen);
-      }
-
+    navNext() {
+      this.navNext();
     }
+  },
+
+  navPrev() {
+    let pagesPerScreen = this.get('pagesPerScreen');
+
+    if (this.get('pageIndex') === 0) {
+      this.$('.book-loading-overlay').show();
+      Ember.run.later(() => this.sendAction('prevSection'), 100);
+    } else {
+      this.incrementProperty('pageIndex', -pagesPerScreen);
+    }
+    console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
+  },
+
+  navNext() {
+    let pagesPerScreen = this.get('pagesPerScreen');
+    let lastIndex = this.get('pageCount') - pagesPerScreen;
+
+    if (this.get('pageIndex') === lastIndex) {
+      this.$('.book-loading-overlay').show();
+      Ember.run.later(() => this.sendAction('nextSection'), 100);
+
+    } else {
+      this.incrementProperty('pageIndex', pagesPerScreen);
+    }
+    console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
+  },
+
+  didInsertElement() {
+    Ember.$('.book-container').click((e) => {
+      if (e.target.tagname !== 'A' && !Ember.$(e.target).hasClass('book-navigation')) {
+        Ember.$('.navbar').toggleClass('show');
+      }
+    });
+
+    Ember.$(window).on('onorientationchange', () => this.onScreenChange());
+    Ember.$(window).on('resize', () => this.onScreenChange());
+  },
+
+  onScreenChange() {
+    this.rerender();
+    this.$('.paginator').html(this.get('html').string);
+    // this.calcContainerWidth();
+    this.propertyDidChange('html');
+  },
+
+  init() {
+    if (window.innerHeight > window.innerWidth) {
+      this.set('pagesPerScreen', 1);
+    } else {
+      this.set('pagesPerScreen', 2);
+    }
+    return this._super();
   },
 
   xAPI_emit(verb,object) {
@@ -114,7 +148,13 @@ export default Ember.Component.extend({
   },
 
   didRender() {
-    Ember.run.scheduleOnce('afterRender', this, 'calcContainerWidth');
+    Ember.run.schedule('afterRender', this, 'calcContainerWidth');
+    Ember.$('.change-section').val(this.get('permalink'));
+
+  },
+
+  didFinishRendering() {
+    Ember.$('.book-loading-overlay').hide();
   },
 
   // Where is all starts
@@ -128,8 +168,14 @@ export default Ember.Component.extend({
       // Skip pagination for sections like the frontmatter
       Ember.$(this.get('html').string).each((i, page) => {
         let pageContent = Ember.$(page).html();
-        this.get('pages').addObject(Ember.String.htmlSafe(pageContent));
+        if (pageContent) {
+          this.get('pages').addObject(Ember.String.htmlSafe(pageContent));
+        }
+        this.didFinishRendering();
       });
+      if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
+        this.get('pages').addObject('');
+      }
     }
   }).on('init'),
 
@@ -152,10 +198,11 @@ export default Ember.Component.extend({
         content = paginator.children();
       }
 
-      // add an extra page if there's an on number of pages on the 2 page layout
-      if (this.get('pagesPerScreen') === 2 && this.get('pages.length') % 2 !== 0) {
+      // add an extra page if there's an odd number of pages on the 2 page layout
+      if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
         this.get('pages').addObject('');
       }
+      this.didFinishRendering();
     });
   },
 
@@ -191,33 +238,6 @@ export default Ember.Component.extend({
     newPage += '</div>';
 
     return newPage;
-
-    // page.children().each((i, p) => {
-    //   let $p = Ember.$(p);
-    //   let height = $p.height();
-    //   if (height < maxHeight && $p.position().top + height > maxHeight) {
-    //     // if (count === 0 && $p[0].tagName === 'P' && !$p.find('img').length) {
-    //     //   let $p2 = $p.clone();
-    //     //   toMove.push($p2);
-
-    //     //   $p.addClass('overflow');
-    //     //   $p.wrapInner('<div class="overflow-content"></div>');
-
-    //     //   $p2.addClass('overflow');
-    //     //   $p2.wrapInner('<div class="overflow-content"></div>');
-
-    //     //   let space = $p.parent().parent().height() - $p.position().top + 28 + 7;
-    //     //   let lines = Math.round(space / $p.css('lineHeight').split('px')[0]);
-
-    //     //   $p.height(space);
-
-    //     //   $p2.find('.overflow-content').css('marginTop', `-${lines * 24}px`);
-    //     // } else {
-    //       toMove.push($p);
-    //     // }
-    //     count++;
-    //   }
-    // });
   },
 
   calcContainerWidth() {

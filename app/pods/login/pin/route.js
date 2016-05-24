@@ -3,6 +3,7 @@ import UnauthenticatedRouteMixin from 'ember-simple-auth/mixins/unauthenticated-
 import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, UnauthenticatedRouteMixin, {
+  showBackButton: true,
   navBarTitle: 'Login > PIN',
   activate() {
     this.set('showBackButton', true);

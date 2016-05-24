@@ -3,7 +3,6 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   queryParams: ['subsection'],
   subsection: null,
-
   actions: {
     nextSection() {
       let index = this.get('model.book.sections').lastIndexOf(this.get('model'));
