@@ -101,8 +101,12 @@ export default Ember.Component.extend({
     console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
   },
 
+  xAPI_emit(verb,object) {
+    console.log ("TODO: log xAPI '" + verb + "' event for " + object);    
+  },
+
   didInsertElement() {
-  	var c = this;
+    var c = this;
     Ember.$('.book-container').click((e) => {
       if (e.target.tagname !== 'A' && !Ember.$(e.target).hasClass('book-navigation')) {
         Ember.$('.navbar').toggleClass('show');
@@ -112,17 +116,16 @@ export default Ember.Component.extend({
     Ember.$(window).on('onorientationchange', () => this.onScreenChange());
     Ember.$(window).on('resize', () => this.onScreenChange());
 
-  	Ember.$("a").each(function() {
-		var e = Ember.$(this);
-		if (e.attr("target") === undefined) {
-			e.attr("target","_blank");	
-		} 
-		console.log("This works... (" + e.attr("href") +")");
-  		e.click(function() {
-  			console.log("Why doesn't this work?");
-  			c.xAPI_emit("click", Ember.$(this).attr("href"));
-  		})
-  	})
+    Ember.$(".book-content").on('click', 'a', (e) => {
+        var a = Ember.$(e.target);
+        if (a.attr("href") === undefined) {
+            return;
+        }
+        if (a.attr("target") === undefined) {
+            a.attr("target","_blank");  
+        } 
+        c.xAPI_emit("click", a.attr("href"));
+    })
   },
 
   onScreenChange() {
@@ -139,10 +142,6 @@ export default Ember.Component.extend({
       this.set('pagesPerScreen', 2);
     }
     return this._super();
-  },
-
-  xAPI_emit(verb,object) {
-  	console.log ("TODO: log xAPI '" + verb + "' event for " + object);	  
   },
 
   didRender() {
