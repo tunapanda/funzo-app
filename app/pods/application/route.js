@@ -117,6 +117,7 @@ var update_books = function(app) {
 };
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
+  currentUser: Ember.inject.service('currentUser'),
   session: Ember.inject.service('session'),
   // beforeModel() {
   //   var res = Ember.RSVP.hash({
@@ -125,7 +126,27 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   //   });
   //   return res;
   // },
-
+  
+  recordxAPI(statement_data) {
+    if (typeof(statement_data.version) === "undefined") {
+      statement_data.version = "1.0.0";
+    }
+    if (typeof(statement_data.actor) === "undefined") {
+      statement_data.actor = {
+          "objectType": "Agent",
+          "account": {
+              id: this.get('currentUser.model.id'),
+              name: this.get('currentUser.model.fullName'),
+              "homePage": 'http://tunapanda.org'
+          }
+      };
+    }
+    let statement = this.store.createRecord('x-api-statement', { 
+        content: statement_data, 
+        user: this.get('currentUser.model') });
+    statement.save();
+  },
+  
   actions: {
     back() {
       history.back();
@@ -133,6 +154,24 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
     openLink(url) {
       window.open(url, '_system');
+    },
+    
+    xAPIOpenLink(event) {
+      var statement_data = {
+        "verb": {
+            "id": "http://adlnet.gov/expapi/verbs/experienced",
+            "display": {
+                "en-US": "experienced"
+            }
+        },
+        "object": {
+            "id":  event.target.href
+        },
+        "context": {
+            "platform": event.target.baseURI
+        }
+      };
+      this.recordxAPI(statement_data);
     }
   }
 });

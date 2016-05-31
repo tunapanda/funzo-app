@@ -6,6 +6,7 @@ import Ember from 'ember';
 // * nicer section transitions (make seamless)
 
 export default Ember.Component.extend({
+  currentUser: Ember.inject.service('currentUser'),
   pages: [''],
   pageIndex: 0,
   pagesPerScreen: 1,
@@ -101,10 +102,6 @@ export default Ember.Component.extend({
     console.log('page %s of %s', this.get('pageIndex'), this.get('pageCount'));
   },
 
-  xAPI_emit(verb,object) {
-    console.log ("TODO: log xAPI '" + verb + "' event for " + object);    
-  },
-
   didInsertElement() {
     var c = this;
     Ember.$('.book-container').click((e) => {
@@ -124,7 +121,7 @@ export default Ember.Component.extend({
         if (a.attr("target") === undefined) {
             a.attr("target","_blank");  
         } 
-        c.xAPI_emit("click", a.attr("href"));
+        c.sendAction("onOpenLink",e);
     })
   },
 
