@@ -17,6 +17,15 @@
     display: block !important;
 }
 
+.form-group.is-focused {
+    //.variations(unquote(".is-focused label.control-label"), color, $brand-primary); // focused label color variations
+    label,
+    label.control-label {
+      color: inherit;
+    }
+}
+
+
 input[type=number].pin-digit {
   -webkit-text-security: disc;
   width: 20%;
