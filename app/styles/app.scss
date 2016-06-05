@@ -184,6 +184,26 @@ $page-navigate-margins: 50px;
   }
 }
 
+.navbar-fixed-left, .navbar-fixed-right {
+  background-color: inherit;
+  color: inherit;
+  opacity: 0;
+  height: 100%;
+  
+  .nav-spacer {
+    height: 50%;
+  }  
+  
+  .nav-link {
+    cursor: pointer;
+  }
+  
+  transition: opacity 0.3s ease-in-out; 
+  &:hover, &.show {
+    opacity: 0.6;
+  }
+}
+
 .book-navigation {
   position: absolute;
   height: 100vh;
