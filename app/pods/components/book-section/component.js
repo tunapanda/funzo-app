@@ -108,6 +108,12 @@ export default Ember.Component.extend({
       }
     });
 
+    Ember.$('.book-container').on('click', '.internal-link', (e) => {
+      e.preventDefault();
+      let permalink = Ember.$(e.target).data('permalink');
+      this.sendAction('changeSection', permalink);
+    });
+
     Ember.$(window).on('onorientationchange', () => this.onScreenChange());
     Ember.$(window).on('resize', () => this.onScreenChange());
   },
@@ -152,7 +158,7 @@ export default Ember.Component.extend({
         if (pageContent) {
           this.get('pages').addObject(Ember.String.htmlSafe(pageContent));
         }
-        this.didFinishRendering();
+        Ember.run.scheduleOnce('afterRender', this, 'didFinishRendering');
       });
       if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
         this.get('pages').addObject('');
@@ -183,7 +189,7 @@ export default Ember.Component.extend({
       if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
         this.get('pages').addObject('');
       }
-      this.didFinishRendering();
+      Ember.run.scheduleOnce('afterRender', this, 'didFinishRendering');
     });
   },
 
