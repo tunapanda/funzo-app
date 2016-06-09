@@ -5,8 +5,18 @@
   </div>
   
   <div class="book-container">
-    <div class="book-navigation book-navigation-left"{{action 'navPrev'}}></div>
-    <div class="book-navigation book-navigation-right"{{action 'navNext'}}></div>
+    <div class="book-navigation book-navigation-left"{{action 'navPrev'}}>
+        <div class="navbar navbar-fixed-left">
+            <div class="nav-spacer" />
+            <i class="nav-link material-icons">arrow_back</i>
+        </div>
+    </div>
+    <div class="book-navigation book-navigation-right"{{action 'navNext'}}>
+        <div class="navbar navbar-fixed-left">
+            <div class="nav-spacer" />
+            <i class="nav-link material-icons">arrow_forward</i>
+        </div>
+    </div>
     <div class="book-content" style={{bookContentStyle}}>
       {{!-- {{pagesHTML}} --}}
       {{#each pages as |page|}}
