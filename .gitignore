@@ -38,6 +38,7 @@ cordova/platforms/android/CordovaLib/ant-build
 cordova/platforms/android/CordovaLib/ant-gen
 cordova/platforms/android/CordovaLib/bin
 cordova/platforms/android/CordovaLib/gen
+cordova/platforms/android/CordovaLib/build
 cordova/platforms/android/CordovaLib/local.properties
 cordova/platforms/android/.gradle/2.2.1/taskArtifacts/
 cordova/platforms/android/CordovaLib/build/intermediates
@@ -52,4 +53,4 @@ cordova/platforms/wp8/*.suo
 cordova/platforms/wp8/*.csproj.user
 
 # funzo
-public/courses
+public/content/courses

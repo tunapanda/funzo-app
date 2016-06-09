@@ -1,24 +1,38 @@
 /*jshint node:true*/
 /* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
-var mergeTrees = require('broccoli-merge-trees');
-var Funnel = require('broccoli-funnel');
 var fs = require('fs');
 
-// Create an index of books available at build-time
-var booksDir = 'public/content/books';
-var bookList = [];
-bookList = fs.readdirSync(booksDir).map(d => {
-  var bookDir = booksDir + '/' + d;
-  if (!fs.statSync(bookDir).isDirectory()) {
-    // TODO: filter out nulls
-    return;
-  }
-  // TODO: catch exceptions and filter out invalid JSON
-  return JSON.parse(fs.readFileSync(bookDir + '/book.json'));
-}).filter(e => e);
+function createIfNotExists(directory, callback) {
+  fs.stat(directory, function(err) {
+    // Check if error defined and the error code is "not exists"
+    if (err && err.code === 'ENOENT') {
+      // Create the directory, call the callback.
+      fs.mkdir(directory, callback);
+    } else {
+      // just in case there was a different error:
+      callback(err);
+    }
+    callback();
+  });
+}
 
-fs.writeFileSync(booksDir + '/local_books.json', JSON.stringify(bookList));
+// Create an index of books available at build-time
+var coursesDir = 'public/content/courses';
+
+createIfNotExists(coursesDir, () => {
+  var bookList = fs.readdirSync(coursesDir).map(dir => {
+    var courseDir = `${coursesDir}/${dir}`;
+    if (!fs.statSync(courseDir).isDirectory()) {
+      // TODO: filter out nulls
+      return;
+    }
+    // TODO: catch exceptions and filter out invalid JSON
+    return JSON.parse(fs.readFileSync(courseDir + '/content.json'));
+  }).filter(e => e);
+
+  fs.writeFileSync(`${coursesDir}/index.json`, JSON.stringify(bookList));
+});
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
@@ -42,10 +56,10 @@ module.exports = function(defaults) {
     }
   });
 
-  var course = new Funnel('bower_components', {
-    include: ['funzo-*/**'],
-    destDir: 'courses/'
-  });
+  // var course = new Funnel('bower_components', {
+  //   include: ['funzo-*/**'],
+  //   destDir: 'courses/'
+  // });
 
   // var books = new Funnel('bower_components', {
   //   include: ['books/**'],
@@ -77,6 +91,6 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
   // return app.toTree();
-  // return app.toTree();
-  return mergeTrees([app.toTree(), course]);
+  return app.toTree();
+  // return mergeTrees([app.toTree(), course]);
 };
