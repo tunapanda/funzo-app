@@ -103,8 +103,8 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     Ember.$('.book-container').click((e) => {
-      if ( !(
-        e.target.tagname == 'A' || 
+      if (!(
+        e.target.tagname === 'A' ||
         Ember.$(e.target).hasClass('book-navigation') ||
         Ember.$(e.target).parents().hasClass('book-navigation')
         )) {
@@ -233,7 +233,7 @@ export default Ember.Component.extend({
 
   calcContainerWidth() {
     this.set('containerWidth', this.$('.book-container').width());
-  },
+  }
 
   // onSubsection: Ember.observer('subsection', function() {
   //   if (this.get('subsection')) {
