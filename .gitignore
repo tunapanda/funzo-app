@@ -41,6 +41,8 @@ cordova/platforms/android/CordovaLib/gen
 cordova/platforms/android/CordovaLib/local.properties
 cordova/platforms/android/.gradle/2.2.1/taskArtifacts/
 cordova/platforms/android/CordovaLib/build/intermediates
+cordova/platforms/android/CordovaLib/build/outputs/aar
+
 # wp8
 cordova/platforms/wp8/bin
 cordova/platforms/wp8/obj
