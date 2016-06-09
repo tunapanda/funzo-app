@@ -1,7 +1,7 @@
 {
   "name": "funzo-app",
   "dependencies": {
-    "ember": "2.3.1",
+    "ember": "2.5.0",
     "ember-cli-shims": "0.1.0",
     "ember-cli-test-loader": "0.2.2",
     "ember-load-initializers": "0.1.7",
@@ -14,7 +14,6 @@
     "hammer-time": "1.0.0",
     "pouchdb": "^3.5.0",
     "relational-pouch": "^1.3.2",
-    "Materialize": "materialize#~0.97.5",
     "tincan": "~0.41.0",
     "bootstrap": "~3.3.6",
     "bootstrap-material-design": "~0.5.8"

@@ -8,7 +8,7 @@ export default Ember.Controller.extend({
       .then(() => this.transitionToRoute('index'));
     }
   },
-  
+
   _pin: Ember.observer('pin', function() {
     console.log(this.get('pin'));
   })
