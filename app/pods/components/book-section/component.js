@@ -122,7 +122,7 @@ export default Ember.Component.extend({
             a.attr("target","_blank");  
         } 
         c.sendAction("onOpenLink",e);
-    })
+    });
   },
 
   onScreenChange() {

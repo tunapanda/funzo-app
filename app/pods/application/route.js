@@ -117,34 +117,40 @@ var update_books = function(app) {
 };
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
-  currentUser: Ember.inject.service('currentUser'),
   session: Ember.inject.service('session'),
-  // beforeModel() {
-  //   var res = Ember.RSVP.hash({
-  //      //update_books: update_books(this),
-  //      update_courses: update_courses(this)
-  //   });
-  //   return res;
-  // },
+  currentUser: Ember.inject.service('currentUser'),
+  
   
   recordxAPI(statement_data) {
-    if (typeof(statement_data.version) === "undefined") {
-      statement_data.version = "1.0.0";
-    }
-    if (typeof(statement_data.actor) === "undefined") {
-      statement_data.actor = {
-          "objectType": "Agent",
-          "account": {
-              id: this.get('currentUser.model.id'),
-              name: this.get('currentUser.model.fullName'),
-              "homePage": 'http://tunapanda.org'
+    return new Ember.RSVP.Promise((resolve,reject) => {
+      /* TODO: it's wasteful to fetch user data now, since we
+               might not use it (see the second `if` below),
+               but I don't see another way to ensure that
+               `statement.save()` doesn't get called before
+               the promise resolves, in case we do need it.
+               Maybe there's a better way though?          */
+      var user = this.get('currentUser.model');
+      resolve(user);
+    }).then((user) => {
+      if (typeof(statement_data.version) === "undefined") {
+        statement_data.version = "1.0.0";
+      }
+      if (typeof(statement_data.actor) === "undefined") {
+        statement_data.actor = {
+          "objectType":"Agent", 
+          "account":{
+            "id":   user.get('id'),
+            "name": user.get('fullName'),
+            "homepage": 'http://tunapanda.org'
           }
-      };
-    }
-    let statement = this.store.createRecord('x-api-statement', { 
-        content: statement_data, 
-        user: this.get('currentUser.model') });
-    statement.save();
+        }
+      }
+      let statement = this.store.createRecord('x-api-statement', { 
+          content: statement_data, 
+          user: this.get('currentUser.model') 
+      });
+      return statement;
+   }).then((statement) => {statement.save()});
   },
   
   actions: {
