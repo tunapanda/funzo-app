@@ -141,7 +141,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           "account":{
             "id":   user.get('id'),
             "name": user.get('fullName'),
-            "homepage": 'http://tunapanda.org'
+            "homePage": 'http://tunapanda.org'
           }
         }
       }
