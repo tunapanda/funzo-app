@@ -45,17 +45,30 @@ $page-navigate-margins: 50px;
 
   font-size: 14px;
 }
-.book-content, .paginator {
+.book-content-container {
   color: #000;
   font-family: serif;
 
-  display: flex;
-  flex: 1 0 50%;
+  // display: flex;
+  // flex: 1 0 50%;
   // flex-wrap: wrap;
+
+  padding: 40px;
+  box-sizing: border-box;
+  height: 100vh;
 
   margin-left: 0;
 
-  transition: margin-left 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+
+  .book-content {
+    column-fill: auto;
+    height: 100%;
+    box-sizing: border-box;
+    column-width: 500px; // basically breakpoint between 2 or 1 pages per screen
+    column-gap: 80px;
+    // column-rule: 1px dotted #ddd;
+  }
 
   h1, h2, p {
     font-family: serif;
@@ -79,32 +92,32 @@ $page-navigate-margins: 50px;
     }
   }
 
-  .page {
-    display: flex;
-    flex-shrink: 0;
-    align-items: flex-start;
+  // .page {
+  //   display: flex;
+  //   flex-shrink: 0;
+  //   align-items: flex-start;
 
-    padding: $page-navigate-margins;
-    padding-top: 85px;
-    // margin: 10px;
-    background-color: #fff;
-    box-sizing: border-box;
-    width: 50%;
-    height: 100vh;
+  //   padding: $page-navigate-margins;
+  //   padding-top: 85px;
+  //   // margin: 10px;
+  //   background-color: #fff;
+  //   box-sizing: border-box;
+  //   width: 50%;
+  //   height: 100vh;
 
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
+  //   cursor: pointer;
+  //   user-select: none;
+  //   -webkit-user-select: none;
 
-    &:nth-child(even) {
-      padding-right: 60px;
-      border-left: 1px solid #e8e8e8;
-    }
+  //   &:nth-child(even) {
+  //     padding-right: 60px;
+  //     border-left: 1px solid #e8e8e8;
+  //   }
 
-    &:nth-child(odd) {
-      padding-left: 60px;
-    }
-  }
+  //   &:nth-child(odd) {
+  //     padding-left: 60px;
+  //   }
+  // }
 
   // @media (orientation: landscape) {
   //   width: 50%;
@@ -114,9 +127,9 @@ $page-navigate-margins: 50px;
   //   width: 100%;
   // }
 
-  .page-content {
-    width: 100%;
-  }
+  // .page-content {
+  //   width: 100%;
+  // }
 
   img {
     max-width: 50%;
@@ -207,7 +220,7 @@ $page-navigate-margins: 50px;
   position: absolute;
   height: 100vh;
   top: 0;
-
+  z-index: 100;
   width: $page-navigate-margins;
 }
 
