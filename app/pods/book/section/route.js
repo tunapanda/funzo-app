@@ -7,6 +7,10 @@ export default Ember.Route.extend(NavBarTitleMixin, {
     return this.store.queryRecord('section', { book_id: this.paramsFor('book').book_id, section_id: params.section_id });
   },
 
+  afterModel(model) {
+    this.controllerFor('book').set('currentSection', model);
+  },
+
   actions: {
     didTransition() {
       this.controllerFor('application').set('navbarFixed', true);

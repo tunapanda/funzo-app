@@ -49,6 +49,8 @@ $page-navigate-margins: 50px;
   color: #000;
   font-family: serif;
 
+  overflow-x: scroll;
+
   // display: flex;
   // flex: 1 0 50%;
   // flex-wrap: wrap;
@@ -65,9 +67,16 @@ $page-navigate-margins: 50px;
     column-fill: auto;
     height: 100%;
     box-sizing: border-box;
-    column-width: 500px; // basically breakpoint between 2 or 1 pages per screen
+    column-width: 400px; // basically breakpoint between 2 or 1 pages per screen
     column-gap: 80px;
-    // column-rule: 1px dotted #ddd;
+  }
+
+  .section { // should be called section now
+    break-after: column;
+  }
+
+  .section-frontmatter .page {
+    break-after: column;
   }
 
   h1, h2, p {
