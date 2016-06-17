@@ -194,7 +194,7 @@ export default Ember.Component.extend({
     //     this.get('pages').addObject('');
     //   }
     this.set('pageWidth', this.$('.book-content p').width());
-      Ember.run.scheduleOnce('afterRender', this, 'didFinishRendering');
+    Ember.run.scheduleOnce('afterRender', this, 'didFinishRendering');
     // });
   },
 
