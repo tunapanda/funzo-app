@@ -5,5 +5,6 @@ export default Ember.Service.extend({
   title: '',
   content: '',
   cancel: '',
-  ok: ''
+  ok: '',
+  args: {}
 });

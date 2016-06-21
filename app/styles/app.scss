@@ -192,6 +192,17 @@ $page-navigate-margins: 50px;
   }
 }
 
+.book-image-modal {
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.modal {
+  padding: 40px;
+}
+
 .paginator {
   position: absolute;
   // margin-left: -10000px;
