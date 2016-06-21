@@ -1,8 +1,8 @@
-  <div class="book-loading-overlay">
+{{!--   <div class="book-loading-overlay">
     <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
     </svg>
-  </div>
+  </div> --}}
   
   <div class="book-container">
     <div class="book-navigation book-navigation-left"{{action 'navPrev'}}>
@@ -17,9 +17,10 @@
             <i class="nav-link material-icons">arrow_forward</i>
         </div>
     </div>
-    <div class="book-content" style={{bookContentStyle}}>
+    <div class="book-content-container" style={{bookContentStyle}}>
+      <div class="book-content">{{html}}</div>
       {{!-- {{pagesHTML}} --}}
-      {{#each pages as |page|}}
+      {{!-- {{#each pages as |page|}}
         <div class="page" style={{pageStyle}}>
           <div class="page-content">
             {{page}}
@@ -30,9 +31,9 @@
           <div class="page-content">
           </div>
         </div>
-      {{/each}}
+      {{/each}} --}}
     </div>
-    <div class="paginator" style={{paginatorStyle}}>
+{{!--     <div class="paginator" style={{paginatorStyle}}>
       {{html}}
-    </div>
+    </div> --}}
   </div>
