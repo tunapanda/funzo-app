@@ -189,6 +189,8 @@ export default Ember.Component.extend({
       lastPosition = $el.position().left;
     });
 
+    this.$('.book-content h3').each((i, el) => $(el).next().andSelf().wrapAll("<div class=\"keep-together\" />"));
+
     // Ember.run.schedule('afterRender', this, 'scrollToSection', this.get('currentSection.permalink'));
 
     Ember.run.schedule('sync', () => this.set('pageCount', pageCount));

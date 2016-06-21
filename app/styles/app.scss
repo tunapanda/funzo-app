@@ -194,6 +194,9 @@ $page-navigate-margins: 50px;
   visibility: hidden;
 
   pointer-events: none;
+  .keep-together {
+    break-inside: avoid;
+  }
 }
 
 .navbar-fixed-top, .navbar-fixed-bottom {
