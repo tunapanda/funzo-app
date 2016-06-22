@@ -2,16 +2,14 @@
 {{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection')}}
 
 <div class="navbar navbar-fixed-bottom">
-  <div class="container-fluid">
-    <form class="navbar-form navbar-left" role="search">
+    <form class="navbar-form">
       <div class="form-group">
         <label for="">Section:</label>
-        <select name="section" class="change-section form-control" {{action 'changeSection' on='change'}}>
+        <select name="section" class="change-section form-control" onchange={{action 'changeSection' value="target.value"}}>
           {{#each model.sections as |section|}}
-            <option value="{{section.permalink}}">{{section.title}}</option>
+            <option value="{{section.permalink}}" selected={{eq section currentSection}}>{{section.title}}</option>
           {{/each}}
         </select>
       </div>
     </form>
-  </div>
 </div>

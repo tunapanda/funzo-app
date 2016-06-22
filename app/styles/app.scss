@@ -211,6 +211,13 @@ $page-navigate-margins: 50px;
   &:hover, &.show {
     opacity: 0.6;
   }
+
+  .form-group, select {
+    width: auto !important;
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
 }
 
 .navbar-fixed-left, .navbar-fixed-right {
@@ -303,7 +310,11 @@ $duration: 1.4s;
  }
 }
 
-blockquote{
+.change-section {
+  width: 50%;
+}
+
+blockquote {
     padding: 10px 20px;
     margin: 0 0 20px;
     border-left: 5px solid #eeeeee;
