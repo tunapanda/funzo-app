@@ -78,7 +78,7 @@ export default Ember.Component.extend({
     $(window).on('onorientationchange', () => this.onScreenChange());
     $(window).on('resize', () => this.onScreenChange());
 
-    $('.book-content-container').on('mousewheel', (e) => e.preventDefault());
+    // $('.book-content-container').on('mousewheel', (e) => e.preventDefault());
 
     // $('.book-content-container').on('scroll', (e) => {
     //   if (!this.get('navigating')) {
@@ -172,11 +172,15 @@ export default Ember.Component.extend({
     // this.$('.paginator').html(this.get('html').string);
     // // this.calcContainerWidth();
     // this.propertyDidChange('html');
+    this.scrollToNearestPage();
+  },
+
+  scrollToNearestPage() {
+    this.scrollTo($('.book-content-container').scrollLeft() - $('.book-content-container').scrollLeft() % $('.book-container').width());
   },
 
   didRender() {
     this._super(...arguments);
-    console.log('didRender');
 
     let pageCount = 0;
     let lastPosition = 0;
