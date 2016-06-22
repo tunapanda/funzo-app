@@ -51,17 +51,9 @@ $page-navigate-margins: 50px;
 
   overflow-x: scroll;
 
-  // display: flex;
-  // flex: 1 0 50%;
-  // flex-wrap: wrap;
-
   padding: 40px;
   box-sizing: border-box;
   height: 100vh;
-
-  margin-left: 0;
-
-  transition: transform 0.3s ease-in-out;
 
   .book-content {
     column-fill: auto;
@@ -71,29 +63,33 @@ $page-navigate-margins: 50px;
     column-gap: 80px;
   }
 
-  .section { // should be called section now
+  .section, .page {
     break-after: column;
   }
 
-  .section-frontmatter .page {
-    break-after: column;
-  }
-
-  h1, h2, p {
-    font-family: serif;
-    flex: 1 0 100%;
+  h1 {
+    font-size: 3em;
+    margin-bottom: 60px;
   }
 
   h2 {
     font-size: 2em;
+    line-height: 1.6em;
+    margin-bottom: 60px;
     text-align: center;
-    text-decoration: underline;
+    // text-decoration: underline;
     font-weight: bold;
   }
 
+  h3 {
+    font-size: 1.5em;
+  }
+
   p {
-    font-size: 1.2em;
+    font-size: 1em;
+    line-height: 1.45em;
     text-align: justify;
+    margin-bottom: 1em;
 
     /* These are technically the same, but use both */
     overflow-wrap: break-word;
@@ -109,44 +105,10 @@ $page-navigate-margins: 50px;
     }
   }
 
-  // .page {
-  //   display: flex;
-  //   flex-shrink: 0;
-  //   align-items: flex-start;
-
-  //   padding: $page-navigate-margins;
-  //   padding-top: 85px;
-  //   // margin: 10px;
-  //   background-color: #fff;
-  //   box-sizing: border-box;
-  //   width: 50%;
-  //   height: 100vh;
-
-  //   cursor: pointer;
-  //   user-select: none;
-  //   -webkit-user-select: none;
-
-  //   &:nth-child(even) {
-  //     padding-right: 60px;
-  //     border-left: 1px solid #e8e8e8;
-  //   }
-
-  //   &:nth-child(odd) {
-  //     padding-left: 60px;
-  //   }
-  // }
-
-  // @media (orientation: landscape) {
-  //   width: 50%;
-  // }
-
-  // @media (orientation: portrait) {
-  //   width: 100%;
-  // }
-
-  // .page-content {
-  //   width: 100%;
-  // }
+  li {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
 
   img {
     max-width: 50%;
@@ -190,18 +152,7 @@ $page-navigate-margins: 50px;
     height: 100%;
     left: 0;
   }
-}
 
-.paginator {
-  position: absolute;
-  // margin-left: -10000px;
-
-  top: 0;
-  left:0;
-  display: block;
-  visibility: hidden;
-
-  pointer-events: none;
 }
 
 .navbar-fixed-top, .navbar-fixed-bottom {
