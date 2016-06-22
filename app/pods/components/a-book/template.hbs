@@ -11,7 +11,7 @@
           <i class="nav-link material-icons">arrow_forward</i>
       </div>
   </div>
-  <div class="book-content-container" style={{bookContentStyle}}>
+  <div class="book-content-container" style={{bookContentStyle}} onscroll={{action 'didScroll'}}>
     <div class="book-content">
       {{#each sections as |section|}}
         <div class="section section-{{section.permalink}}" data-section="{{section.permalink}}">
@@ -19,5 +19,8 @@
         </div>
       {{/each}}
     </div>
+  </div>
+  <div class="page-numbers">
+    
   </div>
 </div>
