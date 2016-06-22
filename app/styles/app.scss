@@ -135,8 +135,22 @@ $page-navigate-margins: 50px;
   }
 
   table {
+    @extend .table;
+    @extend .table-striped;
+    @extend .table-bordered;
+    @extend .table-condensed;
+
     width: 100%;
-    font-size: 0.9em;
+    font-size: 0.75em;
+    font-family: sans-serif;
+
+    tr:first-child, td:first-child {
+      font-weight: bold;
+    }
+    p {
+      margin-bottom: 0;
+      text-align: left;
+    }
   }
 
   .slick-next {
