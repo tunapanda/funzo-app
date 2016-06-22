@@ -3,6 +3,20 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   section: Ember.inject.controller('book.section'),
 
+  fontSize: 14,
+
+  fontSizes: [
+    10,
+    12,
+    14,
+    16,
+    18
+  ],
+
+  fontSizeString: Ember.computed('fontSize', function() {
+    return Ember.String.htmlSafe(this.get('fontSize') + 'pt');
+  }),
+
   actions: {
     nextSection() {
       let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
