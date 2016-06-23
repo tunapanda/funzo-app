@@ -17,6 +17,8 @@ export default Ember.Controller.extend({
     return Ember.String.htmlSafe(this.get('fontSize') + 'pt');
   }),
 
+  modal: Ember.inject.service('bootstrap-modal'),
+
   actions: {
     nextSection() {
       let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
@@ -37,6 +39,13 @@ export default Ember.Controller.extend({
       permalink = permalink || Ember.$('.change-section').val();
 
       Ember.run.later(() => this.transitionToRoute('book.section', this.get('model'), this.get('model.sections').findBy('permalink', permalink)), 100);
+    },
+
+    showImageModal(image) {
+      this.set('modal.component', 'book-image-modal');
+      this.set('modal.args.image', image);
+
+      Ember.$('.modal').modal('show');
     }
   }
 });

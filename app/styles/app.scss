@@ -98,7 +98,7 @@ $page-navigate-margins: 50px;
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
-    
+
     &.overflow {
       position: relative;
       overflow: hidden;
@@ -152,13 +152,34 @@ $page-navigate-margins: 50px;
     height: 100%;
     left: 0;
   }
+}
+
+.book-image-modal {
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.modal {
+  padding: 40px;
+}
+
+.paginator {
+  position: absolute;
+  // margin-left: -10000px;
+
+  top: 0;
+  left:0;
+  display: block;
+  visibility: hidden;
 
 }
 
 .navbar-fixed-top, .navbar-fixed-bottom {
   opacity: 0;
 
-  transition: opacity 0.3s ease-in-out; 
+  transition: opacity 0.3s ease-in-out;
   &:hover, &.show {
     opacity: 0.6;
   }
@@ -176,16 +197,16 @@ $page-navigate-margins: 50px;
   color: inherit;
   opacity: 0;
   height: 100%;
-  
+
   .nav-spacer {
     height: 50%;
-  }  
-  
+  }
+
   .nav-link {
     cursor: pointer;
   }
-  
-  transition: opacity 0.3s ease-in-out; 
+
+  transition: opacity 0.3s ease-in-out;
   &:hover, &.show {
     opacity: 0.6;
   }
@@ -231,7 +252,7 @@ $duration: 1.4s;
     stroke-dashoffset: 0;
     transform-origin: center;
     animation:
-      dash $duration ease-in-out infinite, 
+      dash $duration ease-in-out infinite,
       colors ($duration*4) ease-in-out infinite;
   }
 }
@@ -272,10 +293,9 @@ blockquote {
     font-size: 17.5px;
     font-family: 'Georgia', serif;
     font-style: italic;
-    
+
     cite{
         font-size: 80%;
         font-weight: bold;
     }
 }
-

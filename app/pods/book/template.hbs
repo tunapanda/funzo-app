@@ -4,7 +4,8 @@
     font-size: {{fontSizeString}};
   }
 </style>
-{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection')}}
+
+{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal')}}
 
 <div class="navbar navbar-fixed-bottom">
     <form class="navbar-form">

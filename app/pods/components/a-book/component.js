@@ -80,6 +80,10 @@ export default Ember.Component.extend({
 
     // $('.book-content-container').on('mousewheel', (e) => e.preventDefault());
 
+    let _this = this;
+    $('.book-content img').click(function() {
+      _this.attrs.showImage($(this).attr('src'));
+    });
     // $('.book-content-container').on('scroll', (e) => {
     //   if (!this.get('navigating')) {
     //     Ember.run.debounce(this, 'scrollStart', e, 300, true);
