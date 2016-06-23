@@ -90,6 +90,9 @@ export default Ember.Component.extend({
     $('.book-content img').click(function() {
       _this.attrs.showImage($(this).attr('src'));
     });
+
+    this.$('.book-content h3').each((i, el) => $(el).next().andSelf().wrapAll('<div class="keep-together" />'));
+
     // $('.book-content-container').on('scroll', (e) => {
     //   if (!this.get('navigating')) {
     //     Ember.run.debounce(this, 'scrollStart', e, 300, true);
