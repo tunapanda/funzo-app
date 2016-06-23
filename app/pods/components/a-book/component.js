@@ -4,6 +4,8 @@ let $ = Ember.$;
 
 export default Ember.Component.extend({
   sectionLocations: {},
+  sectionPageCounts: {},
+  currentPageNumber: 1,
 
   touchStarted: false,
 
@@ -43,7 +45,11 @@ export default Ember.Component.extend({
 
     navNext() {
       this.navNext();
-    }
+    },
+    didScroll() {
+      this.set('scrollLeft', $('.book-content-container').scrollLeft());
+      this.$('.page-numbers').css('marginLeft', -$('.book-content-container').scrollLeft());
+    },
   },
 
   navPrev() {
@@ -92,6 +98,34 @@ export default Ember.Component.extend({
     //   }
 
     // });
+
+    this.calcPageNumbers();
+  },
+
+  calcPageNumbers() {
+    this.$('.page-numbers').html();
+
+    let lastPosition = 0;
+
+    let totalPageCount = 0;
+
+    this.$('.book-content .section').each((i, section) => {
+      let sectionPageCount = 0;
+
+      $(section).children(':not(a)').each((i, p) => {
+        let $p = $(p);
+
+        if ($p.position().left > lastPosition) {
+          sectionPageCount++;
+          totalPageCount++;
+          $('.page-numbers').append(`<div class="page-number" style="left: ${$p.position().left - 40}px;">Page ${totalPageCount}</div>`);
+        }
+        lastPosition = $p.position().left;
+      });
+
+      console.log($(section).data('section') + ': ' + sectionPageCount);
+      Ember.run.schedule('sync', () => this.set('sectionPageCounts.' + $(section).data('section'), sectionPageCount));
+    });
   },
 
   // scrollStart() {
@@ -119,10 +153,11 @@ export default Ember.Component.extend({
   //   this.set('touchStarted', false);
   // },
 
+
   scrollTo(to, animate = true) {
     this.set('navigating', true);
     let current = $('.book-content-container').scrollLeft();
-    console.log(`from ${current} to ${to}`);
+    // console.log(`from ${current} to ${to}`);
     if (animate) {
       $('.book-content-container').animate({ scrollLeft: to }, () => {
         // this.set('navigating', false);
@@ -138,13 +173,13 @@ export default Ember.Component.extend({
   didNavigate(direction) {
     $('.section-anchor').toArray().forEach((el) => {
       if ($(el).position().left === 40 && direction === 'forward') {
-        console.log('section ' + $(el).data('permalink'));
+        // console.log('section ' + $(el).data('permalink'));
         this.willChangeSection();
         this.sendAction('nextSection');
       }
 
       if ($(el).position().left === $('.book-container').width() + 40  && direction === 'backward') {
-        console.log('section before ' + $(el).data('permalink'));
+        // console.log('section before ' + $(el).data('permalink'));
         this.willChangeSection();
         this.sendAction('prevSection');
       }
@@ -162,7 +197,7 @@ export default Ember.Component.extend({
   },
 
   onSection: Ember.observer('currentSection', function() {
-    console.log('SECTION: ' + this.get('currentSection.permalink'));
+    // console.log('SECTION: ' + this.get('currentSection.permalink'));
     Ember.run.schedule('afterRender', () => {
       if (!this.get('changingSection')) {
         this.scrollToSection(this.get('currentSection.permalink'));
@@ -172,11 +207,8 @@ export default Ember.Component.extend({
   }).on('init'),
 
   onScreenChange() {
-    // this.rerender();
-    // this.$('.paginator').html(this.get('html').string);
-    // // this.calcContainerWidth();
-    // this.propertyDidChange('html');
     this.scrollToNearestPage();
+    this.calcPageNumbers();
   },
 
   scrollToNearestPage() {
@@ -185,22 +217,7 @@ export default Ember.Component.extend({
 
   didRender() {
     this._super(...arguments);
-
-    let pageCount = 0;
-    let lastPosition = 0;
-    this.$('.book-content .page-content > p').each((i, el) => {
-      let $el = $(el);
-
-      if ($el.position().left > lastPosition) {
-        pageCount++;
-      }
-      lastPosition = $el.position().left;
-    });
-
-    // Ember.run.schedule('afterRender', this, 'scrollToSection', this.get('currentSection.permalink'));
-
-    Ember.run.schedule('sync', () => this.set('pageCount', pageCount));
-  },
+  }
 
   // findSections() {
   //   this.$('.book-content .section').each((i, el) => {
@@ -216,9 +233,9 @@ export default Ember.Component.extend({
   //   this.scrollToSection(this.get('currentSection.permalink'));
   // },
 
-  onNavigating: Ember.observer('navigating', function() {
-    console.log(this.get('navigating') ? 'started navigating' : 'stopped navigating');
-  })
+  // onNavigating: Ember.observer('navigating', function() {
+  //   console.log(this.get('navigating') ? 'started navigating' : 'stopped navigating');
+  // })
 
   // onSubsection: Ember.observer('subsection', function() {
   //   if (this.get('subsection')) {
