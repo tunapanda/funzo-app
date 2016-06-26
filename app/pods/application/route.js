@@ -7,6 +7,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
   actions: {
     back() {
+      if (this.get('nav.indexOnly')) {
+        return this.transitionTo('index', this.modelFor('index'));
+      }
       history.back();
     },
 
