@@ -2,59 +2,12 @@
     <strong>Account Type: </strong> {{if currentUser.model.isTeacher 'Teacher' 'Student'}}
   </div>
   {{#if currentUser.model.isTeacher}}
-    <div>
-
-      <!-- Nav tabs -->
-      <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation"><a class="active" href="#manage-courses" aria-controls='manage-courses' role="tab" data-toggle="tab">Manage Courses</a></li>
-          <li role="presentation"><a class="" href="#manage-users" aria-controls='manage-users' role="tab" data-toggle="tab">Manage Users</a></li>
-          <li role="presentation"><a class="" href="#manage-sync" aria-controls='manage-sync' role="tab" data-toggle="tab">Sync xAPI</a></li>
-          <li role="presentation"><a class="" href="#manage-dev" aria-controls='manage-dev' role="tab" data-toggle="tab">Dev</a></li>
-      </ul>
-
-      <!-- Tab panes -->
-      <div class="tab-content">
-          <div role="tabpanel" class="tab-pane h5p-tab-pane active" id="manage-courses">
-            <button class="btn btn-lg btn-primary btn-raised" {{action 'addCourse'}}>Import From URL</button>
-            <button class="btn btn-lg btn-primary btn-raised" {{action 'importSDCourses'}}>Import From SD</button>
-            <button class="btn btn-lg btn-primary btn-raised" {{action 'loadSDCourses'}}>Load From SD</button>
-          </div>
-          <div role="tabpanel" class="tab-pane h5p-tab-pane" id="manage-users">
-            {{login-user-select users=model.users editable=true}}
-          </div>
-          <div role="tabpanel" class="tab-pane h5p-tab-pane" id="manage-sync">
-            <p>There are <strong>{{statementCount}}</strong>, statements in the store. <strong>{{unsyncedStatementCount}}</strong> need to be synced.</p>
-            {{#if syncable}}
-              <button class="btn-large waves-effect waves-light" {{action "syncStatements"}}>Sync Now</button>
-            {{/if}}
-          </div>
-          <div role="tabpanel" class="tab-pane h5p-tab-pane" id="manage-dev">
-            
-          </div>
-      </div>
-
-    </div>
-{{!--     <h2>Manage Courses</h2>
-    <button class="btn btn-lg btn-primary btn-raised" {{action 'addCourse'}}>Import From URL</button>
-    <button class="btn btn-lg btn-primary btn-raised" {{action 'importSDCourses'}}>Import From SD</button>
-    <button class="btn btn-lg btn-primary btn-raised" {{action 'loadSDCourses'}}>Load From SD</button>
+    <h2>Manage Courses</h2>
+    <button class="btn btn-primary btn-raised" {{action 'addCourse'}}>Import From URL</button>
+    <button class="btn btn-primary btn-raised" {{action 'importSDCourses'}}>Import From SD</button>
+    <button class="btn btn-primary btn-raised" {{action 'loadSDCourses'}}>Load From SD</button>
     <h2>Manage Users</h2>
     {{login-user-select users=model.users editable=true}}
-
-    <h2>Add A Course</h2>
-    <div class="row">
-      <form class="col s12">
-        <div class="row">
-          <div class="input-field col s10">
-            <input id="course_url" type="text" class="validate" value={{mut courseUrl}}>
-            <label for="course_url">Course URL (tar.gz)</label>
-          </div>
-           <div class="col s2">
-            <button class="btn-large waves-effect waves-light">Add</button>
-          </div>
-        </div>
-      </form>
-    </div>
 
     <h2>Sync</h2>
     <p>There are <strong>{{statementCount}}</strong>, statements in the store. <strong>{{unsyncedStatementCount}}</strong> need to be synced.</p>
@@ -65,5 +18,5 @@
     <h2>Development Settings</h2>
     <button class="btn btn-lg btn-primary btn-raised" type="button" {{action 'deleteAllCourse'}}>Delete All Courses</button>
     <button class="btn btn-lg btn-primary btn-raised" type="button" {{action 'deleteAllStatements'}}>Delete All xAPI Statements</button>
- --}}
+
   {{/if}}
