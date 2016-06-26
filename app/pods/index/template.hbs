@@ -1,12 +1,23 @@
 {{#if bookOnlyMode}}
+<div class="col-xs-12">
   <div class="row">
     {{#each model.books as |book|}}
       <div class="col-xs-6 col-sm-4 col-md-2">
-        {{#link-to 'book' book}}<img class="img-responsive" src="content/books/{{book.id}}/cover.png" alt="">{{/link-to}}
+        {{#link-to 'book' book}}
+          <div class="panel panel-default">
+            <img class="img-responsive" src="content/books/{{book.id}}/cover.png" alt="">
+            <div class="panel-body">
+              <div class="book-title">{{book.title}}</div>
+              <div class="book-author">{{book.author}}</div>
+            </div>
+          </div>
+        {{/link-to}}
       </div>
     {{/each}}
   </div>
+</div>
 {{else}}
+<div class="col-xs-12">
   <div class="row">
     {{#each model.courses as |course|}}
       <div class="col-md-6">
@@ -23,5 +34,6 @@
         </div>
       </div>
     {{/each}}
+  </div>
 </div>
 {{/if}}
