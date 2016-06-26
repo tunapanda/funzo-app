@@ -3,22 +3,46 @@ import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, {
   showBackButton: true,
+  
   model: function(params) {
     return this.store.queryRecord('section', { book_id: this.paramsFor('book').book_id, section_id: params.section_id });
   },
 
   afterModel(model) {
+    this.set('navBarTitle', model.get('book.title'));
+
     this.controllerFor('book').set('currentSection', model);
+
+    return this._super(...arguments);
   },
 
-  actions: {
-    didTransition() {
-      this.controllerFor('application').set('navbarFixed', true);
-    },
+  hideNavBar: function() {
+    this.controllerFor('application').set('navbarFixed', true);
+  }.on('activate'),
 
-    willTransition() {
-      this.controllerFor('application').set('navbarFixed', false);
-    }
+  showNavBar: function() {
+    this.controllerFor('application').set('navbarFixed', false);
+  }.on('deactivate'),
+
+  hideStatusBar: function() {
+    this.set('indexOnly', true);
+    this.set('showBackButton', true);
+    window.StatusBar && window.StatusBar.hide();
+
+    document.addEventListener('resume', this.hideStatusBarResume, false);
+
+  }.on('activate'),
+
+  showStatusBar: function() {
+    this.set('indexOnly', false);
+    window.StatusBar && window.StatusBar.show();
+
+    document.removeEventListener('resume', this.hideStatusBarResume, false);
+
+  }.on('deactivate'),
+
+  hideStatusBarResume() {
+    window.StatusBar && window.StatusBar.hide();
   }
 });
 
