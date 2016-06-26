@@ -9,17 +9,17 @@
     <a class="navbar-brand">{{nav.title}}</a>
 
     <ul class="nav navbar-nav navbar-right">
+      {{!-- <li><a href=""><i class="material-icons">format_size</i></a></li> --}}
       {{#if session.isAuthenticated}}
         <li class="dropdown">
-          <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">account_circle</i></a>
+          <a href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></a>
           <ul class="dropdown-menu">
-            <li>{{#link-to 'profile'}}profile{{/link-to}}</li>
-            <li class="divider"></li>
-            <li><a href="#!" {{action 'logout'}}>logout</a></li>
+            <li>{{#link-to 'settings'}}Settings{{/link-to}}</li>
+            <li class="divider"></li>            
+            <li><a href="#!" {{action 'logout'}}>Sign Out</a></li>
           </ul>
         </li>
       {{/if}}
-      <li>{{#link-to 'settings'}}<i class="material-icons">settings</i>{{/link-to}}</li>
     </ul>
   </div>
   </nav>
