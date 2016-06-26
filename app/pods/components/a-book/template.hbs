@@ -1,18 +1,25 @@
 <div class="book-container">
   <div class="book-navigation book-navigation-left"{{action 'navPrev'}}>
-      <div class="navbar navbar-fixed-left">
+      <div class="navbar-fixed-left">
           <div class="nav-spacer" />
           <i class="nav-link material-icons">arrow_back</i>
       </div>
   </div>
   <div class="book-navigation book-navigation-right"{{action 'navNext'}}>
-      <div class="navbar navbar-fixed-left">
+      <div class="navbar-fixed-left">
           <div class="nav-spacer" />
           <i class="nav-link material-icons">arrow_forward</i>
       </div>
   </div>
-  <div class="book-content-container" style={{bookContentStyle}} onscroll={{action 'didScroll'}}>
+
+  <div class="book-content-container" style={{bookContentStyle}} onscroll={{action 'didScroll'}} {{!--  onmousewheel={{action 'didMouseWheel'}} --}}>
     <div class="book-content">
+{{!--     <div class="section section-{{sections.firstObject.permalink}}" data-section="{{sections.firstObject.permalink}}">
+      {{sections.firstObject.html}}
+    </div> --}}
+{{!--       <div class="section section-cover" data-section="cover">
+        <img class="img-responsive" src="content/books/{{sections.firstObject.book.id}}/cover.png" alt="">
+      </div> --}}
       {{#each sections as |section|}}
         <div class="section section-{{section.permalink}}" data-section="{{section.permalink}}">
           {{section.html}}
@@ -21,6 +28,6 @@
     </div>
   </div>
   <div class="page-numbers">
-    
+
   </div>
 </div>
