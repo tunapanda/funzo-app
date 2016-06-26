@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   session: Ember.inject.service('session'),
   modal: Ember.inject.service('bootstrap-modal'),
+  nav: Ember.inject.service('nav'),
 
   navbarFixed: false,
 
@@ -12,6 +13,9 @@ export default Ember.Controller.extend({
     },
 
     back() {
+      if (this.get('nav.indexOnly')) {
+        return this.transitionToRoute('/');
+      }
       history.back();
     }
   }

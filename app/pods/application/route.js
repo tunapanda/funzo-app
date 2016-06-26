@@ -3,6 +3,7 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
+  nav: Ember.inject.service('nav'),
 
   actions: {
     back() {
@@ -11,6 +12,13 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
     openLink(url) {
       window.open(url, '_system');
+    },
+    sessionInvalidated() {
+      this.transitionTo('login.index');
     }
+  },
+
+  sessionInvalidated() {
+    this.transitionTo('login.index');
   }
 });
