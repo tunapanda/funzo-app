@@ -18,20 +18,20 @@ function createIfNotExists(directory, callback) {
 }
 
 // Create an index of books available at build-time
-var coursesDir = 'public/content/courses';
+var booksDir = 'public/content/books';
 
-createIfNotExists(coursesDir, () => {
-  var bookList = fs.readdirSync(coursesDir).map(dir => {
-    var courseDir = `${coursesDir}/${dir}`;
-    if (!fs.statSync(courseDir).isDirectory()) {
+createIfNotExists(booksDir, () => {
+  var bookList = fs.readdirSync(booksDir).map(dir => {
+    var bookDir = `${booksDir}/${dir}`;
+    if (!fs.statSync(bookDir).isDirectory()) {
       // TODO: filter out nulls
       return;
     }
     // TODO: catch exceptions and filter out invalid JSON
-    return JSON.parse(fs.readFileSync(courseDir + '/content.json'));
+    return JSON.parse(fs.readFileSync(bookDir + '/book.json'));
   }).filter(e => e);
 
-  fs.writeFileSync(`${coursesDir}/index.json`, JSON.stringify(bookList));
+  fs.writeFileSync(`${booksDir}/index.json`, JSON.stringify(bookList));
 });
 
 module.exports = function(defaults) {
@@ -43,7 +43,7 @@ module.exports = function(defaults) {
       enabled: false
     },
     fingerprint: {
-      exclude: ['courses']
+      exclude: ['content/courses', 'content/books']
     },
     jscsOptions: {
       enabled: true
@@ -76,6 +76,7 @@ module.exports = function(defaults) {
 
   app.import('bower_components/h5p-standalone/dist/js/h5p-standalone-main.js');
 
+  app.import('bower_components/velocity/velocity.js');
   app.import('vendor/aes.js');
 
   // Use `app.import` to add additional libraries to the generated

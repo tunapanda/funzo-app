@@ -43,6 +43,12 @@ module.exports = function(environment) {
     
     emberPouch: {
       localDb: 'funzo'
+    },
+
+    'ember-simple-auth': {
+      authenticationRoute: 'login.index',
+      routeAfterAuthentication: 'index'
+
     }
   };
 
