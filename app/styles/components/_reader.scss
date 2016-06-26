@@ -1,0 +1,258 @@
+.book-container {
+  // margin: 20px;
+  background: #ffffff;
+  overflow: hidden;
+
+  font-size: 14px;
+}
+
+.page-numbers {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  text-align: center;
+
+  .page-number {
+    position: absolute;
+    top: 0;
+    text-align: center;
+    width: 100vw;
+    line-height: 40px;
+  }
+}
+
+.book-content-container {
+  color: #000;
+  font-family: serif;
+
+  overflow-x: scroll;
+
+  padding: 60px 40px;
+  box-sizing: border-box;
+  height: 100vh;
+
+  .book-content {
+    column-fill: auto;
+    -webkit-column-fill: auto;
+    height: 100%;
+    box-sizing: border-box;
+    column-width: 400px; // basically breakpoint between 2 or 1 pages per screen
+    -webkit-column-width: 400px;
+    column-gap: 80px;
+    -webkit-column-gap: 80px;
+  }
+
+  .section, .page {
+    break-after: column;
+    -webkit-break-after: column;
+    -webkit-column-break-after: always;
+  }
+
+  .page-break {
+    break-after: column;
+    -webkit-break-after: column;
+    -webkit-column-break-after: always;
+    height: 0;
+    margin: 0;
+    border: 0;
+    // break-inside: avoid;
+  }
+
+  h1 {
+    font-size: 3em;
+    margin-bottom: 60px;
+  }
+
+  h2 {
+    font-size: 2em;
+    line-height: 1.6em;
+    margin-bottom: 60px;
+    text-align: center;
+    // text-decoration: underline;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 1.5em;
+  }
+
+  p {
+    font-size: 1em;
+    line-height: 1.45em;
+    text-align: justify;
+    margin-bottom: 1em;
+
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+    &.overflow {
+      position: relative;
+      overflow: hidden;
+    }
+  }
+
+  li {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+
+  img {
+    max-width: 50%;
+    height: auto;
+  }
+
+  .text-center-center {
+    text-align: center;
+    margin-top: 50%;
+  }
+
+  .text-left-bottom {
+    flex: 1;
+    align-self: flex-end;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .title-heading {
+    font-size: 2.5em;
+    font-weight: bold;
+  }
+
+  table {
+    @extend .table;
+    @extend .table-striped;
+    @extend .table-bordered;
+    @extend .table-condensed;
+
+    width: 100%;
+    font-size: 0.75em;
+    font-family: sans-serif;
+
+    tr:first-child, td:first-child {
+      font-weight: bold;
+    }
+    p {
+      margin-bottom: 0;
+      text-align: left;
+    }
+  }
+
+  .slick-next {
+    z-index: 100;
+    width: 50%;
+    height: 100%;
+    right: 0;
+  }
+
+  .slick-prev {
+    z-index: 100;
+    width: 50%;
+    height: 100%;
+    left: 0;
+  }
+}
+
+.book-image-modal {
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.modal {
+  padding: 40px;
+}
+
+.paginator {
+  position: absolute;
+  // margin-left: -10000px;
+
+  top: 0;
+  left:0;
+  display: block;
+  visibility: hidden;
+
+  pointer-events: none;
+  .keep-together {
+    break-inside: avoid;
+  }
+}
+
+
+
+.navbar-fixed-left, .navbar-fixed-right {
+  touch-action:none;
+  background-color: inherit;
+  color: inherit;
+  opacity: 0;
+  height: 100%;
+
+  .nav-spacer {
+    height: 50%;
+  }
+
+  .nav-link {
+    cursor: pointer;
+  }
+
+  transition: opacity 0.3s ease-in-out;
+  &:hover, &.show {
+    opacity: 0.6;
+  }
+}
+
+.book-navigation {
+  position: absolute;
+  height: 100vh;
+  top: 0;
+  z-index: 100;
+  width: $page-navigate-margins;
+
+  touch-action:none;
+}
+
+.book-navigation-left {
+  left: 0;
+}
+
+.book-navigation-right {
+  right: 0;
+}
+
+.book-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+
+  background: hsla(0, 0, 100, 0.4);
+}
+
+.cover-img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  line-height: 100vh;
+  pointer-events: none;
+  touch-events: none;
+
+  img {
+    max-width: 100%;
+    display: inline-block;
+  }
+}
