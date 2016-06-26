@@ -81,7 +81,7 @@ export default Ember.Component.extend({
       $(e.target).hasClass('book-navigation') ||
       $(e.target).parents().hasClass('book-navigation')
       )) {
-      this.attrs.toggleNavBar();
+      $('.navbar').toggleClass('show');
     }
   },
 

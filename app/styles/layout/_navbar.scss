@@ -1,4 +1,4 @@
-
+// 
 .navbar {
   color: #ffffff;
   box-shadow: 0 2px 5px rgba(0,0,0,0.26);
@@ -17,11 +17,11 @@
 
 .navbar-fixed-top, .navbar-fixed-bottom {
   touch-action:none;
-  // opacity: 0;
+  opacity: 0;
 
   transition: opacity 0.3s ease-in-out;
 
-  // pointer-events: none;
+  pointer-events: none;
 
   &:hover, &.show {
     opacity: 0.8;
