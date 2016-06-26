@@ -1,8 +1,8 @@
 {
   "name": "funzo-app",
   "dependencies": {
-    "ember": "2.5.0",
-    "ember-cli-shims": "0.1.0",
+    "ember": "2.6.0",
+    "ember-cli-shims": "0.1.1",
     "ember-cli-test-loader": "0.2.2",
     "ember-load-initializers": "0.1.7",
     "ember-qunit": "0.4.16",
@@ -16,6 +16,9 @@
     "relational-pouch": "^1.3.2",
     "tincan": "~0.41.0",
     "bootstrap": "~3.3.6",
-    "bootstrap-material-design": "~0.5.8"
+    "bootstrap-material-design": "~0.5.8",
+    "jquery.nicescroll": "^3.6.8",
+    "velocity": "^1.2.3",
+    "gsap": "1.18.2"
   }
 }
