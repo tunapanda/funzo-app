@@ -7,28 +7,27 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-background-download": {
             "PACKAGE_NAME": "com.tunapanda.funzoapp"
         },
         "cordova-plugin-crosswalk-webview": {
             "PACKAGE_NAME": "com.tunapanda.funzoapp"
         },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.tunapanda.funzoapp"
+        },
         "cordova-plugin-file-transfer": {
-            "PACKAGE_NAME": "com.tunapanda.funzoapp"
-        },
-        "cordova-plugin-zip": {
-            "PACKAGE_NAME": "com.tunapanda.funzoapp"
-        },
-        "cordova-plugin-background-download": {
             "PACKAGE_NAME": "com.tunapanda.funzoapp"
         },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.tunapanda.funzoapp"
-        }
-    },
-    "dependent_plugins": {
-        "cordova-plugin-file": {
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.tunapanda.funzoapp"
+        },
+        "cordova-plugin-zip": {
             "PACKAGE_NAME": "com.tunapanda.funzoapp"
         }
-    }
+    },
+    "dependent_plugins": {}
 }

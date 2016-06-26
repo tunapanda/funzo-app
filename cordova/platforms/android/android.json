@@ -43,6 +43,10 @@
                         {
                             "xml": "<feature name=\"BackgroundDownload\"><param name=\"android-package\" value=\"org.apache.cordova.backgroundDownload.BackgroundDownload\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"StatusBar\"><param name=\"android-package\" value=\"org.apache.cordova.statusbar.StatusBar\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ],
                     "/widget": [
@@ -94,6 +98,9 @@
             "PACKAGE_NAME": "com.tunapanda.funzoapp"
         },
         "cordova-plugin-background-download": {
+            "PACKAGE_NAME": "com.tunapanda.funzoapp"
+        },
+        "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.tunapanda.funzoapp"
         }
     },
@@ -322,6 +329,14 @@
             "clobbers": [
                 "DownloadOperation"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-statusbar/www/statusbar.js",
+            "id": "cordova-plugin-statusbar.statusbar",
+            "pluginId": "cordova-plugin-statusbar",
+            "clobbers": [
+                "window.StatusBar"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -330,6 +345,7 @@
         "cordova-plugin-file": "4.1.1",
         "cordova-plugin-file-transfer": "1.5.0",
         "cordova-plugin-zip": "3.1.0",
-        "cordova-plugin-background-download": "0.0.2"
+        "cordova-plugin-background-download": "0.0.2",
+        "cordova-plugin-statusbar": "2.1.3"
     }
 }

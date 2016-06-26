@@ -20,6 +20,10 @@
     <feature name="BackgroundDownload">
         <param name="android-package" value="org.apache.cordova.backgroundDownload.BackgroundDownload" />
     </feature>
+    <feature name="StatusBar">
+        <param name="android-package" value="org.apache.cordova.statusbar.StatusBar" />
+        <param name="onload" value="true" />
+    </feature>
     <feature name="Zip">
         <param name="android-package" value="org.apache.cordova.Zip" />
     </feature>
@@ -39,11 +43,12 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <allow-navigation href="http://192.168.1.101:4200/*" />
+    <allow-navigation href="http://192.168.1.102:4200/*" />
     <preference name="DisallowOverscroll" value="true" />
-    <preference name="xwalkVersion" value="16+" />
+    <preference name="xwalkVersion" value="19+" />
     <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
     <preference name="xwalkMode" value="embedded" />
     <preference name="xwalkMultipleApk" value="true" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <preference name="StatusBarBackgroundColor" value="#1E4A5D" />
 </widget>
