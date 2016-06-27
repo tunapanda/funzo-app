@@ -73,7 +73,7 @@ export default Ember.Component.extend({
     if ($target.hasClass('internal-link')) {
       e.preventDefault();
       let permalink = $target.data('permalink');
-      this.sendAction('changeSection', permalink);
+      return this.attrs.changeSection(permalink);
     }
 
     if (!(
