@@ -29,6 +29,11 @@ module.exports = function(environment) {
     APP: {
       bookOnlyMode: true
     },
+    
+    vendor: {
+      downloadUrlBase:   "http://bit.ly",
+      encryptionKeyBase: "foobarbaz"
+    },
 
     cordova: {
       rebuildOnChange: false,
