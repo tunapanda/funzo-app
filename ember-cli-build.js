@@ -3,36 +3,26 @@
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var fs = require('fs');
 
-function createIfNotExists(directory, callback) {
-  fs.stat(directory, function(err) {
-    // Check if error defined and the error code is "not exists"
-    if (err && err.code === 'ENOENT') {
-      // Create the directory, call the callback.
-      fs.mkdir(directory, callback);
-    } else {
-      // just in case there was a different error:
-      callback(err);
-    }
-    callback();
-  });
-}
-
 // Create an index of books available at build-time
-var coursesDir = 'public/content/courses';
-
-createIfNotExists(coursesDir, () => {
-  var bookList = fs.readdirSync(coursesDir).map(dir => {
-    var courseDir = `${coursesDir}/${dir}`;
-    if (!fs.statSync(courseDir).isDirectory()) {
-      // TODO: filter out nulls
+var booksDir = 'public/content/books';
+var bookList = [];
+bookList = fs.readdirSync(booksDir).map(d => {
+  if (typeof(d) === "undefined") {
       return;
-    }
-    // TODO: catch exceptions and filter out invalid JSON
-    return JSON.parse(fs.readFileSync(courseDir + '/content.json'));
-  }).filter(e => e);
+  }
+  var bookDir = booksDir + '/' + d;
+  if (!fs.statSync(bookDir).isDirectory()) {
+    // TODO: filter out nulls
+    return;
+  }
+  try {
+      return JSON.parse(fs.readFileSync(bookDir + '/book.json'));
+  } catch (e) {
+    console.warn("ERROR handling " + d + ": " + e);
+  }
+}).filter(e => e);
 
-  fs.writeFileSync(`${coursesDir}/index.json`, JSON.stringify(bookList));
-});
+fs.writeFileSync(booksDir + '/local_books.json', JSON.stringify(bookList));
 
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {

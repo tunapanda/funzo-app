@@ -5,6 +5,9 @@
 /tmp
 /public/content/books/local_books.json
 
+# content
+public/content/books/*
+
 # dependencies
 /node_modules
 /bower_components/*
