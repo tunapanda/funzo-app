@@ -15,7 +15,7 @@ export default Model.extend({
   expirationDate: Ember.computed('expiration', function() {
     let expiration = this.get('expiration');
     var expirationDate;
-    if (typeof(expiration) === "undefined") {
+    if ( !expiration ) {
       expirationDate = false;
     } else {
       expiration = expiration.toString();
