@@ -27,7 +27,8 @@ module.exports = function(environment) {
     },
 
     APP: {
-      bookOnlyMode: true
+      bookOnlyMode: true,
+      encryptionKeyBase: 'foobarbaz'
     },
 
     cordova: {
