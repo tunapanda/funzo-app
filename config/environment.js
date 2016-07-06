@@ -47,7 +47,7 @@ module.exports = function(environment) {
     },
 
     'ember-simple-auth': {
-      authenticationRoute: 'login.index',
+      authenticationRoute: 'login',
       routeAfterAuthentication: 'index'
 
     }

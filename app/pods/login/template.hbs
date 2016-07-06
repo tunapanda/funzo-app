@@ -1,3 +1,23 @@
-<div class="container">
-  {{liquid-outlet class="login-outlet"}}
+<div class="container welcome-container">
+  <div class="row">
+    <div class="col-md-offset-3 col-md-6">
+      <div class="certel-logo text-center">
+        <img src="assets/Certell-Logo-2.svg" alt="Logo" >
+      </div>
+      {{!-- <h1 class="text-center">Welcome</h1> --}}
+      {{!-- <h4 class="text-center">Please enter a username to identify yourself to your teacher</h4> --}}
+      <div class="form-group {{if errors.model.username.length 'has-error'}}">
+        <label class="control-label" for="first_name">Username</label>
+        {{input id="first_name" type="text" value=model.username class="form-control"}}
+        <span class="help-block">
+        {{#each errors.model.username as |error|}}
+          {{error}}
+        {{/each}}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row get-started">
+    <div class="col-md-12 text-center"><button class="btn btn-primary btn-raised btn-lg" onclick={{action 'getStarted'}}>Get Started <i class="material-icons">chevron_right</i></button></div>
+  </div>
 </div>

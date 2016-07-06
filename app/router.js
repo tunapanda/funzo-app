@@ -6,9 +6,7 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('login', function() {
-    this.route('pin', { path: '/pin/:user_id' });
-  });
+  this.route('login');
   this.route('register');
   this.route('course', { path: '/course/:course_id' }, function() {
     this.route('module', { path: '/module/:module_id' }, function() {

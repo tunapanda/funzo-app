@@ -5,12 +5,17 @@
 
 @import "bootstrap";
 @import "bootstrap-material-design";
+@import "ripples";
 
 @import "layout/inputs";
 
 body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 {
   font-family: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
+}
+
+.btn {
+  font-weight: 400;
 }
 
 body {
@@ -26,11 +31,12 @@ main {
 
 .certel-logo {
   margin-bottom: 3em;
-}
 
-.certel-logo img{
-  width: 100%;
-  max-width: 365px;
+  img {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 365px;
+  }
 }
 
 .user-list {
@@ -138,6 +144,59 @@ blockquote {
         font-size: 80%;
         font-weight: bold;
     }
+}
+
+.alert {
+  font-weight: 500;
+}
+
+.welcome-container {
+  height: 100vh;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#282828+0,005578+100 */
+  background: #282828; /* Old browsers */
+  background: -webkit-linear-gradient(top, #005578 0%, #282828 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #005578 0%, #282828 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  color: #ffffff;
+  padding: 0 20px;
+
+  // height: 50%;
+  padding-top: 25%;
+
+  label.control-label, .btn.btn-raised.btn-primary, .form-control {
+    color: #ffffff;        
+  }
+
+  .get-started {
+    margin-top: 40px;
+  }
+
+  .form-group.is-focused .form-control {
+      outline: none;
+      background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(#005578, #005578);
+      background-size: 100% 2px, 100% 1px;
+      box-shadow: none;
+      transition-duration: 0.3s;
+  }
+
+  .material-icons {
+    font-size: 1.4em;
+    line-height: 0.8em;
+  }
+}
+
+.material-icons {
+  font-size: 1.4em;
+  line-height: 0.8em;
+  vertical-align: middle;
+}
+
+.add-book-panel {
+  height: 230px;
+  line-height: 230px;
+  text-align: center;
+
+  color: #888888;
+  font-size: 16px;
 }
 
 @import "components/reader";

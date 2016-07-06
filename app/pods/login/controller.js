@@ -8,9 +8,10 @@ export default Ember.Controller.extend({
       this.set('selectedUser', model);
     },
 
-    login() {
-      this.get('session').authenticate('authenticator:local', { id: this.get('selectedUser.id'), pin: this.get('pin') })
-        .then(() => this.transitionToRoute('index'));
+    getStarted() {
+      this.get('model').save()
+      .then(() => this.get('session').authenticate('authenticator:local', { id: this.get('model.id') }))
+      .then(() => this.transitionToRoute('index'));
     }
   }
 });

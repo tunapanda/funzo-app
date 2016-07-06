@@ -17,11 +17,11 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       window.open(url, '_system');
     },
     sessionInvalidated() {
-      this.transitionTo('login.index');
+      this.transitionTo('login');
     }
   },
 
   sessionInvalidated() {
-    this.transitionTo('login.index');
+    this.transitionTo('login');
   }
 });

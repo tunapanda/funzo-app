@@ -3,12 +3,13 @@ import DS from 'ember-data';
 import { Model } from 'ember-pouch';
 
 export default Model.extend({
-  firstName: DS.attr(),
-  lastName: DS.attr(),
-  fullName: Ember.computed('firstName', 'lastName', function() {
-    return this.get('firstName') + ' ' + this.get('lastName');
-  }),
-  pin: DS.attr(),
+  username: DS.attr(),
+  // firstName: DS.attr(),
+  // lastName: DS.attr(),
+  // fullName: Ember.computed('firstName', 'lastName', function() {
+  //   return this.get('firstName') + ' ' + this.get('lastName');
+  // }),
+  // pin: DS.attr(),
   isAuthenticated: DS.attr({ defaultValue: false }),
   isTeacher: DS.attr('boolean'),
   course: DS.hasMany('course'),
