@@ -15,18 +15,37 @@
     right: 0;
 }
 
-.navbar-fixed-top, .navbar-fixed-bottom {
-  touch-action:none;
-  opacity: 0;
+// .navbar-fixed-top, .navbar-fixed-bottom {
+//   touch-action:none;
+//   opacity: 0;
 
+//   transition: opacity 0.3s ease-in-out;
+
+//   pointer-events: none;
+
+//   &:hover, &.show {
+//     opacity: 0.8;
+//     pointer-events: initial;
+//   }
+
+//   .form-group, select {
+//     width: auto !important;
+//     display: inline-block;
+//     margin-bottom: 0;
+//     vertical-align: middle;
+//   }
+
+//   select {
+//     max-width: 150px;
+//   }
+// }
+
+
+.navbar-fixed-bottom {
+  touch-action:none;
   transition: opacity 0.3s ease-in-out;
 
   pointer-events: none;
-
-  &:hover, &.show {
-    opacity: 0.8;
-    pointer-events: initial;
-  }
 
   .form-group, select {
     width: auto !important;
@@ -38,4 +57,8 @@
   select {
     max-width: 150px;
   }
+}
+
+.pad-container {
+  margin-top: 50px;
 }

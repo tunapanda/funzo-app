@@ -2,6 +2,8 @@ import Ember from 'ember';
 import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, {
+  nav: Ember.inject.service(),
+
   showBackButton: true,
   
   model: function(params) {
@@ -17,11 +19,11 @@ export default Ember.Route.extend(NavBarTitleMixin, {
   },
 
   hideNavBar: function() {
-    this.controllerFor('application').set('navbarFixed', true);
+    this.set('nav.hide', true);
   }.on('activate'),
 
   showNavBar: function() {
-    this.controllerFor('application').set('navbarFixed', false);
+    this.set('nav.hide', false);
   }.on('deactivate'),
 
   hideStatusBar: function() {

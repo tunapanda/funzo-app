@@ -6,11 +6,17 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, NavBarTitleMixin, {
   navBarTitle: 'My Library',
   showBackButton: false,
   showNavBar: true,
-  
+
   model() {
     return Ember.RSVP.hash({
       courses: this.store.findAll('course'),
       books: this.store.findAll('book')
     });
+  },
+
+  activate() {
+    this.set('showBackButton', false);
+    this.set('nav.showIcons', true);
+    this.set('nav.hide', false);
   }
 });

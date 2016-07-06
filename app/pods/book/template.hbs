@@ -7,7 +7,7 @@
 
 {{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal') changeSection=(action 'changeSection')}}
 
-<div class="navbar navbar-fixed-bottom">
+<div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
     <form class="navbar-form">
       <div class="form-group">
         <label for="">Section:</label>

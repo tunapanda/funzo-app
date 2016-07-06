@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  nav: Ember.inject.service(),
   section: Ember.inject.controller('book.section'),
 
   fontSize: 14,

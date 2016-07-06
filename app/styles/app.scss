@@ -19,27 +19,9 @@ body {
   background: #f5f5f5;
 }
 
-.full-height {
-  display: flex;
-  flex-flow: column;
+main {
   height: 100vh;
-
-  .navbar {
-    flex: 0 1 auto;
-  }
-
-  main {
-    flex: 1 1 auto;
-    display: flex;
-
-    .row {
-      flex: 1;
-    }
-
-    &.pad-navbar {
-      padding-top: 70px;
-    }
-  }
+  padding-top: 15px;
 }
 
 .certel-logo {
