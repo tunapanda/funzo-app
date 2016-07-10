@@ -2,11 +2,19 @@ import DS from 'ember-data';
 
 export default DS.RESTAdapter.extend({
   urlForFindAll() {
-    return 'content/books/index.json';
+    let url = 'content/books/index.json';
+    if (window.cordova) {
+      url = window.cordova.file.externalDataDirectory + url;
+    }
+    return url;
   },
 
   urlForFindRecord(permalink) {
-    return `content/books/${permalink}/book.json`;
+    let url = `content/books/${permalink}/book.json`;
+    if (window.cordova) {
+      url = window.cordova.file.externalDataDirectory + url;
+    }
+    return url;
   },
 
   urlForFindHasMany(id, modelName, snapshot) {

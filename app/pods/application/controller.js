@@ -17,6 +17,9 @@ export default Ember.Controller.extend({
         return this.transitionToRoute('/');
       }
       history.back();
+    },
+    refreshIndex(books) {
+      this.store.pushPayload('book', books);
     }
   }
 });

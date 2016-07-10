@@ -5,8 +5,8 @@ var ifaces = os.networkInterfaces();
 
 var addresses = [];
 for (var dev in ifaces) {
-  ifaces[dev].forEach(function(details){
-    if(details.family === 'IPv4' && details.address !== '127.0.0.1') {
+  ifaces[dev].forEach(function(details) {
+    if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
       addresses.push(details.address);
     }
   });
@@ -41,7 +41,7 @@ module.exports = function(environment) {
         platform: 'android'
       }
     },
-    
+
     emberPouch: {
       localDb: 'funzo'
     },
@@ -80,7 +80,6 @@ module.exports = function(environment) {
     ENV.apiUrl = 'http://funzo-app-staging.herokuapp.com/api/v1';
     ENV.staging = true;
   }
-
 
   if (environment === 'production') {
     ENV.apiUrl = 'http://funzo-app.herokuapp.com/api/v1';
