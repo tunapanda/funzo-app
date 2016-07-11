@@ -24,13 +24,13 @@ export default Ember.Service.extend(Ember.Evented, {
 
     this.set('tmpDir', `${this.get('baseDir')}tmp`);
 
-    this.createDirectory(this.get('tmpDir'));
+    this.createDirectory('tmp');
 
-    this.createDirectory(this.get('contentDir'))
-      .then(this.createDirectory(this.get('bookDir'), this.get('contentDir')));
+    this.createDirectory('content')
+      .then(this.createDirectory('books', this.get('contentDir')));
 
-    this.createDirectory(this.get('downloadDir'))
-      .then(this.createDirectory(this.get('bookDownloadDir'), this.get('downloadDir')));
+    this.createDirectory('downloads')
+      .then(this.createDirectory('books', this.get('downloadDir')));
   },
 
   reset() {

@@ -26,7 +26,10 @@ body {
 
 main {
   height: 100vh;
-  padding-top: 15px;
+
+  &.pad-container {
+    padding-top: 15px;
+  }
 }
 
 .certel-logo {
@@ -158,7 +161,6 @@ blockquote {
   background: linear-gradient(to bottom, #005578 0%, #282828 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   color: #ffffff;
   padding: 0 20px;
-
   // height: 50%;
   padding-top: 25%;
 
