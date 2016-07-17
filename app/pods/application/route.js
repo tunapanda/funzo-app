@@ -9,6 +9,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   beforeModel() {
     if (window.cordova) {
       return new Ember.RSVP.Promise((res) => document.addEventListener('deviceready', res, false))
+        .then(() => this.get('bookManager').setup())
         .then(() => this.get('bookManager').updateIndex()).then(this._super);
     }
     return this._super();

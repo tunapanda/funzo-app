@@ -4,7 +4,7 @@ export default DS.RESTAdapter.extend({
   urlForFindAll() {
     let url = 'content/books/index.json';
     if (window.cordova) {
-      url = window.cordova.file.externalDataDirectory + url;
+      url = window.cordova.file.dataDirectory + url;
     }
     return url;
   },
@@ -12,7 +12,7 @@ export default DS.RESTAdapter.extend({
   urlForFindRecord(permalink) {
     let url = `content/books/${permalink}/book.json`;
     if (window.cordova) {
-      url = window.cordova.file.externalDataDirectory + url;
+      url = window.cordova.file.dataDirectory + url;
     }
     return url;
   },
