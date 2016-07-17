@@ -42,10 +42,10 @@
 
 
 .navbar-fixed-bottom {
-  touch-action:none;
+  // touch-action:none;
   transition: opacity 0.3s ease-in-out;
 
-  pointer-events: none;
+  // pointer-events: none;
 
   .form-group, select {
     width: auto !important;
