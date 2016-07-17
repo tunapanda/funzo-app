@@ -20,6 +20,11 @@ export default Ember.Controller.extend({
     },
     refreshIndex(books) {
       this.store.pushPayload('book', books);
+    },
+    addBook() {
+      this.set('modal.component', 'add-book');
+
+      Ember.$('.modal').modal('show');
     }
   }
 });

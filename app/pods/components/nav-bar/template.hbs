@@ -9,7 +9,7 @@
 
     {{#if showIcons}}
     <ul class="nav navbar-nav navbar-right">
-      <li><a href=""><i class="material-icons">library_add</i></a></li>
+      <li><a href="" {{action addBook}}><i class="material-icons">library_add</i></a></li>
       {{!-- <li><a href=""><i class="material-icons">format_size</i></a></li> --}}
       {{!#if session.isAuthenticated}}
         <li class="dropdown">
