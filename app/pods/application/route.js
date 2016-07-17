@@ -4,6 +4,17 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
   nav: Ember.inject.service('nav'),
+  bookManager: Ember.inject.service(),
+
+  beforeModel() {
+    if (window.cordova) {
+      return new Ember.RSVP.Promise((res) => document.addEventListener('deviceready', res, false))
+        .then(() => this.get('bookManager').updateIndex()).then(() => {
+          return this._super();
+        });
+    }
+    return this._super();
+  },
 
   actions: {
     back() {
