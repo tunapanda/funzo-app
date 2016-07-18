@@ -1,0 +1,46 @@
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">{{title}}</h4>
+    </div>
+    <div class="modal-body">
+      {{#if isIdle}}
+        <p>Enter the code from your teacher to start the download:</p>
+        <p>(Use code 'demo' for demo purposes)</p>
+        <form action="#" onsubmit={{action "submit"}}>
+          <div class="form-group">
+            <label for="book-code">Code</label>
+            {{input class="form-control" name="book-code" value=code}}
+          </div>
+        </form>
+      {{/if}}
+      {{#if isDownloading}}
+        <p class="text-center">Downloading {{downloadProgress}}%</p>
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{downloadProgress}}%">
+            <span class="sr-only">{{downloadProgress}}% Complete</span>
+          </div>
+        </div>
+      {{/if}}
+      {{#if isUnzipping}}
+        <p class="text-center">Unzipping {{zipProgress}}%</p>
+        <div class="progress">
+          <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{zipProgress}}%">
+            <span class="sr-only">{{zipProgress}}% Complete</span>
+          </div>
+        </div>
+      {{/if}}
+      {{#if isComplete}}
+        Complete!
+      {{/if}}
+      {{#if isError}}
+        {{bookManager.error}}
+      {{/if}}
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal" {{action 'cancel'}}>{{if complete 'Close' 'Cancel'}} </button>
+      {{#if isIdle}}
+      <button type="button" class="btn btn-primary" {{action "submit"}}>Add</button>
+      {{/if}}
+    </div>
+  </div><!-- /.modal-content -->

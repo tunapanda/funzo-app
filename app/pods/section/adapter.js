@@ -2,14 +2,26 @@ import DS from 'ember-data';
 
 export default DS.RESTAdapter.extend({
   urlForFindRecord(permalink, modelName, snapshot) {
-    return `content/books/${snapshot.record.get('book.id')}/${permalink}.json`;
+    let url = `content/books/${snapshot.record.get('book.id')}/${permalink}.json`;
+    if (window.cordova) {
+      url = window.cordova.file.dataDirectory + url;
+    }
+    return url;
   },
 
   urlForQuery(query) {
-    return `content/books/${query.book_id}/index.json`;
+    let url = `content/books/${query.book_id}/index.json`;
+    if (window.cordova) {
+      url = window.cordova.file.dataDirectory + url;
+    }
+    return url;
   },
 
   urlForQueryRecord(query) {
-    return `content/books/${query.book_id}/${query.section_id}.json`;
+    let url = `content/books/${query.book_id}/${query.section_id}.json`;
+    if (window.cordova) {
+      url = window.cordova.file.dataDirectory + url;
+    }
+    return url;
   }
 });
