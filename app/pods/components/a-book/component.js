@@ -241,6 +241,13 @@ export default Ember.Component.extend({
    */
   scrollToSection(permalink) {
     let offset = $('.book-content-container').scrollLeft() + $("#"+permalink).position().left - 40;
+    console.log(
+      "s2s " + permalink + " -> " + 
+      $('.book-content-container').scrollLeft() + 
+      " + " + 
+      $("#"+permalink).position().left + 
+      " = " + 
+      offset);
     this.set('animateScroll', false);
     this.set('scrollLeft', offset);
   },
@@ -270,6 +277,11 @@ export default Ember.Component.extend({
     let _this = this;
     $('.book-content img').click(function() {
       _this.attrs.showImage($(this).attr('src'));
+    });
+    
+    $('.book-content').on('click', '.ftnt', (e) => {
+      e.preventDefault();
+      this.scrollToSection($(e.target).data("ref"));
     });
 
     this.$('h3').each((i, el) => $(el).next().andSelf().wrapAll('<div class="keep-together" />'));
