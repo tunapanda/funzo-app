@@ -28,7 +28,10 @@ module.exports = function(environment) {
 
     APP: {
       bookOnlyMode: true,
-      encryptionKeyBase: 'foobarbaz'
+      //encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
+      encryptionKeyBase: 'foobarbaz',
+      //bookURLBase: 'http://certell.org/dl/books/'
+      bookURLBase: 'http://funzo.tunapanda.org/content/dl/'
     },
 
     cordova: {
