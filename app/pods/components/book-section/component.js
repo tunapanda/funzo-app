@@ -6,6 +6,7 @@ import Ember from 'ember';
 // * nicer section transitions (make seamless)
 
 export default Ember.Component.extend({
+  currentUser: Ember.inject.service('currentUser'),
   pages: [''],
   pageIndex: 0,
   pagesPerScreen: 1,
@@ -64,7 +65,7 @@ export default Ember.Component.extend({
 
     this.set('touchStarted', false);
   },
-
+  
   actions: {
     navPrev() {
       this.navPrev();
@@ -102,6 +103,7 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
+    var c = this;
     Ember.$('.book-container').click((e) => {
       if (!(
         e.target.tagname === 'A' ||
@@ -120,6 +122,17 @@ export default Ember.Component.extend({
 
     Ember.$(window).on('onorientationchange', () => this.onScreenChange());
     Ember.$(window).on('resize', () => this.onScreenChange());
+
+    Ember.$(".book-content").on('click', 'a', (e) => {
+        var a = Ember.$(e.target);
+        if (a.attr("href") === undefined) {
+            return;
+        }
+        if (a.attr("target") === undefined) {
+            a.attr("target","_blank");  
+        } 
+        c.sendAction("onOpenLink",e);
+    });
   },
 
   onScreenChange() {
