@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
+import ENV from 'funzo-app/config/environment';
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
@@ -19,7 +20,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   
   
   recordxAPI(statement_data) {
-    console.log("XAPI");
+    console.log("DBG recordxAPI");
     return new Ember.RSVP.Promise((resolve,reject) => {
       /* TODO: it's wasteful to fetch user data now, since we
                might not use it (see the second `if` below),
@@ -41,14 +42,26 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             "name": user.get('fullName'),
             "homePage": 'http://tunapanda.org'
           }
-        }
+        };
       }
       let statement = this.store.createRecord('x-api-statement', { 
           content: statement_data, 
           user: this.get('currentUser.model') 
       });
       return statement;
-   }).then((statement) => {statement.save()});
+   }).then((statement) => {
+    console.log("DBG saving..."); 
+    statement.save();});
+   
+    // TODO: adapt this so it actually works
+    
+      this.get('tincan').sendStatements(statements, (res) => {
+        if (!res[0].err) {
+          let unsynced = this.get('unsyncedStatements');
+          unsynced.setEach('synced', true);
+          unsynced.invoke('save');
+        }
+      });
   },
   
   actions: {
@@ -60,7 +73,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
 
     openLink(url) {
-      console.log("OPENLINK");
+      console.log("DBG OPENLINK");
       window.open(url, '_system');
     },
 
@@ -69,7 +82,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
 
     xAPIOpenLink(event) {
+    console.log("DBG xAPIOpenLink");
       var statement_data = {
+        "timestamp": new Date().toISOString(),
         "verb": {
             "id": "http://adlnet.gov/expapi/verbs/experienced",
             "display": {

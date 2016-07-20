@@ -288,6 +288,18 @@ export default Ember.Component.extend({
 
     this.set('pageWidth', $('.book-container').width());
     this.calcPageNumbers();
+
+    $(".book-content").on('click', 'a', (e) => {
+        console.log("DBG CLICK.link");
+        var a = Ember.$(e.target);
+        if (a.attr("href") === undefined) {
+            return;
+        }
+        if (a.attr("target") === undefined) {
+            a.attr("target","_blank");  
+        } 
+        this.sendAction("onOpenLink",e);
+    });
   },
 
   willDestroyElement() {

@@ -103,8 +103,10 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
+    console.log("DBG insert");
     var c = this;
     Ember.$('.book-container').click((e) => {
+        console.log("DBG CLICK.container");
       if (!(
         e.target.tagname === 'A' ||
         Ember.$(e.target).hasClass('book-navigation') ||
@@ -115,6 +117,7 @@ export default Ember.Component.extend({
     });
 
     Ember.$('.book-container').on('click', '.internal-link', (e) => {
+        console.log("DBG CLICK.internal-link");
       e.preventDefault();
       let permalink = Ember.$(e.target).data('permalink');
       this.sendAction('changeSection', permalink);
@@ -124,6 +127,7 @@ export default Ember.Component.extend({
     Ember.$(window).on('resize', () => this.onScreenChange());
 
     Ember.$(".book-content").on('click', 'a', (e) => {
+        console.log("DBG CLICK.link");
         var a = Ember.$(e.target);
         if (a.attr("href") === undefined) {
             return;
@@ -143,6 +147,7 @@ export default Ember.Component.extend({
   },
 
   init() {
+    console.log("init");
     if (window.innerHeight > window.innerWidth) {
       this.set('pagesPerScreen', 1);
     } else {

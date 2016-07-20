@@ -5,7 +5,7 @@
   }
 </style>
 
-{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal') changeSection=(action 'changeSection')}}
+{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal') changeSection=(action 'changeSection') onOpenLink='xAPIOpenLink'}}
 
 <div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
     <form class="navbar-form">
