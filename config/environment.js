@@ -1,5 +1,5 @@
 /* jshint node: true */
-
+/* global TinCan */
 var os     = require('os');
 var ifaces = os.networkInterfaces();
 
@@ -31,7 +31,15 @@ module.exports = function(environment) {
       //encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
       encryptionKeyBase: 'foobarbaz',
       //bookURLBase: 'http://certell.org/dl/books/'
-      bookURLBase: 'http://funzo.tunapanda.org/content/dl/'
+      bookURLBase: 'http://funzo.tunapanda.org/content/dl/',
+      xAPI: {
+        recordStores: [{
+          endpoint: 'http://lrs.tunapanda.org/data/xAPI/',
+          username: '1017b67da772161ed2889d2a42f7c94780a5e21d',
+          password: '1117ff2bb7674cf58b26177baed7b8f4e5e2e54d',
+          allowFail: false
+        }]
+      }
     },
 
     cordova: {

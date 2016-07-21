@@ -19,6 +19,26 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   currentUser: Ember.inject.service('currentUser'),
   
   
+
+  statementCount: Ember.computed.alias('model.statements.length'),
+  unsyncedStatements: Ember.computed.filterBy('model.statements', 'synced', false),
+  unsyncedStatementCount: Ember.computed.alias('unsyncedStatements.length'),
+  syncable: Ember.computed.bool('unsyncedStatementCount'),
+  
+  syncStatements() {
+    var xapi = new TinCan(ENV.APP.xAPI);
+    console.log("DBG syncing...");
+    let statements = this.get('unsyncedStatements').map((statement) => statement.get('content'));
+
+    xapi.sendStatements(statements, (res) => {
+      if (!res[0].err) {
+        let unsynced = this.get('unsyncedStatements');
+        unsynced.setEach('synced', true);
+        unsynced.invoke('save');
+      }
+    });
+  },
+  
   recordxAPI(statement_data) {
     console.log("DBG recordxAPI");
     return new Ember.RSVP.Promise((resolve,reject) => {
@@ -50,18 +70,15 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       });
       return statement;
    }).then((statement) => {
-    console.log("DBG saving..."); 
-    statement.save();});
+    console.log("DBG pre saving..."); 
+    statement.save();
+    console.log("DBG post saving..."); 
    
-    // TODO: adapt this so it actually works
-    
-      this.get('tincan').sendStatements(statements, (res) => {
-        if (!res[0].err) {
-          let unsynced = this.get('unsyncedStatements');
-          unsynced.setEach('synced', true);
-          unsynced.invoke('save');
-        }
-      });
+    console.log("DBG pre syncing"); 
+    this.syncStatements();
+    console.log("DBG post syncing"); 
+   
+   });
   },
   
   actions: {

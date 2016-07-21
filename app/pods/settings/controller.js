@@ -1,18 +1,12 @@
 /* global TinCan */
 import Ember from 'ember';
-
-var tincan = new TinCan({
-  recordStores: [{
-    endpoint: 'http://lrs.tunapanda.org/data/xAPI/',
-    username: '1017b67da772161ed2889d2a42f7c94780a5e21d',
-    password: '1117ff2bb7674cf58b26177baed7b8f4e5e2e54d',
-    allowFail: false
-  }]
-});
+import ENV from 'funzo-app/config/environment';
 
 function toArray(list) {
   return Array.prototype.slice.call(list || [], 0);
 }
+
+var xapi = new TinCan(ENV.APP.xAPI);
 
 // Call the reader.readEntries() until no more results are returned.
 function readFolder(dir) {
@@ -79,8 +73,6 @@ function loadCourse(coursesPath, name, store) {
 }
 
 export default Ember.Controller.extend({
-  tincan: tincan,
-
   init() {
     if (window.cordova) {
       if (window.cordova.file.externalRootDirectory) {
@@ -111,9 +103,10 @@ export default Ember.Controller.extend({
       Ember.$('.modal').modal('show');
     },
     syncStatements() {
+      console.log("DBG syncing...");
       let statements = this.get('unsyncedStatements').map((statement) => statement.get('content'));
 
-      this.get('tincan').sendStatements(statements, (res) => {
+      this.get('xAPI').sendStatements(statements, (res) => {
         if (!res[0].err) {
           let unsynced = this.get('unsyncedStatements');
           unsynced.setEach('synced', true);
