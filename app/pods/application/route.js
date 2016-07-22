@@ -15,6 +15,12 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     }
     return this._super();
   },
+  
+  model() {
+    return Ember.RSVP.hash({
+      statements: this.store.findAll('x-api-statement')
+    });
+  },
 
   currentUser: Ember.inject.service('currentUser'),
   
