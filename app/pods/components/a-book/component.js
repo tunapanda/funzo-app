@@ -240,14 +240,7 @@ export default Ember.Component.extend({
    * @return {void}
    */
   scrollToSection(permalink) {
-    let offset = $('.book-content-container').scrollLeft() + $("#"+permalink).position().left - 40;
-    console.log(
-      "s2s " + permalink + " -> " + 
-      $('.book-content-container').scrollLeft() + 
-      " + " + 
-      $("#"+permalink).position().left + 
-      " = " + 
-      offset);
+    let offset = $('.book-content-container').scrollLeft() + $("#"+permalink).offset().left - 40;
     this.set('animateScroll', false);
     this.set('scrollLeft', offset);
   },
