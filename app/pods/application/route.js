@@ -15,17 +15,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     }
     return this._super();
   },
-  
-  model() {
-    return Ember.RSVP.hash({
-      statements: this.store.findAll('x-api-statement')
-    });
-  },
 
   currentUser: Ember.inject.service('currentUser'),
   
-  
-
   statementCount: Ember.computed.alias('model.statements.length'),
   unsyncedStatements: Ember.computed.filterBy('model.statements', 'synced', false),
   unsyncedStatementCount: Ember.computed.alias('unsyncedStatements.length'),
@@ -34,14 +26,16 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   syncStatements() {
     var xapi = new TinCan(ENV.APP.xAPI);
     console.log("DBG syncing...");
-    let statements = this.get('unsyncedStatements').map((statement) => statement.get('content'));
-
-    xapi.sendStatements(statements, (res) => {
-      if (!res[0].err) {
-        let unsynced = this.get('unsyncedStatements');
-        unsynced.setEach('synced', true);
-        unsynced.invoke('save');
-      }
+    this.store.query(
+      'x-api-statement',
+      {'synced':false}
+    ).then(statements => {
+      xapi.sendStatements(statements, (res) => {
+        if (!res[0].err) {
+          statements.setEach('synced', true);
+          statements.invoke('save');
+        }
+      });    
     });
   },
   
