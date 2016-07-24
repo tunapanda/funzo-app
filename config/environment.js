@@ -28,9 +28,15 @@ module.exports = function(environment) {
 
     APP: {
       bookOnlyMode: true,
-      //encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
-      encryptionKeyBase: 'foobarbaz',
-      //bookURLBase: 'http://certell.org/dl/books/'
+      defaultBook: false,
+      /*
+      // Set this to false to have no default
+      defaultBook: {
+      	code: 'demo',
+      	hint: 'enter code "demo" to download an example book'
+      },
+      */
+      encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
       bookURLBase: 'http://funzo.tunapanda.org/content/dl/',
       xAPI: {
         recordStores: [{

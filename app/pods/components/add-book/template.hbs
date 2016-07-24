@@ -6,7 +6,9 @@
     <div class="modal-body">
       {{#if isIdle}}
         <p>Enter the code from your teacher to start the download:</p>
-        <p>(Use code 'demo' for demo purposes)</p>
+        {{#if hint}}
+        <p>{{hint}}</p>
+        {{/if}}
         <form action="#" onsubmit={{action "submit"}}>
           <div class="form-group">
             <label for="book-code">Code</label>
@@ -21,7 +23,7 @@
             <span class="sr-only">{{downloadProgress}}% Complete</span>
           </div>
         </div>
-      {{/if}}
+      {{/if}}}
       {{#if isUnzipping}}
         <p class="text-center">Unzipping {{zipProgress}}%</p>
         <div class="progress">
