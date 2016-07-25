@@ -66,13 +66,11 @@ export default Ember.Service.extend(Ember.Evented, {
         return this.readFolderContents(bookDir)
         .then((bookFolders) => {
           return Ember.RSVP.all(bookFolders.filterBy('isDirectory', true).map((bookFolder) => {
-              console.log("DBG: Folder" + bookFolder.name);
             return this.getFile(`content/books/${bookFolder.name}/book.json`).then(file => this.readFileContents(file));
           }));
         }).then((bookMetas) => {
           return Ember.RSVP.resolve(`[${bookMetas.join(',')}]`);
         }).then((indexContent) => {
-          console.log("DBG: indexContent = " + indexContent);
           return this.createFile(bookDir, 'index.json')
             .then((indexFile) => this.writeFileContents(indexFile, indexContent))
             .then((indexContent) => {
@@ -107,7 +105,6 @@ export default Ember.Service.extend(Ember.Evented, {
 
   downloadBook(code) {
     let url = this.urlForBook(code);
-    console.log("DBG: downloading book '" + code + "' from " + url);
     if (code === 'demo-ndl') {
       return Ember.RSVP.resolve();
     }
@@ -123,14 +120,11 @@ export default Ember.Service.extend(Ember.Evented, {
   unzipBook(code) {
     let zipPath = `${this.root.toURL()}downloads/books/${code}.zip`;
     let unzipDest = `${this.root.toURL()}tmp/${code}`;
-    console.log("DBG Unzipping " + zipPath + " to " + unzipDest);
     return this.createDirectory('tmp/' + code)
       .then(() => this.unzip(zipPath, unzipDest))
       .then(() => this.getFile(`tmp/${code}/book.json`))
       .then((file) => this.readFileContents(file))
       .then((bookJSON) => {
-        console.log("DBG Parsing json...");
-        console.log(bookJSON);
         let bookMeta = JSON.parse(bookJSON);
         let permalink = bookMeta.permalink;
 
@@ -138,7 +132,6 @@ export default Ember.Service.extend(Ember.Evented, {
           destFolder: this.getDirectory('content/books'),
           unzipFolder: this.getDirectory(`tmp/${code}`)
         }).then((res) => {
-          console.log("DBG Moving " + res.unzipFolder + " to " + res.destFolder + " for " + permalink);
           return this.moveFile(res.unzipFolder, res.destFolder, permalink);
         });
       });
@@ -156,7 +149,6 @@ export default Ember.Service.extend(Ember.Evented, {
   },
 
   fileTransfer(uri, destPath) {
-    console.log("DBG xfter " + uri + " to " + destPath);
     return new Ember.RSVP.Promise((res, rej) => {
       let fileTransfer = new window.FileTransfer();
       uri = encodeURI(uri);
@@ -213,8 +205,6 @@ export default Ember.Service.extend(Ember.Evented, {
 
   getFile(url) {
     return new Ember.RSVP.Promise((res, rej) => {
-      console.log("DBG getFile at " + url);
-      console.log(this.root);
       this.root.getFile(url, { create: false }, (file) => res(file), rej);
     });
   },
@@ -252,7 +242,6 @@ export default Ember.Service.extend(Ember.Evented, {
 
   readFileContents(file) {
     return new Ember.RSVP.Promise(function(res, rej) {
-      console.log("DBG reading contents of " + file);
       file.file((file) => {
         let reader = new FileReader();
 
