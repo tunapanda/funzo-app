@@ -37,7 +37,8 @@ module.exports = function(environment) {
       },
       */
       encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
-      bookURLBase: 'http://funzo.tunapanda.org/content/dl/',
+      // For directories, be sure to include a trailing '/'!
+      bookURLBase: 'http://elibrary.certell.org/books/',
       xAPI: {
         recordStores: [{
           endpoint: 'http://lrs.tunapanda.org/data/xAPI/',
