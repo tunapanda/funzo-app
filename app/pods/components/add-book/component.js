@@ -1,5 +1,8 @@
-ookimport Ember from 'ember';
+import Ember from 'ember';
 import ENV from 'funzo-app/config/environment';
+
+var dftCode = ENV.APP.defaultBook.code || "";
+var dftHint = ENV.APP.defaultBook.hint || "";
 
 export default Ember.Component.extend({
   bookManager: Ember.inject.service(),
@@ -16,15 +19,10 @@ export default Ember.Component.extend({
   isError: Ember.computed.equal('status', 'error'),
 
   title: 'Add A Book',
-
-  if (ENV.APP.defaultBook) {
-  	code = "ENV.APP.defaultBook.code";
-  	hint = "ENV.APP.defaultBook.hint";
-  } else {
-  	code = "";
-  	hint = false
-  }
-
+  
+  code: dftCode,
+  hint: dftHint,
+  
   didInsertElement() {
     this.get('bookManager').reset();
   },
