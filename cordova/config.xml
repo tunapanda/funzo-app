@@ -7,6 +7,7 @@
     <author email="dev@certell.org" href="http://certell.org">
         The Tunapanda Institute, on behalf of Certell.org
     </author>
+    <icon src="certelllogo-small.png" />
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
