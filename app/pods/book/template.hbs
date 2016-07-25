@@ -10,7 +10,7 @@
 <div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
     <form class="navbar-form">
       <div class="form-group">
-        <label for="">Section:</label>
+        <label for="">Jump To:</label>
         <select name="section" class="change-section form-control" onchange={{action 'changeSection' value="target.value"}}>
           {{#each model.sections as |section|}}
             <option value="{{section.permalink}}" selected={{eq section currentSection}}>{{section.title}}</option>
