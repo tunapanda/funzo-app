@@ -47,8 +47,14 @@
         <param name="ios-package" value="CDVStatusBar" />
     </feature>
 
-    <hook type="after_prepare" src="scripts/copyIcons.js" />
+    <!--<hook type="after_prepare" src="scripts/copyIcons.js" />-->
 
+    <platform name="android">
+        <icon src="icons/android/Icon-App-24x24.png" width="24" height="24" />
+        <icon src="icons/android/Icon-App-36x36.png" width="36" height="36" />
+        <icon src="icons/android/Icon-App-48x48.png" width="48" height="48" />
+        <icon src="icons/android/Icon-App-72x72.png" width="72" height="72" />
+    </platform>
     <platform name="ios">
         <icon src="icons/ios/Icon-App-29x29@1x.png" width="29" height="29" />
         <icon src="icons/ios/Icon-App-29x29@2x.png" width="58" height="58" />
