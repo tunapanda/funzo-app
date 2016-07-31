@@ -7,6 +7,6 @@ export default Model.extend({
   subject: DS.attr(),
   sections: DS.hasMany('section', { async: true }),
   cover: Ember.computed('id', function() {
-    return window.cordova ? window.cordova.file.dataDirectory + 'content/books/' + this.get('id') + '/cover.png' : '';
+    return window.cordova ? window.cordova.file.dataDirectory + 'content/books/' + this.get('id') + '/cover.png' : 'content/books/' + this.get('id') + '/cover.png';
   })
 });
