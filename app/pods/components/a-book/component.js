@@ -77,8 +77,29 @@ export default Ember.Component.extend({
       return this.attrs.changeSection(permalink);
     }
 
+    if (e.target.tagName === 'IMG') {
+      e.preventDefault();
+      return this.attrs.showImage($target.attr('src'));
+    }
+
+    if ($target.hasClass('ftnt')) {
+      e.preventDefault();
+      return this.scrollToSection($target.data('ref'));
+    }
+
+    if (e.target.tagName === 'A') {
+      console.log('DBG CLICK.link');
+      if ($target.attr('href') === undefined) {
+        return;
+      }
+      if ($target.attr('target') === undefined) {
+        $target.attr('target', '_blank');
+      }
+      this.sendAction('onOpenLink', e);
+    };
+
     if (!(
-      e.target.tagname === 'A' ||
+      e.target.tagName === 'A' ||
       $(e.target).hasClass('book-navigation') ||
       $(e.target).parents().hasClass('book-navigation')
       )) {
@@ -247,53 +268,39 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
+
     this.set('elements.page-numbers', this.$('.page-numbers'));
     this.set('elements.book-content-container', $('.book-content-container'));
-    // $('.book-container').click((e) => {
-    //   if (!(
-    //     e.target.tagname === 'A' ||
-    //     $(e.target).hasClass('book-navigation') ||
-    //     $(e.target).parents().hasClass('book-navigation')
-    //     )) {
-    //     $('.navbar').toggleClass('show');
-    //   }
-    // });
-
-    // $('.book-container').on('click', '.internal-link', (e) => {
-    //   e.preventDefault();
-    //   let permalink = $(e.target).data('permalink');
-    //   this.sendAction('changeSection', permalink);
-    // });
 
     $(window).on('onorientationchange', this.onScreenChange.bind(this));
     $(window).on('resize', this.onScreenChange.bind(this));
 
-    let _this = this;
-    $('.book-content img').click(function() {
-      _this.attrs.showImage($(this).attr('src'));
-    });
+    // let _this = this;
+    // $('.book-content img').click(function() {
+    //   _this.attrs.showImage($(this).attr('src'));
+    // });
     
-    $('.book-content').on('click', '.ftnt', (e) => {
-      e.preventDefault();
-      this.scrollToSection($(e.target).data("ref"));
-    });
+    // $('.book-content').on('click', '.ftnt', (e) => {
+    //   e.preventDefault();
+    //   this.scrollToSection($(e.target).data("ref"));
+    // });
 
     this.$('h3').each((i, el) => $(el).next().andSelf().wrapAll('<div class="keep-together" />'));
 
     this.set('pageWidth', $('.book-container').width());
     this.calcPageNumbers();
 
-    $(".book-content").on('click', 'a', (e) => {
-        console.log("DBG CLICK.link");
-        var a = Ember.$(e.target);
-        if (a.attr("href") === undefined) {
-            return;
-        }
-        if (a.attr("target") === undefined) {
-            a.attr("target","_blank");  
-        } 
-        this.sendAction("onOpenLink",e);
-    });
+    // $(".book-content").on('click', 'a', (e) => {
+    //   console.log("DBG CLICK.link");
+    //   var a = Ember.$(e.target);
+    //   if (a.attr("href") === undefined) {
+    //     return;
+    //   }
+    //   if (a.attr("target") === undefined) {
+    //     a.attr("target","_blank");  
+    //   } 
+    //   this.sendAction("onOpenLink",e);
+    // });
   },
 
   willDestroyElement() {
