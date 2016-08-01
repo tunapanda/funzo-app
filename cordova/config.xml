@@ -37,7 +37,6 @@
     <engine name="android" spec="~5.2.0" />
     <plugin name="cordova-plugin-file-transfer" spec="~1.5.0" />
     <engine name="ios" spec="latest" />
-    <plugin name="cordova-plugin-file" spec="~4.2.0" />
     <plugin name="cordova-plugin-zip" spec="~3.1.0" />
 
     <feature name="File">
