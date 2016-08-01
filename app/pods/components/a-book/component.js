@@ -4,6 +4,7 @@ import TweenLite from 'tweenlite';
 let $ = Ember.$;
 
 export default Ember.Component.extend({
+  liquidFireEvents: Ember.inject.service(),
   sectionLocations: {},
   sectionPageCounts: {},
   currentPageNumber: 1,
@@ -163,7 +164,7 @@ export default Ember.Component.extend({
     },
 
     didMouseWheel(e) {
-      // e.preventDefault();
+      e.preventDefault();
     }
   },
 

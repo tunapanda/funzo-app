@@ -2,19 +2,17 @@ import Ember from 'ember';
 import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, {
-// export default Ember.Route.extend({
+  crypto: Ember.inject.service(),
 
   showBackButton: true,
   model(params) {
-    return this.store.find('book', params.book_id).then((book) => {
-      return book.get('sections').then(() => {
-        return Ember.RSVP.resolve(book);
-      });
-    });
+    return this.store.find('book', params.book_id);
   },
 
-  // afterModel(model) {
-  //   this.set('navBarTitle', model.get('title'));
-  //   return this._super(...arguments);
-  // }
+  /**
+   * decrypt the sections
+   **/
+  afterModel(model) {
+    return model.get('sections').then(sections => Ember.RSVP.all(sections.map(section => this.get('crypto').decryptSection(section))));
+  }
 });

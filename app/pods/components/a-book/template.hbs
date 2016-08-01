@@ -12,19 +12,13 @@
       </div>
   </div>
 
-  <div class="book-content-container" style={{bookContentStyle}} onscroll={{action 'didScroll'}} {{!--  onmousewheel={{action 'didMouseWheel'}} --}}>
+  <div class="book-content-container" style={{bookContentStyle}} onscroll={{action 'didScroll'}} onmousewheel={{action 'didMouseWheel'}}>
     <div class="book-content">
-{{!--     <div class="section section-{{sections.firstObject.permalink}}" data-section="{{sections.firstObject.permalink}}">
-      {{sections.firstObject.html}}
-    </div> --}}
-{{!--       <div class="section section-cover" data-section="cover">
-        <img class="img-responsive" src="content/books/{{sections.firstObject.book.id}}/cover.png" alt="">
-      </div> --}}
-      {{#each sections as |section|}}
-        <div class="section section-{{section.permalink}}" data-section="{{section.permalink}}">
-          {{section.html}}
-        </div>
-      {{/each}}
+        {{#each sections as |section|}}
+          <div class="section section-{{section.permalink}}" data-section="{{section.permalink}}">
+            {{section.html}}
+          </div>
+        {{/each}}
     </div>
   </div>
   <div class="page-numbers">

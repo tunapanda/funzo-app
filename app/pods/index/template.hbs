@@ -2,7 +2,7 @@
   <div class="row">
     {{#each model.books as |book|}}
       <div class="col-xs-6 col-sm-4 col-md-2">
-        {{#link-to 'book' book}}
+        {{#link-to 'book.section' book book.sections.firstObject}}
           <div class="panel panel-default">
             <img class="img-responsive" src="{{book.cover}}" alt="">
             <div class="panel-body">

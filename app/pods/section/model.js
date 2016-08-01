@@ -28,27 +28,7 @@ export default Model.extend({
     return expirationDate; 
   }),
   
-  html: Ember.computed('content', function() {
-    let encryption = this.get('encryption');
-    let expiration = this.get('expirationDate');
-    
-    // This should be changed further down, so if the user
-    // ever sees this default, something has indeed gone wrong. 
-    let rendered = "<h1>Error</h1><p><em>Failed to extract book content. Please notify your school.</em></p>";
-    console.log("Expiration = " + expiration);
-    if (expiration && expiration < new Date()) {
-      return Ember.String.htmlSafe("<h1>Expired</h1><p><em>Sorry, this copy of " +
-        this.get('book.title') +
-        " expired on " +
-        expiration +
-        ". Please notify your school.</em></p>");
-    } else if (this.get('content') && encryption === 'aes') {
-      let decrypted = CryptoJS.AES.decrypt(this.get('content'), this.get('key'));
-      return Ember.String.htmlSafe(decrypted.toString(CryptoJS.enc.Utf8));
-    } else {
-      return Ember.String.htmlSafe(this.get('content'));
-    }
-  }),
+  html: DS.attr(),
 
   key: Ember.computed('institution', 'expiration', function() {
     return this.get('institution') + this.get('expiration') + ENV.APP.encryptionKeyBase;

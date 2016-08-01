@@ -14,6 +14,10 @@ export default Ember.Route.extend(AuthenticatedRouteMixin, NavBarTitleMixin, {
     });
   },
 
+  afterModel(model) {
+    return model.books.map(book => book.get('sections.firstObject'));
+  },
+
   activate() {
     this.set('showBackButton', false);
     this.set('nav.showIcons', true);
