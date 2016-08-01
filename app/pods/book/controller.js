@@ -35,7 +35,7 @@ export default Ember.Controller.extend({
         this.transitionToRoute('book.section', this.get('model'), prevSection);
       }
     },
-    changeSection(permalink) {
+    changePermalink(permalink) {
       Ember.$('.book-loading-overlay').show();
       permalink = permalink || Ember.$('.change-section').val();
 

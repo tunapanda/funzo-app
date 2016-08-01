@@ -5,13 +5,13 @@
   }
 </style>
 
-{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal') changeSection=(action 'changeSection') onOpenLink='xAPIOpenLink'}}
+{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal') changePermalink=(action 'changePermalink') onOpenLink='xAPIOpenLink'}}
 
 <div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
     <form class="navbar-form">
       <div class="form-group">
         <label for="">Jump To:</label>
-        <select name="section" class="change-section form-control" onchange={{action 'changeSection' value="target.value"}}>
+        <select name="section" class="change-section form-control" onchange={{action 'changePermalink' value="target.value"}}>
           {{#each model.sections as |section|}}
             <option value="{{section.permalink}}" selected={{eq section currentSection}}>{{section.title}}</option>
           {{/each}}
