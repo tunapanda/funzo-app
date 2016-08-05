@@ -4,6 +4,7 @@ import TweenLite from 'tweenlite';
 let $ = Ember.$;
 
 export default Ember.Component.extend({
+  currentUser: Ember.inject.service('currentUser'),
   liquidFireEvents: Ember.inject.service(),
   sectionLocations: {},
   sectionPageCounts: {},
@@ -11,11 +12,29 @@ export default Ember.Component.extend({
 
   elements: {},
 
+  book: this.model,
+
   /**
    * current container scroll position
    * @type {Number}
    */
-  scrollLeft: 0,
+  scrollLeft: Ember.computed('placeHolder', {
+		get(key) {
+			let placeHolder = this.get('book.placeHolder');
+			console.log("getting scrollLeft from placeholder with location " + placeHolder);
+			return placeHolder;
+		},	
+		set (key,value) {
+			let book = this.get('book');
+			// book is undefined??
+			// this.set('book.placeHolder',value) also doesn't work
+			console.log(book);
+			let placeHolder = book.set('placeHolder',value);
+			console.log(placeHolder);
+			console.log("setting scrollLeft + placeholder to location " + placeHolder);
+			return placeHolder;
+		}
+	}),
 
   /**
    * if changing scrollLeft programmatically, whether to animate the change
@@ -389,6 +408,8 @@ export default Ember.Component.extend({
     } else {
       this.set('scrollLeft', container.scrollLeft() + (this.get('pageWidth') - (container.scrollLeft() % this.get('pageWidth'))));
     }
+		let newLocation = this.get('scrollLeft');
+
   }
 
   // findSections() {
