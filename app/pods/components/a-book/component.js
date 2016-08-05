@@ -4,6 +4,7 @@ import TweenLite from 'tweenlite';
 let $ = Ember.$;
 
 export default Ember.Component.extend({
+  currentUser: Ember.inject.service('currentUser'),
   liquidFireEvents: Ember.inject.service(),
   sectionLocations: {},
   sectionPageCounts: {},
@@ -11,11 +12,42 @@ export default Ember.Component.extend({
 
   elements: {},
 
+  book: this.model,
+
+	placeHolder: Ember.computed('book', 'currentUser', () => {
+			let currentUser = this.get('currentUser');
+			let book = this.get('book');
+			return currentUser.get('placeHolders').then(holders => {
+				let placeHolder = holders.findBy('book',book);
+				if (typeof(placeHolder) === 'undefined') {
+					console.log("creating new placeholder");
+					return this.get('store').createRecord('place-holder', {
+						user: currentUser,
+					  book: book	
+					});
+				} else {
+					console.log("using existing placeholder with location " + placeholder.location);
+					return placeHolder;
+				}
+		})
+  }),
   /**
    * current container scroll position
    * @type {Number}
    */
-  scrollLeft: 0,
+  scrollLeft: Ember.computed('placeHolder', {
+		get(key) {
+			let placeHolder = this.get('placeHolder');
+			console.log("getting scrollLeft from placeholder with location " + placeholder.location);
+			return placeHolder.location;
+		},	
+		set (key,value) {
+			let placeHolder = this.get('placeHolder');
+			placeHolder.location	= value;
+			console.log("setting scrollLeft + placeholder to location " + placeholder.location);
+			return placeHolder.location;
+		}
+	}),
 
   /**
    * if changing scrollLeft programmatically, whether to animate the change
@@ -389,6 +421,8 @@ export default Ember.Component.extend({
     } else {
       this.set('scrollLeft', container.scrollLeft() + (this.get('pageWidth') - (container.scrollLeft() % this.get('pageWidth'))));
     }
+		let newLocation = this.get('scrollLeft');
+
   }
 
   // findSections() {
