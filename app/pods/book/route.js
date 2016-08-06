@@ -14,5 +14,11 @@ export default Ember.Route.extend(NavBarTitleMixin, {
    **/
   afterModel(model) {
     return model.get('sections').then(sections => Ember.RSVP.all(sections.map(section => this.get('crypto').decryptSection(section))));
+  },
+
+  actions: {
+    changeSection(section) {
+      this.replaceWith('book.section', this.get('controller.model'), section);
+    }
   }
 });
