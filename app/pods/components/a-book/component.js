@@ -180,10 +180,6 @@ export default Ember.Component.extend({
         // Ember.run.debounce(this, 'scrollEnd', e, 300);
       }
       // this.get('elements.page-numbers').css('marginLeft', -this.get('elements.book-content-container').scrollLeft());
-    },
-
-    didMouseWheel(e) {
-      e.preventDefault();
     }
   },
 
@@ -209,7 +205,7 @@ export default Ember.Component.extend({
    * @return {void}
    */
 
-  onScrollLeft: Ember.observer('scrollLeft', function () {
+  onScrollLeft: Ember.observer('scrollLeft', function() {
     let container = this.$('.book-content-container');
     let current = container.scrollLeft();
     let to = this.get('scrollLeft');
@@ -335,7 +331,6 @@ export default Ember.Component.extend({
   willDestroyElement() {
     $(window).off('onorientationchange', this.onScreenChange.bind(this));
     $(window).off('resize', this.onScreenChange.bind(this));
-    $('.book-content img').off();
   },
 
   /**
