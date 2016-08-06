@@ -14,7 +14,7 @@
   <div class="book-content-container" style={{bookContentStyle}} onclick={{action 'clickBook'}}>
     <div class="book-content">
         {{#each sections as |section|}}
-          <div class="section section-{{section.permalink}}" data-section="{{section.permalink}}">
+          <div class="section section-{{section.permalink}} {{if section.isHidden 'hide'}}" data-section="{{section.permalink}}">
             {{section.html}}
           </div>
         {{/each}}

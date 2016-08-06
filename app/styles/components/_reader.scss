@@ -260,3 +260,8 @@
 sup {
     position: inherit;
 }
+
+.section.hide {
+  visibility: hidden;
+  display: initial !important;
+}

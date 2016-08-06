@@ -255,11 +255,27 @@ export default Ember.Component.extend({
 
       this.get('sections').setEach('isCurrentSection', false);
       newSection.set('isCurrentSection', true);
+      // this.showSection(permalink);
 
       this.attrs.changePermalink(permalink);
     }
 
     this.set('scrolling', false);
+  },
+
+  showSection(permalink) {
+    let newSection = this.get('sections').findBy('permalink', permalink);
+
+    this.get('sections').setEach('isHidden', true);
+
+    let index = this.get('sections').indexOf(newSection);
+    if (this.get('sections').objectAt(index - 1)) {
+      this.get('sections').objectAt(index - 1).set('isHidden', false);
+    }
+    newSection.set('isHidden', false);
+    if (this.get('sections').objectAt(index + 1)) {
+      this.get('sections').objectAt(index + 1).set('isHidden', false);
+    }
   },
 
   /**
@@ -293,13 +309,19 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    this.set('pageWidth', $('.book-container').width());
-    this.findSections();
 
+    this.set('pageWidth', $('.book-container')[0].clientWidth);
 
+    this.waitForImages().then(() => {
+      this.findSections();
+      Ember.run.scheduleOnce('afterRender', () => {
         if (this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
           this.scrollToSection(this.get('currentRouteModel.permalink'));
         }
+
+        this.set('hideLoading', true);
+      });
+    });
 
     this.set('elements.page-numbers', this.$('.page-numbers'));
     this.set('elements.book-content-container', $('.book-content-container'));
