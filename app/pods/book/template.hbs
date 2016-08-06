@@ -3,9 +3,13 @@
   .book-content {
     font-size: {{fontSizeString}};
   }
+  .book-loading-overlay {
+    background-image: url({{model.cover}});
+    background-size: cover;
+  }
 </style>
 
-{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal') changePermalink=(action 'changePermalink') onOpenLink='xAPIOpenLink'}}
+{{a-book sections=sections currentRouteModel=currentSection showImage=(action 'showImageModal') changePermalink=(action 'changePermalink') onOpenLink='xAPIOpenLink'}}
 
 <div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
     <form class="navbar-form">

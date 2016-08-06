@@ -1,8 +1,21 @@
 import Ember from 'ember';
+const { $, ObjectProxy, computed } = Ember;
+
+let SectionDecorator = ObjectProxy.extend({
+  isHidden: false,
+  isCurrentSection: false,
+  isVisible: Ember.computed.not('isHidden'),
+  startPosition: 0,
+  endPosition: 0
+});
 
 export default Ember.Controller.extend({
   nav: Ember.inject.service(),
   section: Ember.inject.controller('book.section'),
+
+  sections: computed.map('model.sections', function(model, i) {
+    return SectionDecorator.create({ content: model });
+  }),
 
   fontSize: 14,
 
@@ -21,25 +34,25 @@ export default Ember.Controller.extend({
   modal: Ember.inject.service('bootstrap-modal'),
 
   actions: {
-    nextSection() {
-      let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
-      let nextSection = this.get('model.sections').objectAt(index + 1);
-      if (nextSection) {
-        this.transitionToRoute('book.section', this.get('model'), nextSection);
-      }
-    },
-    prevSection() {
-      let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
-      let prevSection = this.get('model.sections').objectAt(index - 1);
-      if (prevSection) {
-        this.transitionToRoute('book.section', this.get('model'), prevSection);
-      }
-    },
+    // nextSection() {
+    //   let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
+    //   let nextSection = this.get('model.sections').objectAt(index + 1);
+    //   if (nextSection) {
+    //     this.transitionToRoute('book.section', this.get('model'), nextSection);
+    //   }
+    // },
+    // prevSection() {
+    //   let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
+    //   let prevSection = this.get('model.sections').objectAt(index - 1);
+    //   if (prevSection) {
+    //     this.transitionToRoute('book.section', this.get('model'), prevSection);
+    //   }
+    // },
     changePermalink(permalink) {
       Ember.$('.book-loading-overlay').show();
-      permalink = permalink || Ember.$('.change-section').val();
 
-      Ember.run.later(() => this.transitionToRoute('book.section', this.get('model'), this.get('model.sections').findBy('permalink', permalink)), 100);
+      this.send('changeSection', this.get('model.sections').findBy('permalink', permalink));
+      // Ember.run.later(() => this.transitionToRoute('book.section', this.get('model'), ), 100);
     },
 
     showImageModal(image) {

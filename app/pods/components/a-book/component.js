@@ -3,8 +3,12 @@ import TweenLite from 'tweenlite';
 
 let $ = Ember.$;
 
+const { $, computed, RSVP } = Ember;
 export default Ember.Component.extend({
   sectionLocations: [],
+
+  _currentSections: computed.filterBy('sections', 'isCurrentSection', true),
+  currentSection: computed.alias('_currentSections.firstObject'),
 
   elements: {},
 
@@ -233,21 +237,26 @@ export default Ember.Component.extend({
    */
 
   didScroll(direction) {
+    // this.findSections();
+
     let permalink;
-    let matchStart = this.get('sectionLocations').findBy('start', this.get('scrollLeft'));
+    let matchStart = this.get('sections').findBy('startPosition', this.get('scrollLeft'));
 
     if (matchStart && direction === 'forward') {
-      permalink = matchStart.permalink;
+      permalink = matchStart.get('permalink');
     }
 
-    let matchEnd = this.get('sectionLocations').findBy('end', this.get('scrollLeft'));
+    let matchEnd = this.get('sections').findBy('endPosition', this.get('scrollLeft'));
     if (matchEnd && direction === 'backward') {
-      permalink = matchEnd.permalink;
+      permalink = matchEnd.get('permalink');
     }
 
-    if ((matchStart || matchEnd) && permalink !== this.get('currentSection.permalink')) {
-      // this.set('changingSection', true);
-      this.set('actualCurrentSection', this.get('sections').findBy('permalink', permalink));
+    if (permalink && (matchStart || matchEnd) && permalink !== this.get('currentRouteModel.permalink')) {
+      let newSection = this.get('sections').findBy('permalink', permalink);
+
+      this.get('sections').setEach('isCurrentSection', false);
+      newSection.set('isCurrentSection', true);
+
       this.attrs.changePermalink(permalink);
     }
 
@@ -261,10 +270,15 @@ export default Ember.Component.extend({
    * @return {void}
    */
   scrollToSection(permalink) {
-    let offset = this.get('sectionLocations').findBy('permalink', permalink).start;
-    // let offset = $(`#${permalink}`).offset().left - $('.book-content-container').offset().left + $('.book-content-container').scrollLeft() - 40;
-    this.set('animateScroll', false);
-    this.set('scrollLeft', offset);
+    // this.showSection(permalink);
+    // schedule afterRender not working! so just delaying
+    // Ember.run.later(() => {
+      // let offset = this.get('sections').findBy('permalink', permalink) ? this.get('sections').findBy('permalink', permalink).get('startPosition') : 0;
+      let offset = ($('#' + permalink).offset().left - 40) + this.get('scrollLeft');
+      console.log(`scrolling to ${permalink} at ${offset}`);
+      this.set('animateScroll', false);
+      this.set('scrollLeft', offset);
+    // }, 500);
   },
 
   scrollToFootnote(footnote) {
@@ -283,12 +297,10 @@ export default Ember.Component.extend({
     this.set('pageWidth', $('.book-container').width());
     this.findSections();
 
-    // initially the book will be on first section whatever the permalink says
-    this.set('actualCurrentSection', this.get('sections.firstObject'));
 
-    if (this.get('actualCurrentSection') !== this.get('currentSection')) {
-      this.scrollToSection(this.get('currentSection.permalink'));
-    }
+        if (this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
+          this.scrollToSection(this.get('currentRouteModel.permalink'));
+        }
 
     this.set('elements.page-numbers', this.$('.page-numbers'));
     this.set('elements.book-content-container', $('.book-content-container'));
@@ -305,48 +317,20 @@ export default Ember.Component.extend({
     $('.book-content img').off();
   },
 
-  calcPageNumbers() {
-    // console.time('calculate page numbers');
-    // let $pageNumbers = $('.page-numbers');
-    // // Clear all page numbers
-    // $pageNumbers.html('');
-
-    // let lastPosition = 0;
-    // let totalPageCount = 0;
-
-    // let pageNumbersHTML = '';
-
-    // this.$('.book-content .section').each((i, section) => {
-    //   let sectionPageCount = 0;
-
-    //   // for each child element of a section
-    //   $(section).children(':not(a)').each((i, p) => {
-    //     let $p = $(p);
-    //     let left = $p.position().left;
-    //     // Check if the element has a greater x than the last, if it does it
-    //     // means were now on the next page so we can increment the page counts
-    //     // and add a page number
-    //     if (left > lastPosition) {
-    //       sectionPageCount++;
-    //       totalPageCount++;
-    //       pageNumbersHTML += `<div class="page-number" style="left: ${left - 40}px;">Page ${totalPageCount}</div>`;
-    //     }
-    //     lastPosition = left;
-    //   });
-
-    //   console.log($(section).data('section') + ': ' + sectionPageCount);
-
-    //   // Save the section page counts, inside a sync becuase used directly causes
-    //   // performamce degredation
-    //   console.timeEnd('calculate page numbers');
-    //   Ember.run.schedule('sync', () => $(section).data('section') && this.set('sectionPageCounts.' + $(section).data('section'), sectionPageCount));
-    // });
-    Ember.run.schedule('afterRender', () => {
-      // $pageNumbers.append(pageNumbersHTML);
-
-      // TweenLite.fromTo('.cover-img', 0.3, {opacity: 1}, {opacity: 0, lazy: true, delay: 0.3});
+  /**
+   * We have to wait for images to load, because they cause text reflowing and move the sections around.
+   */
+  waitForImages() {
+    return new RSVP.Promise((resolve) => {
+      let imagesLoaded = 0;
+      let images = this.$('p img');
+      images.load((e) => {
+        imagesLoaded++;
+        if (images.length === imagesLoaded) {
+          resolve();
+        }
+      });
     });
-
   },
 
   /**
@@ -359,15 +343,15 @@ export default Ember.Component.extend({
    * @return {void}
    */
 
-  onSection: Ember.observer('currentSection', function () {
-    console.log('SECTION: ' + this.get('currentSection.permalink'));
+  onSection: Ember.observer('currentRouteModel', function() {
+    console.log('SECTION: ' + this.get('currentRouteModel.permalink'));
     Ember.run.schedule('afterRender', () => {
 
       // changing section is true if we have changed section internally and
       // triggered the trasition, this is to avoid a transition loop where
       // scrolling causes a transition and the transition causes scrolling...
-      if (this.get('actualCurrentSection') !== this.get('currentSection')) {
-        this.scrollToSection(this.get('currentSection.permalink'));
+      if (this.get('currentRouteModel.permalink') !== this.get('currentSection.permalink')) {
+        this.scrollToSection(this.get('currentRouteModel.permalink'));
       }
     });
   }),
@@ -380,7 +364,6 @@ export default Ember.Component.extend({
    */
   onScreenChange() {
     this.scrollToNearestPage();
-    this.calcPageNumbers();
     this.set('pageWidth', $('.book-container').width());
   },
 
@@ -398,12 +381,12 @@ export default Ember.Component.extend({
       let $el = $(el);
 
       if (i !== 0) {
-        this.set('sectionLocations.lastObject.end', $el.offset().left - 40 - this.get('pageWidth'));
+        this.get('sections').objectAt(i - 1).set('endPosition', (($el[0].offsetLeft - 40) - this.get('pageWidth')) + this.get('scrollLeft'));
       }
-      this.get('sectionLocations').addObject({ permalink: $el.data('permalink'), start: $el.offset().left - 40 });
+      this.get('sections').objectAt(i).set('startPosition', ($el[0].offsetLeft - 40) + this.get('scrollLeft'));
     });
 
-    console.table(this.get('sectionLocations').toArray());
+    console.table(this.get('sections').toArray());
   }
 
   // onNavigating: Ember.observer('scrolling', function() {
