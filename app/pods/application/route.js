@@ -117,6 +117,10 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       };
       this.recordxAPI(statement_data);
     }
+
+		recordLocation(book,loc,user) {
+			
+		}
   },
 
   sessionInvalidated() {

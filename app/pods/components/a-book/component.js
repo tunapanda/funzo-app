@@ -14,40 +14,25 @@ export default Ember.Component.extend({
 
   book: this.model,
 
-	placeHolder: Ember.computed('book', 'currentUser', function() {
-			let book = this.get('book');
-			return this.get('currentUser.model').then((user) => {
-				var placeHolders = user.get('placeHolders');
-				var placeHolder = placeHolders.findBy('book',book);
-				if (typeof(placeHolder) === 'undefined') {
-					console.log("creating new placeholder");
-					return placeHolders.createRecord({
-						user: user,
-					  book: book	
-					});
-				} else {
-					console.log("using existing placeholder with location " + placeHolder.location);
-					return placeHolder;
-				}
-		})
-  }),
   /**
    * current container scroll position
    * @type {Number}
    */
   scrollLeft: Ember.computed('placeHolder', {
 		get(key) {
-			let placeHolder = this.get('placeHolder');
-			console.log("getting scrollLeft from placeholder with location " + placeHolder.location);
-			return placeHolder.location;
+			let placeHolder = this.get('book.placeHolder');
+			console.log("getting scrollLeft from placeholder with location " + placeHolder);
+			return placeHolder;
 		},	
 		set (key,value) {
-			return this.get('placeHolder').then((placeHolder) => {
-				placeHolder.set('location',value);
-				console.log(placeHolder);
-				console.log("setting scrollLeft + placeholder to location " + placeHolder.location);
-				return placeHolder.location;
-			})
+			let book = this.get('book');
+			// book is undefined??
+			// this.set('book.placeHolder',value) also doesn't work
+			console.log(book);
+			let placeHolder = book.set('placeHolder',value);
+			console.log(placeHolder);
+			console.log("setting scrollLeft + placeholder to location " + placeHolder);
+			return placeHolder;
 		}
 	}),
 

@@ -2,6 +2,8 @@ import Ember from 'ember';
 import DS from 'ember-data';
 import { Model } from 'ember-pouch';
 
+
+
 export default Model.extend({
   username: DS.attr(),
   // firstName: DS.attr(),
@@ -14,6 +16,5 @@ export default Model.extend({
   isTeacher: DS.attr('boolean'),
   course: DS.hasMany('course'),
   module: DS.hasMany('module'),
-  xAPIStatement: DS.hasMany('x-api-statement'),
-  placeHolders: DS.hasMany('place-holder') 
+  xAPIStatement: DS.hasMany('x-api-statement')
 });
