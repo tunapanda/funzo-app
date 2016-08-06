@@ -17,11 +17,12 @@ export default Ember.Component.extend({
 	placeHolder: Ember.computed('book', 'currentUser', function() {
 			let book = this.get('book');
 			return this.get('currentUser.model').then((user) => {
-				var placeHolder = user.get('placeHolders').findBy('book',book);
+				var placeHolders = user.get('placeHolders');
+				var placeHolder = placeHolders.findBy('book',book);
 				if (typeof(placeHolder) === 'undefined') {
 					console.log("creating new placeholder");
-					return this.store.createRecord('place-holder', {
-						user: currentUser,
+					return placeHolders.createRecord({
+						user: user,
 					  book: book	
 					});
 				} else {
@@ -41,10 +42,12 @@ export default Ember.Component.extend({
 			return placeHolder.location;
 		},	
 		set (key,value) {
-			let placeHolder = this.get('placeHolder');
-			placeHolder.location	= value;
-			console.log("setting scrollLeft + placeholder to location " + placeHolder.location);
-			return placeHolder.location;
+			return this.get('placeHolder').then((placeHolder) => {
+				placeHolder.set('location',value);
+				console.log(placeHolder);
+				console.log("setting scrollLeft + placeholder to location " + placeHolder.location);
+				return placeHolder.location;
+			})
 		}
 	}),
 
