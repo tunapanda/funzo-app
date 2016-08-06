@@ -14,22 +14,21 @@ export default Ember.Component.extend({
 
   book: this.model,
 
-	placeHolder: Ember.computed('book', 'currentUser', () => {
-			let currentUser = this.get('currentUser');
-			let book = this.get('book');
-			return currentUser.get('placeHolders').then(holders => {
-				let placeHolder = holders.findBy('book',book);
-				if (typeof(placeHolder) === 'undefined') {
-					console.log("creating new placeholder");
-					return this.get('store').createRecord('place-holder', {
-						user: currentUser,
-					  book: book	
-					});
-				} else {
-					console.log("using existing placeholder with location " + placeholder.location);
-					return placeHolder;
-				}
-		})
+	placeHolder: Ember.computed('book', 'currentUser', function() {
+		console.log(this.get('currentUser.model'));
+		console.log('TEST User = ' + this.get('currentUser.model.id'));
+		let book = this.get('book');
+		let placeHolder = this.get('currentUser.model.placeHolders').findBy('book',book);
+		if (typeof(placeHolder) === 'undefined') {
+			console.log("creating new placeholder");
+			return this.get('store').createRecord('place-holder', {
+				user: currentUser,
+				book: book	
+			});
+		} else {
+			console.log("using existing placeholder with location " + placeholder.location);
+			return placeHolder;
+		}
   }),
   /**
    * current container scroll position
