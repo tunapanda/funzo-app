@@ -1,8 +1,6 @@
 import Ember from 'ember';
 import TweenLite from 'tweenlite';
 
-let $ = Ember.$;
-
 const { $, computed, RSVP } = Ember;
 export default Ember.Component.extend({
   sectionLocations: [],
@@ -69,45 +67,6 @@ export default Ember.Component.extend({
     return false;
   },
 
-  click(e) {
-    let $target = $(e.target);
-
-    if ($target.hasClass('internal-link')) {
-      e.preventDefault();
-      let permalink = $target.data('permalink');
-      return this.attrs.changeSection(permalink);
-    }
-
-    if (e.target.tagName === 'IMG') {
-      e.preventDefault();
-      return this.attrs.showImage($target.attr('src'));
-    }
-
-    if ($target.hasClass('ftnt')) {
-      e.preventDefault();
-      return this.scrollToFootnote($target.data('ref'));
-    }
-
-    if (e.target.tagName === 'A') {
-      console.log('DBG CLICK.link');
-      if ($target.attr('href') === undefined) {
-        return;
-      }
-      if ($target.attr('target') === undefined) {
-        $target.attr('target', '_blank');
-      }
-      this.sendAction('onOpenLink', e);
-    };
-
-    if (!(
-      e.target.tagName === 'A' ||
-      $(e.target).hasClass('book-navigation') ||
-      $(e.target).parents().hasClass('book-navigation')
-    )) {
-      $('.navbar').toggleClass('show');
-    }
-  },
-
   /**
    * Touch ended on component, check what direction the touch was and scroll
    * in that direction
@@ -163,6 +122,46 @@ export default Ember.Component.extend({
   // },
 
   actions: {
+    clickBook(e) {
+      let $target = $(e.target);
+
+      // internal section links
+      if ($target.hasClass('internal-link')) {
+        e.preventDefault();
+        let permalink = $target.data('permalink');
+        return this.attrs.changeSection(permalink);
+      }
+
+      // Image popups
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+        return this.attrs.showImage($target.attr('src'));
+      }
+
+      // footnote links
+      if ($target.hasClass('ftnt')) {
+        e.preventDefault();
+        return this.scrollToFootnote($target.data('ref'));
+      }
+
+      // External links
+      if (e.target.tagName === 'A') {
+        console.log('DBG CLICK.link');
+        if ($target.attr('href') === undefined) {
+          return;
+        }
+        if ($target.attr('target') === undefined) {
+          $target.attr('target', '_blank');
+        }
+        this.sendAction('onOpenLink', e);
+      }
+
+      // otherwise toggle the navbars
+      if (e.target.tagName !== 'A') {
+        $('.navbar').toggleClass('show');
+      }
+    },
+
     navPrev() {
       this.navPrev();
     },
