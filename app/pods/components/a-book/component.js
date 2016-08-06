@@ -15,20 +15,20 @@ export default Ember.Component.extend({
   book: this.model,
 
 	placeHolder: Ember.computed('book', 'currentUser', function() {
-		console.log(this.get('currentUser.model'));
-		console.log('TEST User = ' + this.get('currentUser.model.id'));
-		let book = this.get('book');
-		let placeHolder = this.get('currentUser.model.placeHolders').findBy('book',book);
-		if (typeof(placeHolder) === 'undefined') {
-			console.log("creating new placeholder");
-			return this.get('store').createRecord('place-holder', {
-				user: currentUser,
-				book: book	
-			});
-		} else {
-			console.log("using existing placeholder with location " + placeholder.location);
-			return placeHolder;
-		}
+			let book = this.get('book');
+			return this.get('currentUser.model').then((user) => {
+				var placeHolder = user.get('placeHolders').findBy('book',book);
+				if (typeof(placeHolder) === 'undefined') {
+					console.log("creating new placeholder");
+					return this.store.createRecord('place-holder', {
+						user: currentUser,
+					  book: book	
+					});
+				} else {
+					console.log("using existing placeholder with location " + placeHolder.location);
+					return placeHolder;
+				}
+		})
   }),
   /**
    * current container scroll position
@@ -37,13 +37,13 @@ export default Ember.Component.extend({
   scrollLeft: Ember.computed('placeHolder', {
 		get(key) {
 			let placeHolder = this.get('placeHolder');
-			console.log("getting scrollLeft from placeholder with location " + placeholder.location);
+			console.log("getting scrollLeft from placeholder with location " + placeHolder.location);
 			return placeHolder.location;
 		},	
 		set (key,value) {
 			let placeHolder = this.get('placeHolder');
 			placeHolder.location	= value;
-			console.log("setting scrollLeft + placeholder to location " + placeholder.location);
+			console.log("setting scrollLeft + placeholder to location " + placeHolder.location);
 			return placeHolder.location;
 		}
 	}),
