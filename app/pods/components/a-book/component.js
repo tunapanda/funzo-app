@@ -4,35 +4,60 @@ import TweenLite from 'tweenlite';
 let $ = Ember.$;
 
 export default Ember.Component.extend({
-  currentUser: Ember.inject.service('currentUser'),
   liquidFireEvents: Ember.inject.service(),
   sectionLocations: {},
   sectionPageCounts: {},
   currentPageNumber: 1,
+  currentUser: Ember.inject.service('currentUser'),
 
   elements: {},
 
-  book: this.model,
+	scrollBy(delta) {
+		return this.get('scrollLeft').then((scrollLeft) => {
+			let val = scrollLeft + delta;
+			return this.set('scrollLeft',val);
+		});
+	},
 
   /**
    * current container scroll position
    * @type {Number}
    */
-  scrollLeft: Ember.computed('placeHolder', {
+	scrollLeft: Ember.computed('currentUser', {
 		get(key) {
-			let placeHolder = this.get('book.placeHolder');
-			console.log("getting scrollLeft from placeholder with location " + placeHolder);
-			return placeHolder;
-		},	
-		set (key,value) {
-			let book = this.get('book');
-			// book is undefined??
-			// this.set('book.placeHolder',value) also doesn't work
+			var book = this.get('bookId');
+			return this.get('currentUser.model').then((user) => {
+				var placeHolders = user.get('placeHolders');
+				if ( ! ( placeHolders && book in placeHolders) ) {
+					var val = this.set('scrollLeft',0);
+					console.log("Getting new placeHolder " + val);
+				} else {
+					var val = placeHolders[book];
+					console.log("Getting existing placeHolder " + val);
+				}
+				return val;
+			});
+		},
+		set(key,value) {
+			var book = this.get('bookId');
 			console.log(book);
-			let placeHolder = book.set('placeHolder',value);
-			console.log(placeHolder);
-			console.log("setting scrollLeft + placeholder to location " + placeHolder);
-			return placeHolder;
+			return this.get('currentUser.model').then((user) => {
+				var placeHolders = user.get('placeHolders');
+				console.log(placeHolders);
+				if ( typeof(placeHolders) === "undefined" ) {
+					placeHolders = user.set('placeHolders',{});
+					console.log("Creating new placeHolders object");
+				}
+				if ( ! (book in placeHolders) ) {
+					placeHolders[book] = value;
+					console.log("Inserting new placeHolders value for " + book + " as " + placeHolders[book]);
+				} else {
+					let origVal = placeHolders[book];
+					placeHolders[book] = value;
+					console.log("Changing existing placeHolder from " + origVal + " to " + placeHolders[book] + " should be " + value);
+				}
+				return user.save().then((user) => {return placeHolders[book]}).catch((reason) => {console.log(reason); throw reason});
+			});
 		}
 	}),
 
@@ -82,7 +107,7 @@ export default Ember.Component.extend({
 
     this.set('animateScroll', false);
     this.set('scrolling', true);
-    this.set('scrollLeft', this.get('scrollLeft') + diff);
+		this.scrollBy(diff);
 
     return false;
   },
@@ -191,7 +216,7 @@ export default Ember.Component.extend({
     if (!this.get('scrolling')) {
       this.set('scrolling', true);
       this.set('animateScroll', true);
-      this.set('scrollLeft', this.get('scrollLeft') - this.get('pageWidth'));
+			this.scrollBy(0 - this.get('pageWidth'));
     }
   },
 
@@ -199,7 +224,7 @@ export default Ember.Component.extend({
     if (!this.get('scrolling')) {
       this.set('scrolling', true);
       this.set('animateScroll', true);
-      this.set('scrollLeft', this.get('scrollLeft') + this.get('pageWidth'));
+			this.scrollBy(this.get('pageWidth'));
     }
   },
 
@@ -213,18 +238,17 @@ export default Ember.Component.extend({
     // if (!this.get('scrolling')) {
     let container = this.$('.book-content-container');
     let current = container.scrollLeft();
-    let to = this.get('scrollLeft');
-    // console.log(`from ${current} to ${to}`);
-
-    if (this.get('animateScroll')) {
-      $('html').velocity('scroll', { axis: 'x', offset: to - current, container: container, mobileHA: false, complete: () => {
-        this.didScroll(to > current ? 'forward' : 'backward');
-      } });
-    } else {
-      container.scrollLeft(to);
-      this.didScroll(to < current ? 'forward' : 'backward');
-    }
-    // }
+    this.get('scrollLeft').then((to) => {
+      console.log(`from ${current} to ${to}`);
+			if (this.get('animateScroll')) {
+				$('html').velocity('scroll', { axis: 'x', offset: to - current, container: container, mobileHA: false, complete: () => {
+					this.didScroll(to > current ? 'forward' : 'backward');
+				} });
+			} else {
+				container.scrollLeft(to);
+				this.didScroll(to < current ? 'forward' : 'backward');
+			}
+    });
   }),
 
   /**
@@ -262,7 +286,7 @@ export default Ember.Component.extend({
   scrollToSection(permalink) {
     let offset = $('.book-content-container').scrollLeft() + $("#"+permalink).offset().left - 80;
     this.set('animateScroll', false);
-    this.set('scrollLeft', offset);
+		this.scrollBy(offset);
   },
 
   didInsertElement() {
@@ -404,9 +428,9 @@ export default Ember.Component.extend({
   scrollToNearestPage(direction = 'backward') {
     let container = $('.book-content-container');
     if (direction === 'backward') {
-      this.set('scrollLeft', container.scrollLeft() - container.scrollLeft() % this.get('pageWidth'));
+      this.scrollBy(container.scrollLeft() - container.scrollLeft() % this.get('pageWidth'));
     } else {
-      this.set('scrollLeft', container.scrollLeft() + (this.get('pageWidth') - (container.scrollLeft() % this.get('pageWidth'))));
+      this.scrollBy(container.scrollLeft() + (this.get('pageWidth') - (container.scrollLeft() % this.get('pageWidth'))));
     }
 		let newLocation = this.get('scrollLeft');
 
