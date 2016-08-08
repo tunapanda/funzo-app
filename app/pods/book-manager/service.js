@@ -60,6 +60,11 @@ export default Ember.Service.extend(Ember.Evented, {
       });
   },
 
+  deleteBook(id) {
+    this.removeDirectory(`content/books/${id}`)
+      .then(() => this.updateIndex());
+  },
+
   updateIndex() {
     return this.getDirectory('content/books')
       .then((bookDir) => {
@@ -144,6 +149,16 @@ export default Ember.Service.extend(Ember.Evented, {
           return resolve(file);
         }
         return reject(`could not create directory ${folder}`);
+      }, reject);
+    });
+  },
+
+  removeDirectory(folder) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this.root.getDirectory(folder, {}, (file) => {
+        if (file) {
+          file.removeRecursively(resolve, reject);
+        }
       }, reject);
     });
   },
