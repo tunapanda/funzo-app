@@ -2,15 +2,23 @@
   <div class="row">
     {{#each model.books as |book|}}
       <div class="col-xs-6 col-sm-4 col-md-2">
-        {{#link-to 'book.section' book book.sections.firstObject}}
           <div class="panel panel-default">
-            <img class="img-responsive" src="{{book.cover}}" alt="">
+            {{#link-to 'book.section' book book.sections.firstObject}}
+              <img class="img-responsive" src="{{book.cover}}" alt="">
+            {{/link-to}}
             <div class="panel-body">
-              <div class="book-title">{{book.title}}</div>
-              <div class="book-author">{{book.author}}</div>
+              <div class="book-context-menu dropdown">
+                <button id="open-context-{{book.id}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
+                <ul class="dropdown-menu" aria-labelledby="open-context-{{book.id}}">
+                    <li><a href="#" onclick={{action "deleteBook" book}}>Delete</a></li>
+                  </ul>
+                </div>
+              {{#link-to 'book.section' book book.sections.firstObject}}
+                <div class="book-title">{{book.title}}</div>
+                <div class="book-author">{{book.author}}</div>
+              {{/link-to}}
             </div>
           </div>
-        {{/link-to}}
       </div>
     {{else}}
     <div class="col-xs-6 col-sm-4 col-md-2">
