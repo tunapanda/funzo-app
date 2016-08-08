@@ -4,7 +4,7 @@ export default Ember.Controller.extend({
   nav: Ember.inject.service(),
   section: Ember.inject.controller('book.section'),
 
-  fontSize: 14,
+  fontSize: 12,
 
   fontSizes: [
     10,
