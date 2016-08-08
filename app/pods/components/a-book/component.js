@@ -18,23 +18,7 @@ export default Ember.Component.extend({
    * current container scroll position
    * @type {Number}
    */
-  scrollLeft: Ember.computed('placeHolder', {
-		get(key) {
-			let placeHolder = this.get('book.placeHolder');
-			console.log("getting scrollLeft from placeholder with location " + placeHolder);
-			return placeHolder;
-		},	
-		set (key,value) {
-			let book = this.get('book');
-			// book is undefined??
-			// this.set('book.placeHolder',value) also doesn't work
-			console.log(book);
-			let placeHolder = book.set('placeHolder',value);
-			console.log(placeHolder);
-			console.log("setting scrollLeft + placeholder to location " + placeHolder);
-			return placeHolder;
-		}
-	}),
+  scrollLeft: 0,
 
   /**
    * if changing scrollLeft programmatically, whether to animate the change
@@ -313,6 +297,10 @@ export default Ember.Component.extend({
         } 
         this.sendAction("onOpenLink",e);
     });
+
+    if (this.get('scrollLeft') !== 0) {
+      Ember.run.scheduleOnce('afterRender', () => this.propertyDidChange('scrollLeft'));
+    }
   },
 
   willDestroyElement() {
@@ -387,7 +375,7 @@ export default Ember.Component.extend({
       }
       this.set('changingSection', false);
     });
-  }).on('init'),
+  }),
 
   /**
    * If the screen resizes or rotates we may have moved page, and the page

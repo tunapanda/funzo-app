@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   nav: Ember.inject.service(),
+  currentUser: Ember.inject.service(),
   section: Ember.inject.controller('book.section'),
 
   fontSize: 12,
@@ -19,6 +20,22 @@ export default Ember.Controller.extend({
   }),
 
   modal: Ember.inject.service('bootstrap-modal'),
+
+  scrollLeft: Ember.computed('currentUser.model.placeholders.[]', {
+    get() {
+      let placeholder = this.get('currentUser.model.placeholders').findBy('book', this.get('model.id'));
+
+      return placeholder ? Ember.get(placeholder, 'scrollLeft') : 0;
+    },
+    set(key, scrollLeft) {
+      let placeholder = this.get('currentUser.model.placeholders').findBy('book', this.get('model.id'));
+      if (!placeholder) {
+        return this.get('currentUser.model.placeholders').pushObject({ book: this.get('model.id'), scrollLeft });
+      }
+      Ember.set(placeholder, 'scrollLeft', scrollLeft);
+      this.get('currentUser.model.content').save();
+    }
+  }),
 
   actions: {
     nextSection() {
@@ -47,6 +64,12 @@ export default Ember.Controller.extend({
       this.set('modal.args.image', image);
 
       Ember.$('.modal').modal('show');
+    },
+
+    didScroll(scrollLeft) {
+      let user = this.get('user');
+      user.set(`${this.get('book.id')}`, scrollLeft);
+      user.save();
     }
   }
 });

@@ -3,17 +3,23 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 import ENV from 'funzo-app/config/environment';
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
-  session: Ember.inject.service('session'),
-  nav: Ember.inject.service('nav'),
+  session: Ember.inject.service(),
+  currentUser: Ember.inject.service(),
+  nav: Ember.inject.service(),
   bookManager: Ember.inject.service(),
 
   beforeModel() {
     if (window.cordova) {
       return new Ember.RSVP.Promise((res) => document.addEventListener('deviceready', res, false))
         .then(() => this.get('bookManager').setup())
-        .then(() => this.get('bookManager').updateIndex()).then(this._super);
+        .then(() => this.get('bookManager').updateIndex())
+        .then(() => this._super());
     }
     return this._super();
+  },
+
+  afterModel() {
+    return this.get('currentUser.model').then(() => this._super());
   },
 
   currentUser: Ember.inject.service('currentUser'),
@@ -116,7 +122,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         }
       };
       this.recordxAPI(statement_data);
-    }
+    },
 
 		recordLocation(book,loc,user) {
 			

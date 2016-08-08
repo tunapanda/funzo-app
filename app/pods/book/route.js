@@ -3,6 +3,7 @@ import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, {
   crypto: Ember.inject.service(),
+  currentUser: Ember.inject.service(),
 
   showBackButton: true,
   model(params) {
