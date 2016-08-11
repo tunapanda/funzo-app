@@ -284,11 +284,11 @@ export default Ember.Component.extend({
     // this.showSection(permalink);
     // schedule afterRender not working! so just delaying
     // Ember.run.later(() => {
-      // let offset = this.get('sections').findBy('permalink', permalink) ? this.get('sections').findBy('permalink', permalink).get('startPosition') : 0;
-      let offset = ($('#' + permalink).offset().left - 40) + this.get('scrollLeft');
-      console.log(`scrolling to ${permalink} at ${offset}`);
-      this.set('animateScroll', false);
-      this.set('scrollLeft', offset);
+    let offset = this.get('sections').findBy('permalink', permalink) ? this.get('sections').findBy('permalink', permalink).get('startPosition') : 0;
+    // let offset = ($('#' + permalink).offset().left - 40) + this.get('scrollLeft');
+    console.log(`scrolling to ${permalink} at ${offset}`);
+    this.set('animateScroll', false);
+    this.set('scrollLeft', offset);
     // }, 500);
   },
 
