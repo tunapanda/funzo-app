@@ -27,7 +27,7 @@ module.exports = function(environment) {
     },
 
     APP: {
-      bookOnlyMode: true,
+      bookOnlyMode: false,
       // Set this to false to have no default
       defaultBook: {
         code: 'demo',

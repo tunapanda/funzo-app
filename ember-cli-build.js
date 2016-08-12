@@ -34,6 +34,23 @@ createIfNotExists(booksDir, () => {
   fs.writeFileSync(`${booksDir}/index.json`, JSON.stringify(bookList));
 });
 
+// Create an index of books available at build-time
+var coursesDir = 'public/content/courses';
+
+createIfNotExists(coursesDir, () => {
+  var courseList = fs.readdirSync(coursesDir).map(dir => {
+    var courseDir = `${coursesDir}/${dir}`;
+    if (!fs.statSync(courseDir).isDirectory()) {
+      // TODO: filter out nulls
+      return;
+    }
+    // TODO: catch exceptions and filter out invalid JSON
+    return JSON.parse(fs.readFileSync(courseDir + '/content.json'));
+  }).filter(e => e);
+
+  fs.writeFileSync(`${coursesDir}/index.json`, JSON.stringify(courseList));
+});
+
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
     minifyJS: {

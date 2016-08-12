@@ -1,31 +1,49 @@
 <div class="col-xs-12">
   <div class="row">
-    {{#each model.books as |book|}}
-      <div class="col-xs-6 col-sm-4 col-md-2">
-        {{#link-to 'book.section' book book.sections.firstObject}}
-          <div class="panel panel-default">
-            <img class="img-responsive" src="{{book.cover}}" alt="">
-            <div class="panel-body">
-              <div class="book-title">{{book.title}}</div>
-              <div class="book-author">{{book.author}}</div>
+    {{#if bookOnlyMode}}
+      {{#each model.books as |book|}}
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          {{#link-to 'book.section' book book.sections.firstObject}}
+            <div class="panel panel-default">
+              <img class="img-responsive" src="{{book.cover}}" alt="">
+              <div class="panel-body">
+                <div class="book-title">{{book.title}}</div>
+                <div class="book-author">{{book.author}}</div>
+              </div>
             </div>
-          </div>
-        {{/link-to}}
-      </div>
-    {{else}}
-    <div class="col-xs-6 col-sm-4 col-md-2">
-        <div class="panel panel-default" onclick={{action 'addBook'}}>
-          <div class="panel-header add-book-panel">
-            <i class="material-icons">library_add</i><br>
-            Add Book
-          </div>
-
+          {{/link-to}}
         </div>
-    </div>
-    {{!-- <div class="col-xs-12">
-    <a class="btn btn-default btn-success btn-fab"><i class="material-icons">library_add</i></a>
-      <button class="btn btn-lg btn-raised btn-block btn-primary"> add your first book</button>
-    </div> --}}
+      {{else}}
+      <div class="col-xs-6 col-sm-4 col-md-2">
+          <div class="panel panel-default" onclick={{action 'addBook'}}>
+            <div class="panel-header add-book-panel">
+              <i class="material-icons">library_add</i><br>
+              Add Book
+            </div>
+
+          </div>
+      </div>
+      {{!-- <div class="col-xs-12">
+      <a class="btn btn-default btn-success btn-fab"><i class="material-icons">library_add</i></a>
+        <button class="btn btn-lg btn-raised btn-block btn-primary"> add your first book</button>
+      </div> --}}
+      {{/each}}
+    {{else}}
+      {{#each model.courses as |course|}}
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            {{course.title}}
+          </div>
+          <div class="panel-body">
+            <p><strong>Subject:</strong> {{course.subject}}</p>
+          </div>
+          <div class="panel-footer">
+            {{#link-to 'course' course}}Open Course{{/link-to}}
+          </div>
+        </div>
+      </div>
     {{/each}}
+  {{/if}}
   </div>
 </div>
