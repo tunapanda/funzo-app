@@ -34,12 +34,12 @@ export default function() {
   //   })
   // );
 
-  this.transition(
-    this.fromRoute('index'),
-    this.toRoute('book'),
-    this.use('toLeft'),
-    this.reverse('toRight')
-  );
+  // this.transition(
+  //   this.fromRoute('index'),
+  //   this.toRoute('book'),
+  //   this.use('toLeft'),
+  //   this.reverse('toRight')
+  // );
 
   // this.transition(
   //   this.fromRoute('index'),

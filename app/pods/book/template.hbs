@@ -3,10 +3,10 @@
   .book-content {
     font-size: {{fontSizeString}};
   }
-  .book-loading-overlay {
+  {{!--.book-loading-overlay {
     background-image: url({{model.cover}});
     background-size: cover;
-  }
+  }--}}
 </style>
 
 {{a-book sections=sections currentRouteModel=currentSection showImage=(action 'showImageModal') changePermalink=(action 'changePermalink') onOpenLink='xAPIOpenLink'}}
