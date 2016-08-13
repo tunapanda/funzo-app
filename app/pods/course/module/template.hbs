@@ -1,15 +1,17 @@
 {{#if hasActivities}}
-  <div>
+  <div class="row">
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-      {{#each model.activities as |activity|}}
-        <li>{{#link-to 'course.module.activity' model.course model activity class=activity.active}}{{activity.title}}{{/link-to}}</li>
-      {{/each}}
-    </ul>
+    <div class="col-xs-3">
+      <ul class="nav nav-pills nav-stacked">
+        {{#each model.activities as |activity|}}
+          <li>{{#link-to 'course.module.activity' model.course model activity class=activity.active}}{{activity.title}}{{/link-to}}</li>
+        {{/each}}
+      </ul>
+    </div>
 
     <!-- Tab panes -->
-    <div class="tab-content">
+    <div class="col-xs-9">
       {{outlet}}
     </div>
 
