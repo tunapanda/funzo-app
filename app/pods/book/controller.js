@@ -17,7 +17,7 @@ export default Ember.Controller.extend({
     return SectionDecorator.create({ content: model });
   }),
 
-  fontSize: 14,
+  fontSize: 12,
 
   fontSizes: [
     10,
