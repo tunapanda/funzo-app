@@ -162,7 +162,12 @@ blockquote {
   color: #ffffff;
   padding: 0 20px;
   // height: 50%;
-  padding-top: 25%;
+  //padding-top: 25%;
+
+  label.control-label {
+    width: 100%;
+    text-align: center;
+  }
 
   label.control-label, .btn.btn-raised.btn-primary, .form-control {
     color: #ffffff;        
