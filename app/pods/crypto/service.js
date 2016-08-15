@@ -3,7 +3,7 @@ import Ember from 'ember';
 
 export default Ember.Service.extend({
   decryptSection(section) {
-    return new Ember.RSVP.Promise((resolve) => {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       // delay by 100ms to give time to transition to the loading spinner
       Ember.run.later(() => {
         let encryption = section.get('encryption');
@@ -17,8 +17,13 @@ export default Ember.Service.extend({
           section.set('html', Ember.String.htmlSafe(`<h1>Expired</h1><p><em>Sorry, this copy of ${section.get('book.title')} 
           expired on ${expiration}. Please notify your school.</em></p>`));
         } else if (section.get('content') && encryption === 'aes') {
-          let decrypted = CryptoJS.AES.decrypt(section.get('content'), section.get('key'));
-          section.set('html', Ember.String.htmlSafe(decrypted.toString(CryptoJS.enc.Utf8)));
+          let decrypted;
+          try {
+            decrypted = CryptoJS.AES.decrypt(section.get('content'), section.get('key')).toString(CryptoJS.enc.Utf8);
+          } catch (e) {
+            return reject(e);
+          }
+          section.set('html', Ember.String.htmlSafe(decrypted));
         } else {
           section.set('html', Ember.String.htmlSafe(section.get('content')));
         }
