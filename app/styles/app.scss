@@ -77,6 +77,15 @@ main {
   color: #5d5c5c;
 }
 
+.book-context-menu {
+  float: right;
+  button {
+    padding: 0;
+    background: none;
+    border: none;
+  }
+}
+
 .panel img.enlarge {
   position: absolute;
   width: 100%;
