@@ -2,6 +2,12 @@
   display: none;
 }
 
-.h5p-footer-print {
-  display: none;
+.h5p-course-presentation .h5p-footer .h5p-footer-print, .h5p-course-presentation .h5p-footer .h5p-footer-toggle-full-screen {
+    display: none !important;
+}
+
+div.h5p-course-presentation {
+  div.h5p-presentation-wrapper, div.h5p-box-wrapper {
+    background: transparent;
+  }
 }
