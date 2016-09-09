@@ -158,7 +158,7 @@ export default Ember.Component.extend({
 
       // otherwise toggle the navbars
       if (e.target.tagName !== 'A') {
-        $('.navbar').toggleClass('show');
+        $('main .navbar').toggleClass('show');
       }
     },
 
@@ -367,6 +367,7 @@ export default Ember.Component.extend({
       // triggered the trasition, this is to avoid a transition loop where
       // scrolling causes a transition and the transition causes scrolling...
       if (this.get('currentRouteModel.permalink') !== this.get('currentSection.permalink')) {
+        $('#chapters').modal('hide');
         this.scrollToSection(this.get('currentRouteModel.permalink'));
       }
     });
