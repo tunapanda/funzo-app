@@ -34,7 +34,10 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         if (!res[0].err) {
           statements.setEach('synced', true);
           statements.invoke('save');
-        }
+          Ember.RSVP.resolve("WOO");
+        } 
+        else { Ember.RSVP.reject(res); }
+        //else { console.log("DBG: sync err..."); console.log(res[0].err); }
       });    
     });
   },
