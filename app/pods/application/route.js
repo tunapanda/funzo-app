@@ -17,12 +17,12 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
 
   currentUser: Ember.inject.service('currentUser'),
-  
+
   statementCount: Ember.computed.alias('model.statements.length'),
   unsyncedStatements: Ember.computed.filterBy('model.statements', 'synced', false),
   unsyncedStatementCount: Ember.computed.alias('unsyncedStatements.length'),
   syncable: Ember.computed.bool('unsyncedStatementCount'),
-  
+
   syncStatements() {
     var xapi = new TinCan(ENV.APP.xAPI);
     console.log("DBG syncing...");
@@ -30,30 +30,30 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       'x-api-statement',
       {'synced':false}
     ).then((statements) => {
-			console.log("DBG syncStatements statements...");
-			console.log(statements);
-			var xApiStatements = [];
-			statements.forEach((s) => { console.log("DBG Adding..."); console.log(s); xApiStatements.addObject(s.content) });
-			console.log("DBG syncStatements xApiStatements...");
-			console.log(xApiStatements);
+      console.log("DBG syncStatements statements...");
+      console.log(statements);
+      var xApiStatements = [];
+      statements.forEach((s) => { console.log("DBG Adding..."); console.log(s); xApiStatements.addObject(s.content) });
+      console.log("DBG syncStatements xApiStatements...");
+      console.log(xApiStatements);
       xapi.sendStatements(xApiStatements, (res) => {
-				console.log("DBG sendStatements res");
-				console.log(res);
+        console.log("DBG sendStatements res");
+        console.log(res);
         if (!res[0].err) {
-					console.log("DBG no error");
+          console.log("DBG no error");
           statements.setEach('synced', true);
           statements.invoke('save');
           Ember.RSVP.resolve(xApiStatements);
-        } 
-        else { 
-					console.log("DBG ERROR");
-					Ember.RSVP.reject(res); 
-				}
+        }
+        else {
+          console.log("DBG ERROR");
+          Ember.RSVP.reject(res);
+        }
         //else { console.log("DBG: sync err..."); console.log(res[0].err); }
-      });    
+      });
     });
   },
-  
+
   recordxAPI(statement_data) {
     console.log("DBG recordxAPI");
     return new Ember.RSVP.Promise((resolve,reject) => {
@@ -71,7 +71,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       }
       if (typeof(statement_data.actor) === "undefined") {
         statement_data.adone = {
-          "objectType":"Agent", 
+          "objectType":"Agent",
           "account":{
             "id":   user.get('id'),
             "name": user.get('fullName'),
@@ -79,23 +79,23 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           }
         };
       }
-      let statement = this.store.createRecord('x-api-statement', { 
-          content: statement_data, 
-          user: this.get('currentUser.model') 
+      let statement = this.store.createRecord('x-api-statement', {
+          content: statement_data,
+          user: this.get('currentUser.model')
       });
       return statement;
    }).then((statement) => {
-    console.log("DBG pre saving..."); 
+    console.log("DBG pre saving...");
     statement.save();
-    console.log("DBG post saving..."); 
-   
-    console.log("DBG pre syncing"); 
+    console.log("DBG post saving...");
+
+    console.log("DBG pre syncing");
     this.syncStatements();
-    console.log("DBG post syncing"); 
-   
+    console.log("DBG post syncing");
+
    });
   },
-  
+
   actions: {
     back() {
       if (this.get('nav.indexOnly')) {
@@ -130,9 +130,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             "platform": event.target.baseURI
         }
       };
-			console.log("DBG recordxAPI start");
+      console.log("DBG recordxAPI start");
       this.recordxAPI(statement_data);
-			console.log("DBG recordxAPI done");
+      console.log("DBG recordxAPI done");
     }
   },
 
