@@ -54,37 +54,42 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     });
   },
 
-  recordxAPI(statement_data) {
-    console.log("DBG recordxAPI");
-    return new Ember.RSVP.Promise((resolve,reject) => {
-      /* TODO: it's wasteful to fetch user data now, since we
-               might not use it (see the second `if` below),
-               but I don't see another way to ensure that
-               `statement.save()` doesn't get called before
-               the promise resolves, in case we do need it.
-               Maybe there's a better way though?          */
-      var user = this.get('currentUser.model');
-      resolve(user);
-    }).then((user) => {
-      if (typeof(statement_data.version) === "undefined") {
-        statement_data.version = "1.0.0";
-      }
-      if (typeof(statement_data.actor) === "undefined") {
-        statement_data.adone = {
-          "objectType":"Agent",
-          "account":{
-            "id":   user.get('id'),
-            "name": user.get('fullName'),
-            "homePage": 'http://tunapanda.org'
-          }
-        };
-      }
-      let statement = this.store.createRecord('x-api-statement', {
-          content: statement_data,
-          user: this.get('currentUser.model')
-      });
-      return statement;
-   }).then((statement) => {
+  /* extracted recordxAPI promises here */
+
+  fetchUser(resolve, reject) {
+    /* TODO: it's wasteful to fetch user data now, since we
+             might not use it (see the second `if` below),
+             but I don't see another way to ensure that
+             `statement.save()` doesn't get called before
+             the promise resolves, in case we do need it.
+             Maybe there's a better way though?          */
+    var user = this.get('currentUser.model');
+    resolve(user);
+  },
+
+  /* end of extracted promises */
+
+  storeXAPIStatement(user, statement_data) {
+    if (typeof(statement_data.version) === "undefined") {
+      statement_data.version = "1.0.0";
+    }
+    if (typeof(statement_data.actor) === "undefined") {
+      statement_data.adone = {
+        "objectType":"Agent",
+        "account":{
+          "id":   user.get('id'),
+          "name": user.get('fullName'),
+          "homePage": 'http://tunapanda.org'
+        }
+      };
+    }
+    return this.store.createRecord('x-api-statement', {
+      content: statement_data,
+      user: user
+    });
+  },
+
+  saveDB(statement) {
     console.log("DBG pre saving...");
     statement.save();
     console.log("DBG post saving...");
@@ -92,8 +97,17 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     console.log("DBG pre syncing");
     this.syncStatements();
     console.log("DBG post syncing");
+  },
 
-   });
+  recordxAPI(statement_data) {
+    console.log("DBG recordxAPI");
+    return new Ember.RSVP.Promise(
+      this.fetchUser.bind(this)
+    ).then((user) => {
+      return this.storeXAPIStatement(user, statement_data);
+    }).then(
+      this.saveDB.bind(this)
+    );
   },
 
   actions: {
@@ -114,7 +128,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
 
     xAPIOpenLink(event) {
-    console.log("DBG xAPIOpenLink");
+      console.log("DBG xAPIOpenLink");
       var statement_data = {
         "timestamp": new Date().toISOString(),
         "verb": {
