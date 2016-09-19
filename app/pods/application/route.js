@@ -29,14 +29,26 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     this.store.query(
       'x-api-statement',
       {'synced':false}
-    ).then(statements => {
-      xapi.sendStatements(statements, (res) => {
+    ).then((statements) => {
+			console.log("DBG syncStatements statements...");
+			console.log(statements);
+			var xApiStatements = [];
+			statements.forEach((s) => { console.log("DBG Adding..."); console.log(s); xApiStatements.addObject(s.content) });
+			console.log("DBG syncStatements xApiStatements...");
+			console.log(xApiStatements);
+      xapi.sendStatements(xApiStatements, (res) => {
+				console.log("DBG sendStatements res");
+				console.log(res);
         if (!res[0].err) {
+					console.log("DBG no error");
           statements.setEach('synced', true);
           statements.invoke('save');
-          Ember.RSVP.resolve("WOO");
+          Ember.RSVP.resolve(xApiStatements);
         } 
-        else { Ember.RSVP.reject(res); }
+        else { 
+					console.log("DBG ERROR");
+					Ember.RSVP.reject(res); 
+				}
         //else { console.log("DBG: sync err..."); console.log(res[0].err); }
       });    
     });
@@ -58,7 +70,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         statement_data.version = "1.0.0";
       }
       if (typeof(statement_data.actor) === "undefined") {
-        statement_data.actor = {
+        statement_data.adone = {
           "objectType":"Agent", 
           "account":{
             "id":   user.get('id'),
@@ -118,7 +130,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             "platform": event.target.baseURI
         }
       };
+			console.log("DBG recordxAPI start");
       this.recordxAPI(statement_data);
+			console.log("DBG recordxAPI done");
     }
   },
 
