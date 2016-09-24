@@ -2,6 +2,7 @@ import Ember from 'ember';
 import TweenLite from 'tweenlite';
 
 const { $, computed, RSVP } = Ember;
+
 export default Ember.Component.extend({
   sectionLocations: [],
 
@@ -10,10 +11,6 @@ export default Ember.Component.extend({
 
   elements: {},
 
-  /**
-   * current container scroll position
-   * @type {Number}
-   */
   scrollLeft: 0,
 
   /**
@@ -36,7 +33,6 @@ export default Ember.Component.extend({
    * @param  {Object}
    * @return {void}
    */
-
   touchStart(e) {
     let start = e.originalEvent.touches[0].pageX;
     this.set('touchStartX', start);
@@ -50,7 +46,6 @@ export default Ember.Component.extend({
    * @param  {Object}
    * @return {void}
    */
-
   touchMove(e) {
     // e.preventDefault(); // prevent scrolling
     let current = e.originalEvent.touches[0].pageX;
@@ -74,15 +69,12 @@ export default Ember.Component.extend({
    * @param  {Object}
    * @return {void}
    */
-
   touchEnd() {
-
     let start = this.get('touchStartX');
     let current = this.get('touchCurrentX');
 
     let diff = start - current;
 
-    console.log(diff);
     if (this.get('touchStarted') && Math.abs(diff) > 10) {
       this.set('animateScroll', true);
       this.set('scrolling', true);
@@ -91,35 +83,6 @@ export default Ember.Component.extend({
 
     this.set('touchStarted', false);
   },
-
-  // scrollStart() {
-  //   this.set('touchStarted', true);
-  //   this.set('scrolling', true);
-  //   this.set('touchStartX', $('.book-content-container').scrollLeft());
-  // },
-
-  // scrollMove(e) {
-  //   console.log(e);
-  //   e.preventDefault();
-
-  //   this.set('scrollLeft', $('.book-content-container').scrollLeft());
-  //   this.set('touchCurrentX', $('.book-content-container').scrollLeft());
-  // },
-
-  // scrollEnd() {
-  //   let start = this.get('touchStartX');
-  //   let current = this.get('touchCurrentX');
-
-  //   // if (this.get('touchStarted') && Math.abs(start - current) > 10) {
-  //   //   if (start < current) {
-  //   //     this.scrollTo(start + this.get('pageWidth'));
-  //   //   } else {
-  //   //     this.scrollTo(start - this.get('pageWidth'));
-  //   //   }
-  //   // }
-  //   this.set('scrolling', false);
-  //   this.set('touchStarted', false);
-  // },
 
   actions: {
     clickBook(e) {
@@ -170,33 +133,23 @@ export default Ember.Component.extend({
       this.navNext();
     },
 
-    didScroll() {
-      if (!this.get('scrolling')) {
-        // console.log(e);
-        // this.set('scrollLeft', $('.book-content-container').scrollLeft());
+    didScroll(){}
+  },
 
-        // Ember.run.debounce(this, 'scrollStart', e, 300, true);
-        // this.scrollMove(e);
-        // Ember.run.debounce(this, 'scrollEnd', e, 300);
-      }
-      // this.get('elements.page-numbers').css('marginLeft', -this.get('elements.book-content-container').scrollLeft());
+  animateScrollLeft(position) {
+    if (!this.get('scrolling')) {
+      this.set('scrolling', true);
+      this.set('animateScroll', true);
+      this.set('scrollLeft', position);
     }
   },
 
   navPrev() {
-    if (!this.get('scrolling')) {
-      this.set('scrolling', true);
-      this.set('animateScroll', true);
-      this.set('scrollLeft', this.get('scrollLeft') - this.get('pageWidth'));
-    }
+    this.animateScrollLeft(this.get('scrollLeft') - this.get('pageWidth'));
   },
 
   navNext() {
-    if (!this.get('scrolling')) {
-      this.set('scrolling', true);
-      this.set('animateScroll', true);
-      this.set('scrollLeft', this.get('scrollLeft') + this.get('pageWidth'));
-    }
+    this.animateScrollLeft(this.get('scrollLeft') + this.get('pageWidth'));
   },
 
   /**
@@ -209,17 +162,19 @@ export default Ember.Component.extend({
     let container = this.$('.book-content-container');
     let current = container.scrollLeft();
     let to = this.get('scrollLeft');
-    // console.log(`from ${current} to ${to}`);
+    let didScroll = () => this.didScroll(to > current ? 'forward' : 'backward');
 
     if (this.get('animateScroll')) {
       $('html').velocity('scroll', {
-        axis: 'x', offset: to - current, container: container, mobileHA: false, complete: () => {
-          this.didScroll(to > current ? 'forward' : 'backward');
-        }
+        axis: 'x',
+        offset: to - current,
+        container: container,
+        mobileHA: false,
+        complete: didScroll,
       });
     } else {
       container.scrollLeft(to);
-      this.didScroll(to < current ? 'forward' : 'backward');
+      didScroll();
     }
   }),
 
@@ -227,13 +182,13 @@ export default Ember.Component.extend({
    * Called after the container has been scrolled, checks if we have scrolled
    * into another section and changes the route/url accordingly via actions
    *
+   * FIXME this doesn't seem to be working - mcantor 9/24/2016
+   *
    * @param  {String}
    * @return {void}
    */
 
   didScroll(direction) {
-    // this.findSections();
-
     let permalink;
     let matchStart = this.get('sections').findBy('startPosition', this.get('scrollLeft'));
 
@@ -251,7 +206,6 @@ export default Ember.Component.extend({
 
       this.get('sections').setEach('isCurrentSection', false);
       newSection.set('isCurrentSection', true);
-      // this.showSection(permalink);
 
       this.attrs.changePermalink(permalink);
     }
@@ -281,15 +235,10 @@ export default Ember.Component.extend({
    * @return {void}
    */
   scrollToSection(permalink) {
-    // this.showSection(permalink);
-    // schedule afterRender not working! so just delaying
-    // Ember.run.later(() => {
     let offset = this.get('sections').findBy('permalink', permalink) ? this.get('sections').findBy('permalink', permalink).get('startPosition') : 0;
-    // let offset = ($('#' + permalink).offset().left - 40) + this.get('scrollLeft');
     console.log(`scrolling to ${permalink} at ${offset}`);
     this.set('animateScroll', false);
     this.set('scrollLeft', offset);
-    // }, 500);
   },
 
   scrollToFootnote(footnote) {
@@ -404,14 +353,4 @@ export default Ember.Component.extend({
 
     console.table(this.get('sections').toArray());
   }
-
-  // onNavigating: Ember.observer('scrolling', function() {
-  //   console.log(this.get('scrolling') ? 'started scrolling' : 'stopped scrolling');
-  // })
-
-  // onSubsection: Ember.observer('subsection', function() {
-  //   if (this.get('subsection')) {
-  //     this.set('pageIndex', this.get('sectionLocations')[this.get('subsection')]);
-  //   }
-  // })
 });

@@ -18,14 +18,7 @@ export default Ember.Controller.extend({
   }),
 
   fontSize: 12,
-
-  fontSizes: [
-    10,
-    12,
-    14,
-    16,
-    18
-  ],
+  fontSizes: [10, 12, 14, 16, 18],
 
   fontSizeString: Ember.computed('fontSize', function() {
     return Ember.String.htmlSafe(this.get('fontSize') + 'pt');
@@ -34,25 +27,10 @@ export default Ember.Controller.extend({
   modal: Ember.inject.service('bootstrap-modal'),
 
   actions: {
-    // nextSection() {
-    //   let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
-    //   let nextSection = this.get('model.sections').objectAt(index + 1);
-    //   if (nextSection) {
-    //     this.transitionToRoute('book.section', this.get('model'), nextSection);
-    //   }
-    // },
-    // prevSection() {
-    //   let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
-    //   let prevSection = this.get('model.sections').objectAt(index - 1);
-    //   if (prevSection) {
-    //     this.transitionToRoute('book.section', this.get('model'), prevSection);
-    //   }
-    // },
     changePermalink(permalink) {
       Ember.$('.book-loading-overlay').show();
 
       this.send('changeSection', this.get('model.sections').findBy('permalink', permalink));
-      // Ember.run.later(() => this.transitionToRoute('book.section', this.get('model'), ), 100);
     },
 
     showImageModal(image) {

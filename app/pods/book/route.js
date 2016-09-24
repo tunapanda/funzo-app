@@ -5,6 +5,7 @@ export default Ember.Route.extend(NavBarTitleMixin, {
   crypto: Ember.inject.service(),
 
   showBackButton: true,
+
   model(params) {
     return this.store.find('book', params.book_id);
   },
@@ -13,7 +14,11 @@ export default Ember.Route.extend(NavBarTitleMixin, {
    * decrypt the sections
    **/
   afterModel(model) {
-    return model.get('sections').then(sections => Ember.RSVP.all(sections.map(section => this.get('crypto').decryptSection(section))));
+    return model.get('sections').then(
+      sections => Ember.RSVP.all(sections.map(
+        section => this.get('crypto').decryptSection(section)
+      ))
+    );
   },
 
   actions: {

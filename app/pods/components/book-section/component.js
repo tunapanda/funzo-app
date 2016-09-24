@@ -1,10 +1,5 @@
 import Ember from 'ember';
 
-// TODO
-// * Subsection links (was done but lost the code)
-// * rerender on resize/orientation change
-// * nicer section transitions (make seamless)
-
 export default Ember.Component.extend({
   currentUser: Ember.inject.service('currentUser'),
   pages: [''],
@@ -12,8 +7,6 @@ export default Ember.Component.extend({
   pagesPerScreen: 1,
 
   touchStarted: false,
-
-  // pageRenderChain: Ember.RSVP.resolve(),
 
   pageCount: Ember.computed.alias('pages.length'),
 
@@ -28,15 +21,6 @@ export default Ember.Component.extend({
   bookContentStyle: Ember.computed('bookContentWidth', 'carouselOffset', function() {
     return Ember.String.htmlSafe(`transform: translateX(-${this.get('carouselOffset')}%)`);
   }),
-
-  // paginatorStyle: Ember.computed('bookContentWidth', function() {
-  //   return Ember.String.htmlSafe(`width:${this.get('bookContentWidth')}%;`);
-  // }),
-
-  // pageStyle: Ember.computed('containerWidth', 'pageCount', 'pagesPerScreen', function() {
-  //   let width = this.get('containerWidth') / this.get('pagesPerScreen'); // - (20 * this.get('pagesPerScreen')))
-  //   return Ember.String.htmlSafe(`width:${width}px;`);
-  // }),
 
   touchStart(e) {
     let start = e.originalEvent.touches[0].pageX;
@@ -65,13 +49,14 @@ export default Ember.Component.extend({
 
     this.set('touchStarted', false);
   },
-  
+
   actions: {
     navPrev() {
       this.navPrev();
     },
 
     navNext() {
+      alert("nav next");
       this.navNext();
     }
   },
@@ -133,18 +118,13 @@ export default Ember.Component.extend({
             return;
         }
         if (a.attr("target") === undefined) {
-            a.attr("target","_blank");  
-        } 
+            a.attr("target","_blank");
+        }
         c.sendAction("onOpenLink",e);
     });
   },
 
-  onScreenChange() {
-    // this.rerender();
-    // this.$('.paginator').html(this.get('html').string);
-    // // this.calcContainerWidth();
-    // this.propertyDidChange('html');
-  },
+  onScreenChange() {},
 
   init() {
     console.log("init");
@@ -159,62 +139,13 @@ export default Ember.Component.extend({
   didRender() {
     Ember.run.schedule('afterRender', this, 'calcContainerWidth');
     Ember.$('.change-section').val(this.get('permalink'));
-
   },
 
   didFinishRendering() {
     Ember.$('.book-loading-overlay').hide();
   },
 
-  // Where is all starts
-  onHTML: Ember.observer('html', function() {
-    // this.get('pages').clear();
-    // this.set('pageIndex', 0);
-
-    // if (this.get('paginated') !== true) {
-    //   Ember.run.schedule('afterRender', this, 'initPagination');
-    // } else {
-    //   // Skip pagination for sections like the frontmatter
-    //   Ember.$(this.get('html').string).each((i, page) => {
-    //     let pageContent = Ember.$(page).html();
-    //     if (pageContent) {
-    //       this.get('pages').addObject(Ember.String.htmlSafe(pageContent));
-    //     }
-    //     Ember.run.scheduleOnce('afterRender', this, 'didFinishRendering');
-    //   });
-    //   if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
-    //     this.get('pages').addObject('');
-    //   }
-    // }
-  }).on('init'),
-
-  initPagination() {
-    // All the html is put into the "paginator"
-    // let paginator = this.$('.paginator .page .page-content');
-
-    // Ember.run.schedule('afterRender', () => {
-    //   this.set('paginatorPageHeight', this.$('.paginator .page').height());
-
-    //   let content = paginator.children();
-
-    //   // make sure the paginator width and height matches the actual pages
-    //   this.$('.paginator .page').height(this.$('.book-content .page').height());
-    //   this.$('.paginator .page').width(this.$('.book-content .page').width());
-
-    //   // keep looping and extracting content until there's none left
-    //   while (content.length > 0) {
-    //     this.get('pages').addObject(Ember.String.htmlSafe(this.getNextPageContent(content)));
-    //     content = paginator.children();
-    //   }
-
-    //   // add an extra page if there's an odd number of pages on the 2 page layout
-    //   if (this.get('pagesPerScreen') === 2 && this.get('pageCount') % 2 !== 0) {
-    //     this.get('pages').addObject('');
-    //   }
-    this.set('pageWidth', this.$('.book-content p').width());
-    Ember.run.scheduleOnce('afterRender', this, 'didFinishRendering');
-    // });
-  },
+  onHTML: Ember.observer('html', function(){}).on('init'),
 
   getNextPageContent(content) {
     let toMove = [];
@@ -253,10 +184,4 @@ export default Ember.Component.extend({
   calcContainerWidth() {
     this.set('containerWidth', this.$('.book-container').width());
   }
-
-  // onSubsection: Ember.observer('subsection', function() {
-  //   if (this.get('subsection')) {
-  //     this.set('pageIndex', this.get('sectionLocations')[this.get('subsection')]);
-  //   }
-  // })
 });
