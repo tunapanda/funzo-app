@@ -59,12 +59,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   /* extracted recordxAPI promises here */
 
   fetchUser(resolve, reject) {
-    /* TODO: it's wasteful to fetch user data now, since we
-             might not use it (see the second `if` below),
-             but I don't see another way to ensure that
-             `statement.save()` doesn't get called before
-             the promise resolves, in case we do need it.
-             Maybe there's a better way though?          */
     var user = this.get('currentUser.model');
     resolve(user);
   },
