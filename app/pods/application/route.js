@@ -28,19 +28,10 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   // lets us get around our weird query issues
   syncStatement(statement) {
     var xapi = new TinCan(ENV.APP.xAPI);
-    console.log("DBG syncing...");
-    console.log("DBG syncStatements statements...");
-    console.log(statement);
     var xApiStatements = [];
-    console.log("DBG Adding...");
     xApiStatements.addObject(statement);
-    console.log("DBG syncStatements xApiStatements...");
-    console.log(xApiStatements);
     xapi.sendStatements(xApiStatements, (res) => {
-      console.log("DBG sendStatements res");
-      console.log(res);
       if (!res[0].err) {
-        console.log("DBG no error");
         // XXX FIXME since we're cheating and passing statement data directly,
         // we can't sync the corresponding db method for free. we'll have to
         // query the record here and set it to synced, or find a way to make
@@ -50,9 +41,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         Ember.RSVP.resolve(xApiStatements);
       } else {
         console.log("DBG ERROR");
-        Ember.RSVP.reject(res);
       }
-      //else { console.log("DBG: sync err..."); console.log(res[0].err); }
     });
   },
 
@@ -64,19 +53,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
 
   storeXAPIStatement(user, statement_data) {
-    if (typeof(statement_data.version) === "undefined") {
-      statement_data.version = "1.0.0";
-    }
-    if (typeof(statement_data.actor) === "undefined") {
-      statement_data.actor = {
-        "objectType":"Agent",
-        "account":{
-          "id":   user.get('id'),
-          "name": user.get('username'),
-          "homePage": 'http://tunapanda.org'
-        }
-      };
-    }
     this.store.createRecord('x-api-statement', {
       content: statement_data,
       user: user
@@ -86,13 +62,48 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
   /* end of extracted promises */
 
+  getXapiPlatform() {
+    return this.modelFor('book').get('id');
+  },
+
+  getXapiUserHomepage() {
+    return this.modelFor('book').get('institutionUri');
+  },
+
+  populatexAPI(statement_data) {
+    if (typeof(statement_data.version) === "undefined") {
+      statement_data.version = "1.0.0";
+    }
+    if (typeof(statement_data.context) === "undefined") {
+      statement_data.context = {};
+    }
+    if (typeof(statement_data.context.platform) === "undefined") {
+      statement_data.context.platform = this.getXapiPlatform();
+    }
+    if (typeof(statement_data.context.contextActivities) === "undefined") {
+      statement_data.context.contextActivities = {};
+    }
+    if (typeof(statement_data.actor) === "undefined") {
+      return new Ember.RSVP.Promise(
+        this.fetchUser.bind(this)
+      ).then((user) => {
+          statement_data.actor = {
+            "objectType":"Agent",
+            "account":{
+              "id":   user.get('id'),
+              "name": user.get('username'),
+              "homePage": this.getXapiUserHomepage()
+            }
+          };
+        return statement_data;
+      });
+    } else {
+      return new Ember.RSVP.Promise(statement_data); 
+    }
+  },
+
   recordxAPI(statement_data) {
-    console.log("DBG recordxAPI");
-    return new Ember.RSVP.Promise(
-      this.fetchUser.bind(this)
-    ).then((user) => {
-      return this.storeXAPIStatement(user, statement_data);
-    }).then(
+    return this.populatexAPI(statement_data).then(
       this.syncStatement.bind(this)
     );
   },
@@ -106,7 +117,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
 
     openLink(url) {
-      console.log("DBG OPENLINK");
       window.open(url, '_system');
     },
 
@@ -115,25 +125,32 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
 
     xAPIOpenLink(event) {
-      console.log("DBG xAPIOpenLink");
+      var linkText = event.target.textContent;
       var statement_data = {
         "timestamp": new Date().toISOString(),
+        "description": "User opened link '"+linkText+"'",
+        "context": { 
+          "contextActivities": {
+            "parent": event.target.baseURI
+          }
+        },  
         "verb": {
-            "id": "http://adlnet.gov/expapi/verbs/experienced",
-            "display": {
-                "en-US": "experienced"
-            }
+          "id": "http://adlnet.gov/expapi/verbs/experienced",
+          "display": {
+              "en-US": "experienced"
+          }
         },
         "object": {
-            "id":  event.target.href
+          "id":  event.target.href,
+          "definition": {
+            "name": {
+              "en-US": linkText,
+            },
+            "type": "http://funzo.tunapanda.org/xapi/activity/link",
+          },
         },
-        "context": {
-            "platform": event.target.baseURI
-        }
       };
-      console.log("DBG recordxAPI start");
       this.recordxAPI(statement_data);
-      console.log("DBG recordxAPI done");
     }
   },
 
