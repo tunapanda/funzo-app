@@ -3,17 +3,24 @@ import NavBarTitleMixin from 'funzo-app/mixins/nav-title';
 
 export default Ember.Route.extend(NavBarTitleMixin, {
   crypto: Ember.inject.service(),
+  bookmarks: Ember.inject.service(),
 
   showBackButton: true,
+
+  beforeModel() {
+    return this.get('bookmarks').start();
+  },
 
   model(params) {
     return this.store.find('book', params.book_id);
   },
 
-  /**
-   * decrypt the sections
-   **/
   afterModel(model) {
+    this.get('bookmarks').openBook(model);
+
+    /**
+     * decrypt the sections
+     **/
     return model.get('sections').then(
       sections => Ember.RSVP.all(sections.map(
         section => this.get('crypto').decryptSection(section)
@@ -24,6 +31,10 @@ export default Ember.Route.extend(NavBarTitleMixin, {
   actions: {
     changeSection(section) {
       this.replaceWith('book.section', this.get('controller.model'), section);
+    },
+
+    updateUserBookmark(scrollLeft) {
+      this.get('bookmarks').updatePosition(scrollLeft);
     }
   }
 });

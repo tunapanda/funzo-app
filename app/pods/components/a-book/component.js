@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import TweenLite from 'tweenlite';
 
 const { $, computed, RSVP } = Ember;
 
@@ -144,12 +143,20 @@ export default Ember.Component.extend({
     }
   },
 
+  updateScrollPosition() {
+    var scrollLeft = this.get('scrollLeft');
+    console.log('about to send page change with position', scrollLeft);
+    this.sendAction('onPageChange', scrollLeft);
+  },
+
   navPrev() {
     this.animateScrollLeft(this.get('scrollLeft') - this.get('pageWidth'));
+    this.updateScrollPosition();
   },
 
   navNext() {
     this.animateScrollLeft(this.get('scrollLeft') + this.get('pageWidth'));
+    this.updateScrollPosition();
   },
 
   /**
@@ -182,32 +189,27 @@ export default Ember.Component.extend({
    * Called after the container has been scrolled, checks if we have scrolled
    * into another section and changes the route/url accordingly via actions
    *
-   * FIXME this doesn't seem to be working - mcantor 9/24/2016
-   *
    * @param  {String}
    * @return {void}
    */
 
   didScroll(direction) {
-    let permalink;
-    let matchStart = this.get('sections').findBy('startPosition', this.get('scrollLeft'));
+    let scrollLeft   = this.get('scrollLeft'),
+        newSection   = this.get('sections').find(sec => sec.get('endPosition') > scrollLeft),
+        newPermalink = newSection.get('permalink'),
+        oldPermalink = this.get('currentRouteModel.permalink'),
+        oldSection   = this.get('sections').findBy('permalink', oldPermalink);
 
-    if (matchStart && direction === 'forward') {
-      permalink = matchStart.get('permalink');
-    }
+    console.log('checking if we have changed section after scrolling ' + direction);
+    console.log('from ' + oldPermalink + ' to ' + newPermalink);
 
-    let matchEnd = this.get('sections').findBy('endPosition', this.get('scrollLeft'));
-    if (matchEnd && direction === 'backward') {
-      permalink = matchEnd.get('permalink');
-    }
-
-    if (permalink && (matchStart || matchEnd) && permalink !== this.get('currentRouteModel.permalink')) {
-      let newSection = this.get('sections').findBy('permalink', permalink);
-
-      this.get('sections').setEach('isCurrentSection', false);
+    if (newPermalink !== oldPermalink) {
+      console.log('section changed. updating permalink');
+      oldSection.set('isCurrentSection', false);
       newSection.set('isCurrentSection', true);
-
-      this.attrs.changePermalink(permalink);
+      // FIXME when paging back from the start of a section, this will force a skip
+      // all the way to the begninning of the section you just entered
+      this.attrs.changePermalink(newPermalink);
     }
 
     this.set('scrolling', false);
@@ -235,7 +237,8 @@ export default Ember.Component.extend({
    * @return {void}
    */
   scrollToSection(permalink) {
-    let offset = this.get('sections').findBy('permalink', permalink) ? this.get('sections').findBy('permalink', permalink).get('startPosition') : 0;
+    let section = this.get('sections').findBy('permalink', permalink);
+    let offset = section ? section.get('startPosition') : 0;
     console.log(`scrolling to ${permalink} at ${offset}`);
     this.set('animateScroll', false);
     this.set('scrollLeft', offset);
@@ -254,13 +257,17 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-
     this.set('pageWidth', $('.book-container')[0].clientWidth);
 
     this.waitForImages().then(() => {
       this.findSections();
       Ember.run.scheduleOnce('afterRender', () => {
-        if (this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
+        console.log("starting scroll left:", this.get('startingScrollLeft'));
+        if(this.get('startingScrollLeft')) {
+          console.warn("SCROLLING!");
+          this.set('animateScroll', false);
+          this.set('scrollLeft', this.get('startingScrollLeft'));
+        } else if(this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
           this.scrollToSection(this.get('currentRouteModel.permalink'));
         }
 
@@ -311,7 +318,6 @@ export default Ember.Component.extend({
   onSection: Ember.observer('currentRouteModel', function() {
     console.log('SECTION: ' + this.get('currentRouteModel.permalink'));
     Ember.run.schedule('afterRender', () => {
-
       // changing section is true if we have changed section internally and
       // triggered the trasition, this is to avoid a transition loop where
       // scrolling causes a transition and the transition causes scrolling...
@@ -342,14 +348,28 @@ export default Ember.Component.extend({
   },
 
   findSections() {
-    this.$('.section-anchor').each((i, el) => {
-      let $el = $(el);
+    let scrollLeft = this.get('scrollLeft'),
+        pageWidth  = this.get('pageWidth');
 
-      if (i !== 0) {
-        this.get('sections').objectAt(i - 1).set('endPosition', (($el[0].offsetLeft - 40) - this.get('pageWidth')) + this.get('scrollLeft'));
-      }
-      this.get('sections').objectAt(i).set('startPosition', ($el[0].offsetLeft - 40) + this.get('scrollLeft'));
+    console.groupCollapsed("finding sections");
+    console.log('scrollLeft:', scrollLeft, 'pageWidth:', pageWidth);
+
+    this.$('.section-anchor').each((i, el) => {
+      let section       = this.get('sections').objectAt(i),
+          prev          = this.get('sections').objectAt(i - 1),
+          left          = el.offsetLeft - 40,
+          startPosition = left + scrollLeft,
+          endPosition   = startPosition - pageWidth;
+
+      console.group("found section #" + i + ": ", el.getAttribute("data-permalink"));
+      console.log("prev:", prev);
+      console.log("left:", left, "start:", startPosition, "end:", endPosition);
+      console.groupEnd();
+
+      if (i !== 0) prev.set('endPosition', endPosition);
+      section.set('startPosition', startPosition);
     });
+    console.groupEnd();
 
     console.table(this.get('sections').toArray());
   }

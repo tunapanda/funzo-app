@@ -12,9 +12,15 @@ let SectionDecorator = ObjectProxy.extend({
 export default Ember.Controller.extend({
   nav: Ember.inject.service(),
   section: Ember.inject.controller('book.section'),
+  bookmarks: Ember.inject.service(),
 
   sections: computed.map('model.sections', function(model, i) {
     return SectionDecorator.create({ content: model });
+  }),
+
+  startingScrollLeft: Ember.computed('bookmarks.currentPosition', function() {
+    console.log("Getting computed position attribute:", this.get("bookmarks.currentPosition"));
+    return this.get("bookmarks.currentPosition");
   }),
 
   fontSize: 12,
@@ -38,6 +44,10 @@ export default Ember.Controller.extend({
       this.set('modal.args.image', image);
 
       Ember.$('.modal').modal('show');
+    },
+
+    onPageChange(scrollLeft) {
+      this.send('updateUserBookmark', scrollLeft);
     }
   }
 });

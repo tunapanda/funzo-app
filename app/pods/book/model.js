@@ -2,6 +2,7 @@ import DS from 'ember-data';
 import { Model } from 'ember-pouch';
 
 export default Model.extend({
+  permalink: DS.attr(),
   title: DS.attr(),
   author: DS.attr(),
   subject: DS.attr(),
