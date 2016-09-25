@@ -6,6 +6,7 @@
       </div>
       {{!-- <h1 class="text-center">Welcome</h1> --}}
       <h4 class="text-center"></h4>
+      <form {{ action 'getStarted' on='submit' }}>
       <div class="form-group {{if errors.model.username.length 'has-error'}}">
         <label class="control-label" for="first_name">Please enter a username to identify yourself to your teacher</label>
         {{input id="first_name" type="text" value=model.username class="form-control"}}
@@ -15,6 +16,7 @@
         {{/each}}
         </span>
       </div>
+      </form>
     </div>
   </div>
   <div class="row get-started">
