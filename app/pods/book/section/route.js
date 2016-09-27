@@ -5,9 +5,12 @@ export default Ember.Route.extend(NavBarTitleMixin, {
   nav: Ember.inject.service(),
 
   showBackButton: true,
-  
+
   model: function(params) {
-    return this.store.queryRecord('section', { book_id: this.paramsFor('book').book_id, section_id: params.section_id });
+    return this.store.queryRecord('section', {
+      book_id:    this.paramsFor('book').book_id,
+      section_id: params.section_id
+    });
   },
 
   afterModel(model) {
@@ -18,13 +21,8 @@ export default Ember.Route.extend(NavBarTitleMixin, {
     return this._super(...arguments);
   },
 
-  hideNavBar: function() {
-    this.set('nav.hide', true);
-  }.on('activate'),
-
-  showNavBar: function() {
-    this.set('nav.hide', false);
-  }.on('deactivate'),
+  hideNavBar: function() { this.set('nav.hide', true);  }.on('activate'),
+  showNavBar: function() { this.set('nav.hide', false); }.on('deactivate'),
 
   hideStatusBar: function() {
     this.set('indexOnly', true);

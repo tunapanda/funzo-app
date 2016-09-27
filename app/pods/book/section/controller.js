@@ -21,7 +21,11 @@ export default Ember.Controller.extend({
     changeSection(permalink) {
       Ember.$('.book-loading-overlay').show();
 
-      Ember.run.later(() => this.transitionToRoute('book.section', this.get('model.book'), this.get('model.book.sections').findBy('permalink', permalink)), 100);
+      Ember.run.later(() => this.transitionToRoute(
+        'book.section',
+        this.get('model.book'),
+        this.get('model.book.sections').findBy('permalink', permalink)
+      ), 100);
     }
   }
 });
