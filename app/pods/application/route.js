@@ -67,7 +67,12 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
 
   getXapiUserHomepage() {
-    return this.modelFor('book').get('institutionUri');
+    var book = this.modelFor('book');
+    var uri = book.get('institutionUri');
+    if (typeof(uri) === "undefined") {
+      uri = "http://funzo.tunapanda.org/xapi/institution/" + book.get("institution");
+    } 
+    return uri;
   },
 
   populatexAPI(statement_data) {
