@@ -1,12 +1,8 @@
-/* global TinCan */
 import Ember from 'ember';
-import ENV from 'funzo-app/config/environment';
 
 function toArray(list) {
   return Array.prototype.slice.call(list || [], 0);
 }
-
-var xapi = new TinCan(ENV.APP.xAPI);
 
 // Call the reader.readEntries() until no more results are returned.
 function readFolder(dir) {
