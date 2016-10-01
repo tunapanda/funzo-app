@@ -15,7 +15,7 @@ export default Adapter.extend({
       let keyForModel = Ember.String.pluralize(type.modelName);
       // FIXME: This is a terrible hack to work around I don't even
       // know what with Ember.
-      if (keyForModel == "x-api-statements") {
+      if (keyForModel === "x-api-statements") {
         keyForModel = "xApiStatements";
       }
       let filterFunction = (item) => {

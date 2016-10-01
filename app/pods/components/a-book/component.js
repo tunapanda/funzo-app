@@ -296,7 +296,7 @@ export default Ember.Component.extend({
     return new RSVP.Promise((resolve) => {
       let imagesLoaded = 0;
       let images = this.$('p img');
-      images.load((e) => {
+      images.load(() => {
         imagesLoaded++;
         if (images.length === imagesLoaded) {
           resolve();
@@ -366,7 +366,7 @@ export default Ember.Component.extend({
       console.log("left:", left, "start:", startPosition, "end:", endPosition);
       console.groupEnd();
 
-      if (i !== 0) prev.set('endPosition', endPosition);
+      if (i !== 0) { prev.set('endPosition', endPosition); }
       section.set('startPosition', startPosition);
     });
     console.groupEnd();

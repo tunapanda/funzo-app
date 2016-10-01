@@ -27,7 +27,7 @@ export default Ember.Route.extend(NavBarTitleMixin, {
   hideStatusBar: function() {
     this.set('indexOnly', true);
     this.set('showBackButton', true);
-    window.StatusBar && window.StatusBar.hide();
+    if (window.StatusBar) { window.StatusBar.hide(); }
 
     document.addEventListener('resume', this.hideStatusBarResume, false);
 
@@ -35,14 +35,14 @@ export default Ember.Route.extend(NavBarTitleMixin, {
 
   showStatusBar: function() {
     this.set('indexOnly', false);
-    window.StatusBar && window.StatusBar.show();
+    if (window.StatusBar) { window.StatusBar.show(); }
 
     document.removeEventListener('resume', this.hideStatusBarResume, false);
 
   }.on('deactivate'),
 
   hideStatusBarResume() {
-    window.StatusBar && window.StatusBar.hide();
+    if (window.StatusBar) { window.StatusBar.hide(); }
   }
 });
 

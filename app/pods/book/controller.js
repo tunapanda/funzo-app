@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { $, ObjectProxy, computed } = Ember;
+const { $, ObjectProxy, computed } = Ember; // jshint ignore:line
 
 let SectionDecorator = ObjectProxy.extend({
   isHidden: false,
@@ -14,7 +14,10 @@ export default Ember.Controller.extend({
   section: Ember.inject.controller('book.section'),
   bookmarks: Ember.inject.service(),
 
-  sections: computed.map('model.sections', function(model, i) {
+  // this method can take a second argument, but since we're not
+  // using it right now jshint will complain if it's references.
+  //sections: computed.map('model.sections', function(model, i) {
+  sections: computed.map('model.sections', function(model) {
     return SectionDecorator.create({ content: model });
   }),
 

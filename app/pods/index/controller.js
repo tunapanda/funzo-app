@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
   }),
 
   init() {
-    this.get('bookManager').on('booksUpdated', (books) => {
+    this.get('bookManager').on('booksUpdated', () => {
       // this.store.pushPayload('book', { books });
       this.store.unloadAll('book');
       this.store.findAll('book', { reload: true }).then((books) => this.set('model.books', books));
