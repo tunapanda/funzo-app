@@ -27,6 +27,8 @@ module.exports = function(environment) {
     },
 
     APP: {
+      // This should match the version number in cordova/config.xml
+      version: '1.0.3',
       bookOnlyMode: true,
       // Set this to false to have no default
       defaultBook: {
@@ -42,7 +44,13 @@ module.exports = function(environment) {
           username: '1017b67da772161ed2889d2a42f7c94780a5e21d',
           password: '1117ff2bb7674cf58b26177baed7b8f4e5e2e54d',
           allowFail: false
-        }]
+        }],
+        // Number of decimal places to get from lat/long values
+        // 3 decimal places = accuracy to ~ 100 meters
+        // 2 would be closer to ~ 1km
+        // More details: http://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+        // -1 disables location data in xapi reports
+        gps_accuracy: 3
       }
     },
 

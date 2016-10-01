@@ -5,6 +5,7 @@ export default Model.extend({
   permalink: DS.attr(),
   title: DS.attr(),
   author: DS.attr(),
+  institution: DS.attr(),
   institutionUri: DS.attr(),
   subject: DS.attr(),
   sections: DS.hasMany('section', { async: true }),

@@ -2,6 +2,13 @@ import Ember from 'ember';
 import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mixin';
 import ENV from 'funzo-app/config/environment';
 
+var setIfUnset = function(statement_data, setting, value) {
+  if (typeof(statement_data[setting]) === "undefined") {
+    statement_data[setting] = value;
+  }
+  return statement_data;
+};
+
 export default Ember.Route.extend(ApplicationRouteMixin, {
   session: Ember.inject.service('session'),
   nav: Ember.inject.service('nav'),
@@ -70,41 +77,83 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     var book = this.modelFor('book');
     var uri = book.get('institutionUri');
     if (typeof(uri) === "undefined") {
-      uri = "http://funzo.tunapanda.org/xapi/institution/" + book.get("institution");
+      uri = "http://funzo.tunapanda.org/xapi/extensions/institution/" + book.get("institution");
     } 
     return uri;
   },
 
   populatexAPI(statement_data) {
-    if (typeof(statement_data.version) === "undefined") {
-      statement_data.version = "1.0.0";
+    setIfUnset(statement_data, "timestamp", new Date().toISOString());
+    setIfUnset(statement_data, "version", "1.0.0");
+    setIfUnset(statement_data, "context", {});
+    setIfUnset(statement_data.context, "platform", this.getXapiPlatform());
+    setIfUnset(statement_data.context, "extensions", {});
+    setIfUnset(statement_data, "", );
+    var debugKey = "http://tunapanda.org/xapi/extensions/debug";
+    setIfUnset(statement_data.context.extensions, debugKey, {});
+    setIfUnset(statement_data.context.extensions[debugKey], "book", this.modelFor('book').get('id'));
+    setIfUnset(statement_data.context.extensions[debugKey], "userAgent", navigator.userAgent);
+    setIfUnset(statement_data.context.extensions[debugKey], "platform", );
+    var platform = "web";
+    var platformVersion = undefined;
+    if (typeof(device) !== "undefined") {
+      platform = device.platform;
+      platformVersion = device.version;
     }
-    if (typeof(statement_data.context) === "undefined") {
-      statement_data.context = {};
+    setIfUnset(statement_data.context.extensions[debugKey], "platform", platform);
+    setIfUnset(statement_data.context.extensions[debugKey], "platformVersion", platformVersion);
+    // We can use this to store non-fatal error messages for later review
+    setIfUnset(statement_data.context.extensions[debugKey], "messages", []);
+    var appversionKey = "http://tunapanda.org/xapi/extensions/appversion";
+    var institutionKey = "http://tunapanda.org/xapi/extensions/institution";
+    if (typeof(statement_data.context.extensions[institutionKey]) === "undefined") {
+      var book = this.modelFor('book');
+      statement_data.context.extensions[institutionKey] = book.get('institution');
     }
-    if (typeof(statement_data.context.platform) === "undefined") {
-      statement_data.context.platform = this.getXapiPlatform();
-    }
-    if (typeof(statement_data.context.contextActivities) === "undefined") {
-      statement_data.context.contextActivities = {};
-    }
-    if (typeof(statement_data.actor) === "undefined") {
-      return new Ember.RSVP.Promise(
-        this.fetchUser.bind(this)
-      ).then((user) => {
-          statement_data.actor = {
+    return new Ember.RSVP.Promise((resolve,reject) => {
+      var gps_accuracy = ENV.APP.xAPI.gps_accuracy;
+      if ( typeof(gps_accuracy) === "undefined" || gps_accuracy < 0 ) {
+        // location data disabled in config
+        resolve(statement_data);
+      }
+      var gpsKey = "http://tunapanda.org/xapi/extensions/location";
+      if (typeof(statement_data.context.extensions[gpsKey]) === "undefined") {
+        navigator.geolocation.getCurrentPosition((location) => {
+          if (typeof(location) === "undefined") {
+            resolve(statement_data);
+          }
+          setIfUnset(statement_data.context.extensions, gpsKey, {
+            "lat": location.coords.latitude.toFixed(gps_accuracy),
+            "lng": location.coords.longitude.toFixed(gps_accuracy),
+          });
+          resolve(statement_data);
+        }, (err) => {
+          statement_data.context.extensions[debugKey].messages.push("GPS error: " + err);
+        }); 
+      } else {
+        resolve(statement_data);
+      }
+    }, (err) => { console.log("Location ERROR:"); console.log(err) }
+    ).then((statement_data) => {
+      if (typeof(statement_data.actor) === "undefined") {
+        return new Ember.RSVP.Promise(
+          this.fetchUser.bind(this)
+        ).then((user) => {
+          var regnameKey =  "http://tunapanda.org/xapi/extensions/regname";
+          setIfUnset(statement_data.context.extensions, regnameKey, user.get('username'));
+          setIfUnset(statement_data, "actor", {
             "objectType":"Agent",
             "account":{
-              "id":   user.get('id'),
-              "name": user.get('username'),
+              "name":   user.get('id'),
               "homePage": this.getXapiUserHomepage()
             }
-          };
-        return statement_data;
-      });
-    } else {
-      return new Ember.RSVP.Promise(statement_data); 
-    }
+          });
+          return statement_data;
+        });
+      } else {
+        return statement_data; 
+      }
+    });
   },
 
   recordxAPI(statement_data) {
@@ -132,7 +181,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     xAPIOpenLink(event) {
       var linkText = event.target.textContent;
       var statement_data = {
-        "timestamp": new Date().toISOString(),
         "description": "User opened link '"+linkText+"'",
         "context": { 
           "contextActivities": {
