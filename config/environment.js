@@ -28,14 +28,17 @@ module.exports = function(environment) {
 
     APP: {
       bookOnlyMode: true,
+      defaultBook: false,
+      /*
       // Set this to false to have no default
       defaultBook: {
-        code: 'demo',
-        hint: 'enter code "demo" to download an example book'
+      	code: 'demo',
+      	hint: 'enter code "demo" to download an example book'
       },
-      encryptionKeyBase: 'foobarbaz',
+      */
+      encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
       // For directories, be sure to include a trailing '/'!
-      bookURLBase: 'http://funzo.tunapanda.org/content/dl/',
+      bookURLBase: 'http://elibrary.certell.org/books/',
       xAPI: {
         recordStores: [{
           endpoint: 'http://lrs.tunapanda.org/data/xAPI/',

@@ -27,6 +27,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   // we might want to go back to that, but for now one sync per statement
   // lets us get around our weird query issues
   syncStatement(statement) {
+    /* global TinCan */
     var xapi = new TinCan(ENV.APP.xAPI);
     var xApiStatements = [];
     xApiStatements.addObject(statement);
@@ -47,9 +48,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
   /* extracted recordxAPI promises here */
 
-  fetchUser(resolve, reject) {
+  fetchUser() {
     var user = this.get('currentUser.model');
-    resolve(user);
+    return user;
   },
 
   storeXAPIStatement(user, statement_data) {

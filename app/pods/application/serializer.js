@@ -3,7 +3,7 @@ import DS from 'ember-data';
 export default DS.RESTSerializer.extend({
   primaryKey: 'permalink',
 	modelNameFromPayloadKey(key) {
-		if (key == "xApiStatements") {
+		if (key === "xApiStatements") {
 			return "x-api-statement";
 		} else {
 			return key;
