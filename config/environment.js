@@ -28,11 +28,14 @@ module.exports = function(environment) {
 
     APP: {
       bookOnlyMode: false,
+      defaultBook: false,
+      /*
       // Set this to false to have no default
       defaultBook: {
-        code: 'demo',
-        hint: 'enter code "demo" to download an example book'
+      	code: 'demo',
+      	hint: 'enter code "demo" to download an example book'
       },
+      */
       encryptionKeyBase: 'foobarbaz',
       // For directories, be sure to include a trailing '/'!
       bookURLBase: 'http://funzo.tunapanda.org/content/dl/',

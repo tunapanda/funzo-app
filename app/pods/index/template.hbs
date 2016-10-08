@@ -1,6 +1,5 @@
 <div class="col-xs-12">
   <div class="row">
-    {{#if bookOnlyMode}}
       {{#each model.books as |book|}}
         <div class="col-xs-6 col-sm-4 col-md-2">
           {{#link-to 'book.section' book book.sections.firstObject}}
@@ -28,7 +27,11 @@
         <button class="btn btn-lg btn-raised btn-block btn-primary"> add your first book</button>
       </div> --}}
       {{/each}}
-    {{else}}
+    </div>
+    {{#unless bookOnlyMode}}
+      <div class="row">
+        <div class="col-md-12">
+      <h2>Courses</h2>
       {{#each model.courses as |course|}}
       <div class="col-md-6">
         <div class="panel panel-default">
@@ -44,6 +47,7 @@
         </div>
       </div>
     {{/each}}
-  {{/if}}
-  </div>
+      </div>
+      </div>
+  {{/unless}}
 </div>

@@ -5,7 +5,11 @@
     <div class="col-xs-3">
       <ul class="nav nav-pills nav-stacked">
         {{#each model.activities as |activity|}}
-          <li>{{#link-to 'course.module.activity' model.course model activity class=activity.active}}{{activity.title}}{{/link-to}}</li>
+          {{#unless activity.isReading}}
+            <li>{{#link-to 'course.module.activity' model.course model activity class=activity.active}}{{activity.title}}{{/link-to}}</li>
+          {{else}}
+            <li>{{#link-to 'book.section' 'CSE' activity.section}}{{activity.title}}{{/link-to}}</li>
+          {{/unless}}
         {{/each}}
       </ul>
     </div>
