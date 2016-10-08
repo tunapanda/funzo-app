@@ -2,6 +2,16 @@
 /* global TinCan */
 var os     = require('os');
 var ifaces = os.networkInterfaces();
+try {
+  var local  = require('./local.js');
+} catch(e) {
+  var local  = { 
+    update_env: function(env) {
+      env.test = "OTHER";
+      return env;
+    }
+  }
+}
 
 var addresses = [];
 for (var dev in ifaces) {
@@ -14,6 +24,7 @@ for (var dev in ifaces) {
 
 module.exports = function(environment) {
   var ENV = {
+    test: "testfoo",
     modulePrefix: 'funzo-app',
     podModulePrefix: 'funzo-app/pods',
     environment: environment,
@@ -101,5 +112,5 @@ module.exports = function(environment) {
     ENV.production = true;
   }
 
-  return ENV;
+  return local.env(ENV);
 };
