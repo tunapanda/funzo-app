@@ -1,0 +1,12 @@
+{
+  "id": "Demo_Book",
+  "title": "Demo Book",
+  "institution": "Testing University",
+  "encryptionKeyBase": "foobarbaz",
+  "expiration": 20161201,
+  "coverImage": "cover.png",
+  "sections": [
+    { "title" : "Section One",
+      "source": "section1.html" }
+  ]
+}
