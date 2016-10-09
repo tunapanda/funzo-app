@@ -200,10 +200,13 @@ export default Ember.Component.extend({
         oldPermalink = this.get('currentRouteModel.permalink'),
         oldSection   = this.get('sections').findBy('permalink', oldPermalink);
 
+    this.sendAction('onPageChange', scrollLeft);
     console.log('checking if we have changed section after scrolling ' + direction);
     console.log('from ' + oldPermalink + ' to ' + newPermalink);
+    
 
     if (newPermalink !== oldPermalink) {
+      // TODO: Emit xapi statement saying this section has been started
       console.log('section changed. updating permalink');
       oldSection.set('isCurrentSection', false);
       newSection.set('isCurrentSection', true);
