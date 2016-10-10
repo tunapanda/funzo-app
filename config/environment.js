@@ -41,19 +41,20 @@ module.exports = function(environment) {
       // This should match the version number in cordova/config.xml
       version: '1.0.3',
       bookOnlyMode: true,
+      defaultBook: false,
       // Set this to false to have no default
       defaultBook: {
         code: 'demo',
         hint: 'enter code "demo" to download an example book'
       },
-      encryptionKeyBase: 'foobarbaz',
+      encryptionKeyBase: 'OVERRIDE IN config/local.js',
       // For directories, be sure to include a trailing '/'!
-      bookURLBase: 'http://funzo.tunapanda.org/content/dl/',
+      bookURLBase: 'OVERRIDE IN config/local.js',
       xAPI: {
         recordStores: [{
-          endpoint: 'http://lrs.tunapanda.org/data/xAPI/',
-          username: '1017b67da772161ed2889d2a42f7c94780a5e21d',
-          password: '1117ff2bb7674cf58b26177baed7b8f4e5e2e54d',
+          endpoint: 'OVERRIDE IN config/local.js',
+          username: 'OVERRIDE IN config/local.js',
+          password: 'OVERRIDE IN config/local.js',
           allowFail: false
         }],
         // Number of decimal places to get from lat/long values
@@ -120,5 +121,5 @@ module.exports = function(environment) {
     ENV.production = true;
   }
 
-  return local.env(ENV);
+  return local.update_env(ENV);
 };
