@@ -55,9 +55,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
   /* extracted recordxAPI promises here */
 
-  fetchUser() {
+  fetchUser(resolve, reject) { // jshint ignore:line
     var user = this.get('currentUser.model');
-    return user;
+    resolve(user);
   },
 
   storeXAPIStatement(user, statement_data) {
@@ -89,29 +89,28 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     setIfUnset(statement_data, "context", {});
     setIfUnset(statement_data.context, "platform", this.getXapiPlatform());
     setIfUnset(statement_data.context, "extensions", {});
-    setIfUnset(statement_data, "", );
     var debugKey = "http://tunapanda.org/xapi/extensions/debug";
     setIfUnset(statement_data.context.extensions, debugKey, {});
     setIfUnset(statement_data.context.extensions[debugKey], "book", this.modelFor('book').get('id'));
     setIfUnset(statement_data.context.extensions[debugKey], "userAgent", navigator.userAgent);
-    setIfUnset(statement_data.context.extensions[debugKey], "platform", );
     var platform = "web";
-    var platformVersion = undefined;
+    var platformVersion = "unknown";
+    /* global device */
     if (typeof(device) !== "undefined") {
       platform = device.platform;
       platformVersion = device.version;
     }
     setIfUnset(statement_data.context.extensions[debugKey], "platform", platform);
     setIfUnset(statement_data.context.extensions[debugKey], "platformVersion", platformVersion);
+    setIfUnset(statement_data.context.extensions[debugKey], "appVersion", ENV.APP.version);
     // We can use this to store non-fatal error messages for later review
     setIfUnset(statement_data.context.extensions[debugKey], "messages", []);
-    var appversionKey = "http://tunapanda.org/xapi/extensions/appversion";
     var institutionKey = "http://tunapanda.org/xapi/extensions/institution";
     if (typeof(statement_data.context.extensions[institutionKey]) === "undefined") {
       var book = this.modelFor('book');
       statement_data.context.extensions[institutionKey] = book.get('institution');
     }
-    return new Ember.RSVP.Promise((resolve,reject) => {
+    return new Ember.RSVP.Promise((resolve,reject) => { // jshint ignore:line
       var gps_accuracy = ENV.APP.xAPI.gps_accuracy;
       if ( typeof(gps_accuracy) === "undefined" || gps_accuracy < 0 ) {
         // location data disabled in config
@@ -134,7 +133,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       } else {
         resolve(statement_data);
       }
-    }, (err) => { console.log("Location ERROR:"); console.log(err) }
+    }, (err) => { console.log("Location ERROR:"); console.log(err) ;}
     ).then((statement_data) => {
       if (typeof(statement_data.actor) === "undefined") {
         return new Ember.RSVP.Promise(
