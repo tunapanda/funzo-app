@@ -39,7 +39,7 @@ module.exports = function(environment) {
 
     APP: {
       // This should match the version number in cordova/config.xml
-      version: '1.0.3',
+      version: '1.0.4',
       bookOnlyMode: true,
       defaultBook: false,
       // Set this to false to have no default
