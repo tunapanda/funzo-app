@@ -139,12 +139,14 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         return new Ember.RSVP.Promise(
           this.fetchUser.bind(this)
         ).then((user) => {
+          var useridKey =  "http://tunapanda.org/xapi/extensions/userid";
+          setIfUnset(statement_data.context.extensions, useridKey, user.get('userid'));
           var regnameKey =  "http://tunapanda.org/xapi/extensions/regname";
           setIfUnset(statement_data.context.extensions, regnameKey, user.get('username'));
           setIfUnset(statement_data, "actor", {
             "objectType":"Agent",
             "account":{
-              "name":   user.get('id'),
+              "name":   user.get('username'),
               "homePage": this.getXapiUserHomepage()
             }
           });
