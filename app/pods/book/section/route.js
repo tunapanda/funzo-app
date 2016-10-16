@@ -6,6 +6,10 @@ export default Ember.Route.extend(NavBarTitleMixin, {
 
   showBackButton: true,
 
+  activate() {
+    console.log("XXX SECTION ACTIVATE START");
+  },
+
   model: function(params) {
     return this.store.queryRecord('section', {
       book_id:    this.paramsFor('book').book_id,

@@ -14,6 +14,10 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   nav: Ember.inject.service('nav'),
   bookManager: Ember.inject.service(),
 
+  activate() {
+    console.log("XXX ROUTE ACTIVATE");
+  },
+
   beforeModel() {
     if (window.cordova) {
       return new Ember.RSVP.Promise((res) => document.addEventListener('deviceready', res, false))
@@ -178,6 +182,32 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
     sessionInvalidated() {
       this.transitionTo('login');
+    },
+
+    xAPIOpenBook(book) {
+      console.log("XXX ACTIVATE START");
+      var bookId = book.get('id');
+      var bookTitle = book.get('title');
+      var statement_data = {
+        "description": "User opened book '" + bookTitle + "'",
+        "verb": {
+          "id": "http://adlnet.gov/expapi/verbs/launched",
+          "display": {
+              "en-US": "launched"
+          }
+        },
+        "object": {
+          "id":  bookId,
+          "definition": {
+            "name": {
+              "en-US": bookTitle,
+            },
+            "type": "http://funzo.tunapanda.org/xapi/activity/book",
+          },
+        },
+      };
+      this.recordxAPI(statement_data);
+      console.log("XXX ACTIVATE END");
     },
 
     xAPIOpenLink(event) {

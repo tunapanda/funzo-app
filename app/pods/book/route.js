@@ -7,6 +7,10 @@ export default Ember.Route.extend(NavBarTitleMixin, {
 
   showBackButton: true,
 
+  activate() {
+    //this.sendAction('xAPIOpenBook', this.modelFor('book'));
+  },
+
   beforeModel() {
     return this.get('bookmarks').start();
   },

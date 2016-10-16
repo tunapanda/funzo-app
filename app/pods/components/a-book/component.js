@@ -4,6 +4,7 @@ const { $, computed, RSVP } = Ember;
 
 export default Ember.Component.extend({
   sectionLocations: [],
+  xapi: Ember.inject.service('xapi-reporter'),
 
   _currentSections: computed.filterBy('sections', 'isCurrentSection', true),
   currentSection: computed.alias('_currentSections.firstObject'),
@@ -17,6 +18,12 @@ export default Ember.Component.extend({
    * @type {Boolean}
    */
   animateScroll: true,
+
+  didRender() {
+    console.log("XXX RENDER");
+    console.log(this.get('xapi'));
+    this.get('xapi').testMsg();
+  },
 
   /**
    * if scrolling is currently happening
