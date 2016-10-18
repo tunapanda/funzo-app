@@ -145,8 +145,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         ).then((user) => {
           var useridKey =  "http://tunapanda.org/xapi/extensions/userid";
           setIfUnset(statement_data.context.extensions, useridKey, user.get('id'));
-          var regnameKey =  "http://tunapanda.org/xapi/extensions/regname";
-          setIfUnset(statement_data.context.extensions, regnameKey, user.get('username'));
+          var usernameKey =  "http://tunapanda.org/xapi/extensions/username";
+          setIfUnset(statement_data.context.extensions, usernameKey, user.get('username'));
           setIfUnset(statement_data, "actor", {
             "objectType":"Agent",
             "account":{
@@ -184,8 +184,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       this.transitionTo('login');
     },
 
-    xAPIOpenBook(book) {
-      console.log("XXX ACTIVATE START");
+    xAPIOpenBook() {
+      var book = this.modelFor('book');
       var bookId = book.get('id');
       var bookTitle = book.get('title');
       var statement_data = {
@@ -197,7 +197,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           }
         },
         "object": {
-          "id":  bookId,
+          "id":  "http://funzo.tunapanda.org/xapi/object/book/" + bookId,
           "definition": {
             "name": {
               "en-US": bookTitle,
@@ -207,7 +207,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         },
       };
       this.recordxAPI(statement_data);
-      console.log("XXX ACTIVATE END");
     },
 
     xAPIOpenLink(event) {
