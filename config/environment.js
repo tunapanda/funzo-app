@@ -2,16 +2,6 @@
 /* global TinCan */
 var os     = require('os');
 var ifaces = os.networkInterfaces();
-try {
-  var local  = require('./local.js');
-} catch(e) {
-  var local  = { 
-    update_env: function(env) {
-      env.test = "OTHER";
-      return env;
-    }
-  }
-}
 
 var addresses = [];
 for (var dev in ifaces) {
@@ -120,6 +110,16 @@ module.exports = function(environment) {
     ENV.apiUrl = 'http://funzo-app.herokuapp.com/api/v1';
     ENV.production = true;
   }
+
+  try {
+    var local  = require('./local.js');
+    ENV = local.update_env(ENV);
+  } catch(e) {}
+
+  try {
+    var local  = require('./' + environment + '.js');
+    ENV = local.update_env(ENV);
+  } catch(e) {}
 
   return local.update_env(ENV);
 };
