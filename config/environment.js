@@ -112,14 +112,18 @@ module.exports = function(environment) {
   }
 
   try {
-    var local  = require('./local.js');
-    ENV = local.update_env(ENV);
+    var override = require('./local.js');
+    if (typeof(override) === "undefined") {
+      ENV = override.update_env(ENV);
+    }
   } catch(e) {}
 
   try {
     var local  = require('./' + environment + '.js');
-    ENV = local.update_env(ENV);
+    if (typeof(override) === "undefined") {
+      ENV = override.update_env(ENV);
+    }
   } catch(e) {}
 
-  return local.update_env(ENV);
+  return ENV;
 };
