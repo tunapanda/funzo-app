@@ -18,11 +18,6 @@ export default Ember.Component.extend({
    */
   animateScroll: true,
 
-  didRender() {
-    this.sendAction('onOpenBook');
-    //this.get('xapi').testMsg();
-  },
-
   /**
    * if scrolling is currently happening
    * @type {Boolean}

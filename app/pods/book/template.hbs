@@ -4,6 +4,7 @@
   }
 </style>
 
+{{ log-me logger='xAPIOpenBook' }}
 {{a-book
   sections=sections
   startingScrollLeft=startingScrollLeft
@@ -12,7 +13,6 @@
   changePermalink=(action 'changePermalink')
   onPageChange=(action 'onPageChange')
   onOpenLink='xAPIOpenLink'
-  onOpenBook='xAPIOpenBook'
 }}
 
 <div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
