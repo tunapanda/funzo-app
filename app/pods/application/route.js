@@ -15,7 +15,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   bookManager: Ember.inject.service(),
 
   activate() {
-    console.log("XXX ROUTE ACTIVATE");
   },
 
   beforeModel() {
@@ -41,6 +40,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     /* global TinCan */
     var xapi = new TinCan(ENV.APP.xAPI);
     var xApiStatements = [];
+    console.log("Sending xapi statement to " + ENV.APP.xAPI.recordStores[0].endpoint);
+    console.log(statement);
     xApiStatements.addObject(statement);
     xapi.sendStatements(xApiStatements, (res) => {
       if (!res[0].err) {
@@ -65,6 +66,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   },
 
   storeXAPIStatement(user, statement_data) {
+    console.log("Storing xapi statement");
+    console.log(statement);
     this.store.createRecord('x-api-statement', {
       content: statement_data,
       user: user
@@ -122,7 +125,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       }
       var gpsKey = "http://tunapanda.org/xapi/extensions/location";
       if (typeof(statement_data.context.extensions[gpsKey]) === "undefined") {
+        console.log("GPS start");
         navigator.geolocation.getCurrentPosition((location) => {
+          console.log("GPS callback: " + location);
           if (typeof(location) === "undefined") {
             resolve(statement_data);
           }
@@ -130,13 +135,17 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             "lat": location.coords.latitude.toFixed(gps_accuracy),
             "lng": location.coords.longitude.toFixed(gps_accuracy),
           });
-          resolve(statement_data);
+          console.log("GPS done");
+          return statement_data;
         }, (err) => {
-          statement_data.context.extensions[debugKey].messages.push("GPS error: " + err);
+          statement_data.context.extensions[debugKey].messages.push("GPS error: " + err.toString());
+          console.log("GPS (nonfatal) error: " + err.toString());
+          return statement_data;
         }); 
       } else {
-        resolve(statement_data);
+        console.log("GPS skipped");
       }
+      resolve(statement_data);
     }, (err) => { console.log("Location ERROR:"); console.log(err) ;}
     ).then((statement_data) => {
       if (typeof(statement_data.actor) === "undefined") {
@@ -157,7 +166,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           return statement_data;
         });
       } else {
-        return statement_data; 
+        resolve(statement_data); 
       }
     });
   },
@@ -185,6 +194,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
 
     xAPIOpenBook() {
+      console.log("xapi logging open book");
       var book = this.modelFor('book');
       var bookId = book.get('id');
       var bookTitle = book.get('title');
@@ -211,6 +221,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
     xAPIOpenLink(event) {
       var linkText = event.target.textContent;
+      console.log("xapi log link click: " + linkText);
       var statement_data = {
         "description": "User opened link '"+linkText+"'",
         "context": { 
