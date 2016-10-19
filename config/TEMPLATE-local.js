@@ -18,11 +18,11 @@ module.exports = {
 			allowFail: false
 		}];
 		// Number of decimal places to get from lat/long values
-		// 3 decimal places = accuracy to ~ 100 meters
+		// 3 decimal places = accuracy to ~ 100 meters 
 		// 2 would be closer to ~ 1km
 		// More details: http://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 		// -1 disables location data in xapi reports
-		env.xAPI.gps_accuracy: 3
+		env.xAPI.gps_accuracy: 2
     return env;
   }
 }
