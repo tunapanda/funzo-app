@@ -52,7 +52,7 @@ module.exports = function(environment) {
         // 2 would be closer to ~ 1km
         // More details: http://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
         // -1 disables location data in xapi reports
-        gps_accuracy: 3
+        gps_accuracy: 2
       }
     },
 
@@ -113,14 +113,14 @@ module.exports = function(environment) {
 
   try {
     var override = require('./local.js');
-    if (typeof(override) === "undefined") {
+    if (typeof(override) !== "undefined") {
       ENV = override.update_env(ENV);
     }
   } catch(e) {}
 
   try {
     var local  = require('./' + environment + '.js');
-    if (typeof(override) === "undefined") {
+    if (typeof(override) !== "undefined") {
       ENV = override.update_env(ENV);
     }
   } catch(e) {}
