@@ -14,6 +14,10 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   nav: Ember.inject.service('nav'),
   bookManager: Ember.inject.service(),
 
+  activate() {
+    console.log("XXX ROUTE ACTIVATE");
+  },
+
   beforeModel() {
     if (window.cordova) {
       return new Ember.RSVP.Promise((res) => document.addEventListener('deviceready', res, false))
@@ -141,8 +145,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         ).then((user) => {
           var useridKey =  "http://tunapanda.org/xapi/extensions/userid";
           setIfUnset(statement_data.context.extensions, useridKey, user.get('id'));
-          var regnameKey =  "http://tunapanda.org/xapi/extensions/regname";
-          setIfUnset(statement_data.context.extensions, regnameKey, user.get('username'));
+          var usernameKey =  "http://tunapanda.org/xapi/extensions/username";
+          setIfUnset(statement_data.context.extensions, usernameKey, user.get('username'));
           setIfUnset(statement_data, "actor", {
             "objectType":"Agent",
             "account":{
@@ -178,6 +182,31 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
     sessionInvalidated() {
       this.transitionTo('login');
+    },
+
+    xAPIOpenBook() {
+      var book = this.modelFor('book');
+      var bookId = book.get('id');
+      var bookTitle = book.get('title');
+      var statement_data = {
+        "description": "User opened book '" + bookTitle + "'",
+        "verb": {
+          "id": "http://adlnet.gov/expapi/verbs/launched",
+          "display": {
+              "en-US": "launched"
+          }
+        },
+        "object": {
+          "id":  "http://funzo.tunapanda.org/xapi/object/book/" + bookId,
+          "definition": {
+            "name": {
+              "en-US": bookTitle,
+            },
+            "type": "http://funzo.tunapanda.org/xapi/activity/book",
+          },
+        },
+      };
+      this.recordxAPI(statement_data);
     },
 
     xAPIOpenLink(event) {

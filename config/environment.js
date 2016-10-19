@@ -2,16 +2,6 @@
 /* global TinCan */
 var os     = require('os');
 var ifaces = os.networkInterfaces();
-try {
-  var local  = require('./local.js');
-} catch(e) {
-  var local  = { 
-    update_env: function(env) {
-      env.test = "OTHER";
-      return env;
-    }
-  }
-}
 
 var addresses = [];
 for (var dev in ifaces) {
@@ -121,5 +111,19 @@ module.exports = function(environment) {
     ENV.production = true;
   }
 
-  return local.update_env(ENV);
+  try {
+    var override = require('./local.js');
+    if (typeof(override) === "undefined") {
+      ENV = override.update_env(ENV);
+    }
+  } catch(e) {}
+
+  try {
+    var local  = require('./' + environment + '.js');
+    if (typeof(override) === "undefined") {
+      ENV = override.update_env(ENV);
+    }
+  } catch(e) {}
+
+  return ENV;
 };
