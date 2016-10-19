@@ -109,6 +109,7 @@ export default Ember.Service.extend(Ember.Evented, {
 
   downloadBook(code) {
     let url = this.urlForBook(code);
+    console.log("Downloading " + url);
     if (code === 'demo-ndl') {
       return Ember.RSVP.resolve();
     }
