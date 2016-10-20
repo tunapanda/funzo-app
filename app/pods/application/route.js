@@ -45,6 +45,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     xApiStatements.addObject(statement);
     xapi.sendStatements(xApiStatements, (res) => {
       if (!res[0].err) {
+        console.log("xAPI success!");
         // XXX FIXME since we're cheating and passing statement data directly,
         // we can't sync the corresponding db method for free. we'll have to
         // query the record here and set it to synced, or find a way to make
@@ -53,7 +54,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         // statement.save();
         Ember.RSVP.resolve(xApiStatements);
       } else {
-        console.log("DBG ERROR");
+        console.log("xAPI error: " + res[0].err.toString());
       }
     });
   },
@@ -125,9 +126,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       }
       var gpsKey = "http://tunapanda.org/xapi/extensions/location";
       if (typeof(statement_data.context.extensions[gpsKey]) === "undefined") {
-        console.log("GPS start");
         navigator.geolocation.getCurrentPosition((location) => {
-          console.log("GPS callback: " + location);
           if (typeof(location) === "undefined") {
             resolve(statement_data);
           }
@@ -135,18 +134,18 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
             "lat": location.coords.latitude.toFixed(gps_accuracy),
             "lng": location.coords.longitude.toFixed(gps_accuracy),
           });
-          console.log("GPS done");
-          return statement_data;
+          resolve(statement_data);
         }, (err) => {
           statement_data.context.extensions[debugKey].messages.push("GPS error: " + err.toString());
           console.log("GPS (nonfatal) error: " + err.toString());
-          return statement_data;
+          // don't reject, just return the statement data sans location
+          resolve(statement_data);
         }); 
       } else {
         console.log("GPS skipped");
+        resolve(statement_data);
       }
-      resolve(statement_data);
-    }, (err) => { console.log("Location ERROR:"); console.log(err) ;}
+    }, (err) => { console.log("Location ERROR:"); console.log(err.toString()) ;}
     ).then((statement_data) => {
       if (typeof(statement_data.actor) === "undefined") {
         return new Ember.RSVP.Promise(
