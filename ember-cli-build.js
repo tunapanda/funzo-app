@@ -2,6 +2,8 @@
 /* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var fs = require('fs');
+var libxml = require("libxmljs");
+var env = require('./config/environment.js')();
 
 function createIfNotExists(directory, callback) {
   fs.stat(directory, function(err) {
@@ -15,6 +17,15 @@ function createIfNotExists(directory, callback) {
     }
     callback();
   });
+}
+
+// Update cordova version to match APP.version from config
+var appVersion = env.APP.version;
+if (typeof(appVersion) !== "undefined") {
+  var cordovaCfgXml = fs.readFileSync("cordova/config.xml")
+  var cordovaCfg = libxml.parseXml(cordovaCfgXml)
+  cordovaCfg.root().attr("version").value(appVersion);
+  fs.writeFileSync("cordova/config.xml", cordovaCfg.toString());
 }
 
 // Create an index of books available at build-time
@@ -55,6 +66,8 @@ module.exports = function(defaults) {
       ]
     }
   });
+
+  
 
   // var course = new Funnel('bower_components', {
   //   include: ['funzo-*/**'],
