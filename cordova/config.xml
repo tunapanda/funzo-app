@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='utf-8'?>
-<widget id="org.tunapanda.funzoapp" version="1.0.5" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" id="org.tunapanda.funzoapp" version="1.0.6">
     <name>Certell eLibrary</name>
     <description>
         A reader for learning content distributed by Certell (certell.org)
@@ -7,85 +7,85 @@
     <author email="dev@certell.org" href="http://certell.org">
         The Tunapanda Institute, on behalf of Certell.org
     </author>
-    <content src="index.html" />
-    <access origin="*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
+    <content src="index.html"/>
+    <access origin="*"/>
+    <allow-intent href="http://*/*"/>
+    <allow-intent href="https://*/*"/>
+    <allow-intent href="tel:*"/>
+    <allow-intent href="sms:*"/>
+    <allow-intent href="mailto:*"/>
+    <allow-intent href="geo:*"/>
     <platform name="android">
-        <allow-intent href="market:*" />
+        <allow-intent href="market:*"/>
     </platform>
     <platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
+        <allow-intent href="itms:*"/>
+        <allow-intent href="itms-apps:*"/>
     </platform>
-    <allow-navigation href="http://192.168.1.102:4200/*" />
-    <preference name="DisallowOverscroll" value="true" />
-    <preference name="xwalkVersion" value="19+" />
-    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect" />
-    <preference name="xwalkMode" value="embedded" />
-    <preference name="xwalkMultipleApk" value="true" />
-    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="StatusBarBackgroundColor" value="#1E4A5D" />
-    <plugin name="cordova-plugin-whitelist" spec="1" />
-    <plugin name="cordova-plugin-crosswalk-webview" spec="~1.8.0" />
-    <plugin name="cordova-plugin-background-download" spec="https://github.com/sgrebnov/cordova-plugin-background-download" />
-    <plugin name="cordova-plugin-statusbar" spec="~2.1.3" />
-    <engine name="android" spec="~5.2.0" />
-    <plugin name="cordova-plugin-file-transfer" spec="~1.5.0" />
-    <engine name="ios" spec="latest" />
-    <plugin name="cordova-plugin-zip" spec="~3.1.0" />
+    <allow-navigation href="http://192.168.1.102:4200/*"/>
+    <preference name="DisallowOverscroll" value="true"/>
+    <preference name="xwalkVersion" value="19+"/>
+    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect"/>
+    <preference name="xwalkMode" value="embedded"/>
+    <preference name="xwalkMultipleApk" value="true"/>
+    <preference name="AndroidPersistentFileLocation" value="Compatibility"/>
+    <preference name="StatusBarBackgroundColor" value="#1E4A5D"/>
+    <plugin name="cordova-plugin-whitelist" spec="1"/>
+    <plugin name="cordova-plugin-crosswalk-webview" spec="~1.8.0"/>
+    <plugin name="cordova-plugin-background-download" spec="https://github.com/sgrebnov/cordova-plugin-background-download"/>
+    <plugin name="cordova-plugin-statusbar" spec="~2.1.3"/>
+    <engine name="android" spec="~5.2.0"/>
+    <plugin name="cordova-plugin-file-transfer" spec="~1.5.0"/>
+    <engine name="ios" spec="latest"/>
+    <plugin name="cordova-plugin-zip" spec="~3.1.0"/>
     <feature name="File">
-        <param name="ios-package" value="CDVFile" />
+        <param name="ios-package" value="CDVFile"/>
     </feature>
     <feature name="StatusBar">
-        <param name="ios-package" value="CDVStatusBar" />
+        <param name="ios-package" value="CDVStatusBar"/>
     </feature>
     <platform name="android">
-        <icon height="24" src="icons/android/Icon-App-24x24.png" width="24" />
-        <icon height="36" src="icons/android/Icon-App-36x36.png" width="36" />
-        <icon height="48" src="icons/android/Icon-App-48x48.png" width="48" />
-        <icon height="72" src="icons/android/Icon-App-72x72.png" width="72" />
+        <icon height="24" src="icons/android/Icon-App-24x24.png" width="24"/>
+        <icon height="36" src="icons/android/Icon-App-36x36.png" width="36"/>
+        <icon height="48" src="icons/android/Icon-App-48x48.png" width="48"/>
+        <icon height="72" src="icons/android/Icon-App-72x72.png" width="72"/>
     </platform>
     <platform name="ios">
-        <icon height="29" src="icons/ios/Icon-App-29x29@1x.png" width="29" />
-        <icon height="58" src="icons/ios/Icon-App-29x29@2x.png" width="58" />
-        <icon height="87" src="icons/ios/Icon-App-29x29@3x.png" width="87" />
-        <icon height="40" src="icons/ios/Icon-App-40x40@1x.png" width="40" />
-        <icon height="80" src="icons/ios/Icon-App-40x40@2x.png" width="80" />
-        <icon height="120" src="icons/ios/Icon-App-40x40@3x.png" width="120" />
-        <icon height="50" src="icons/ios/Icon-App-50x50@1x.png" width="50" />
-        <icon height="100" src="icons/ios/Icon-App-50x50@2x.png" width="100" />
-        <icon height="57" src="icons/ios/Icon-App-57x57@1x.png" width="57" />
-        <icon height="114" src="icons/ios/Icon-App-57x57@2x.png" width="114" />
-        <icon height="120" src="icons/ios/Icon-App-60x60@2x.png" width="120" />
-        <icon height="180" src="icons/ios/Icon-App-60x60@3x.png" width="180" />
-        <icon height="72" src="icons/ios/Icon-App-72x72@1x.png" width="72" />
-        <icon height="144" src="icons/ios/Icon-App-72x72@2x.png" width="144" />
-        <icon height="76" src="icons/ios/Icon-App-76x76@1x.png" width="76" />
-        <icon height="152" src="icons/ios/Icon-App-76x76@2x.png" width="152" />
-        <icon height="167" src="icons/ios/Icon-App-83.5x83.5@2x.png" width="167" />
-        <splash height="1136" src="splash/ios/Default-568h@2x~iphone_640x1136.png" width="640" />
-        <splash height="1242" src="splash/ios/Default-1242@3x~iphone6s-landscape_2208x1242.png" width="2208" />
-        <splash height="2208" src="splash/ios/Default-1242@3x~iphone6s-portrait_1242x2208.png" width="1242" />
-        <splash height="750" src="splash/ios/Default-750@2x~iphone6-landscape_1334x750.png" width="1334" />
-        <splash height="1334" src="splash/ios/Default-750@2x~iphone6-portrait_750x1334.png" width="750" />
-        <splash height="1024" src="splash/ios/Default-Portrait~ipad_768x1024.png" width="768" />
-        <splash height="1334" src="splash/ios/Default~ipad.png" width="750" />
-        <splash height="768" src="splash/ios/Default-Landscape~ipad_1024x768.png" width="1024" />
-        <splash height="748" src="splash/ios/Default-Landscape~ipad_1024x748.png" width="1024" />
-        <splash height="480" src="splash/ios/Default~iphone.png" width="320" />
-        <splash height="1496" src="splash/ios/Default-Landscape@2x~ipad_2048x1496.png" width="2048" />
-        <splash height="1536" src="splash/ios/Default-Landscape@2x~ipad_2048x1536.png" width="2048" />
-        <splash height="2008" src="splash/ios/Default-Portrait@2x~ipad_1536x2008.png" width="1536" />
-        <splash height="2048" src="splash/ios/Default-Portrait@2x~ipad_1536x2048.png" width="1536" />
-        <splash height="960" src="splash/ios/Default@2x~iphone_640x960.png" width="640" />
-        <splash height="1004" src="splash/ios/Default.png" width="768" />
+        <icon height="29" src="icons/ios/Icon-App-29x29@1x.png" width="29"/>
+        <icon height="58" src="icons/ios/Icon-App-29x29@2x.png" width="58"/>
+        <icon height="87" src="icons/ios/Icon-App-29x29@3x.png" width="87"/>
+        <icon height="40" src="icons/ios/Icon-App-40x40@1x.png" width="40"/>
+        <icon height="80" src="icons/ios/Icon-App-40x40@2x.png" width="80"/>
+        <icon height="120" src="icons/ios/Icon-App-40x40@3x.png" width="120"/>
+        <icon height="50" src="icons/ios/Icon-App-50x50@1x.png" width="50"/>
+        <icon height="100" src="icons/ios/Icon-App-50x50@2x.png" width="100"/>
+        <icon height="57" src="icons/ios/Icon-App-57x57@1x.png" width="57"/>
+        <icon height="114" src="icons/ios/Icon-App-57x57@2x.png" width="114"/>
+        <icon height="120" src="icons/ios/Icon-App-60x60@2x.png" width="120"/>
+        <icon height="180" src="icons/ios/Icon-App-60x60@3x.png" width="180"/>
+        <icon height="72" src="icons/ios/Icon-App-72x72@1x.png" width="72"/>
+        <icon height="144" src="icons/ios/Icon-App-72x72@2x.png" width="144"/>
+        <icon height="76" src="icons/ios/Icon-App-76x76@1x.png" width="76"/>
+        <icon height="152" src="icons/ios/Icon-App-76x76@2x.png" width="152"/>
+        <icon height="167" src="icons/ios/Icon-App-83.5x83.5@2x.png" width="167"/>
+        <splash height="1136" src="splash/ios/Default-568h@2x~iphone_640x1136.png" width="640"/>
+        <splash height="1242" src="splash/ios/Default-1242@3x~iphone6s-landscape_2208x1242.png" width="2208"/>
+        <splash height="2208" src="splash/ios/Default-1242@3x~iphone6s-portrait_1242x2208.png" width="1242"/>
+        <splash height="750" src="splash/ios/Default-750@2x~iphone6-landscape_1334x750.png" width="1334"/>
+        <splash height="1334" src="splash/ios/Default-750@2x~iphone6-portrait_750x1334.png" width="750"/>
+        <splash height="1024" src="splash/ios/Default-Portrait~ipad_768x1024.png" width="768"/>
+        <splash height="1334" src="splash/ios/Default~ipad.png" width="750"/>
+        <splash height="768" src="splash/ios/Default-Landscape~ipad_1024x768.png" width="1024"/>
+        <splash height="748" src="splash/ios/Default-Landscape~ipad_1024x748.png" width="1024"/>
+        <splash height="480" src="splash/ios/Default~iphone.png" width="320"/>
+        <splash height="1496" src="splash/ios/Default-Landscape@2x~ipad_2048x1496.png" width="2048"/>
+        <splash height="1536" src="splash/ios/Default-Landscape@2x~ipad_2048x1536.png" width="2048"/>
+        <splash height="2008" src="splash/ios/Default-Portrait@2x~ipad_1536x2008.png" width="1536"/>
+        <splash height="2048" src="splash/ios/Default-Portrait@2x~ipad_1536x2048.png" width="1536"/>
+        <splash height="960" src="splash/ios/Default@2x~iphone_640x960.png" width="640"/>
+        <splash height="1004" src="splash/ios/Default.png" width="768"/>
     </platform>
-    <plugin name="cordova-plugin-device" spec="~1.1.3" />
-    <plugin name="cordova-plugin-geolocation" spec="~2.4.0" />
-    <plugin name="cordova-plugin-file" spec="~4.2.0" />
+    <plugin name="cordova-plugin-device" spec="~1.1.3"/>
+    <plugin name="cordova-plugin-geolocation" spec="~2.4.0"/>
+    <plugin name="cordova-plugin-file" spec="~4.2.0"/>
 </widget>
