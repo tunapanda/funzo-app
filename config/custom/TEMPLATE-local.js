@@ -3,7 +3,13 @@ module.exports = {
   update_env: function(app) {
     // Basic information for your app
     app.name = 'My App',
+    app.description = 'Powered by Tunapanda Funzo (http://tunapanda.org)'
     app.version = '0.0.1',
+    app.author = {
+      name: "Your Name",
+      email: "you@yourdomain.com",
+      website: "http://yourdomain.com"
+    },
     
     // For a custom logo, place an image in public/assets/custom/logo.png
     // and uncomment the next line.  
