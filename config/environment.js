@@ -58,7 +58,7 @@ module.exports = function(environment) {
         // 2 would be closer to ~ 1km
         // More details: http://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
         // -1 disables location data in xapi reports
-        gps_accuracy: 2
+        gps_accuracy: -1
       }
     },
 
