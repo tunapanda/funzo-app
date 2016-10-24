@@ -1,7 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # custom config
-/config/local.js
+/config/custom/*
+/cordova/config.xml
+/public/assets/custom/*
 
 # compiled output
 /dist

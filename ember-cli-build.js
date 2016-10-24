@@ -20,13 +20,16 @@ function createIfNotExists(directory, callback) {
 }
 
 // Update cordova version to match APP.version from config
-var appVersion = env.APP.version;
-if (typeof(appVersion) !== "undefined") {
-  var cordovaCfgXml = fs.readFileSync("cordova/config.xml")
-  var cordovaCfg = libxml.parseXml(cordovaCfgXml)
-  cordovaCfg.root().attr("version").value(appVersion);
-  fs.writeFileSync("cordova/config.xml", cordovaCfg.toString());
-}
+var cordovaCfgXml = fs.readFileSync("cordova/TEMPLATE-config.xml");
+var cordovaCfg = libxml.parseXml(cordovaCfgXml);
+cordovaCfg.root().attr("version").value(env.APP.version);
+cordovaCfg.get("/n:widget/n:name", { n:"http://www.w3.org/ns/widgets"} ).text(env.APP.name);
+cordovaCfg.get("/n:widget/n:description", { n:"http://www.w3.org/ns/widgets"} ).text(env.APP.description);
+var author = cordovaCfg.get("/n:widget/n:author", { n:"http://www.w3.org/ns/widgets"});
+author.text(env.APP.author.name);
+author.attr("email").value(env.APP.author.email);
+author.attr("href").value(env.APP.author.website);
+fs.writeFileSync("cordova/config.xml", cordovaCfg.toString());
 
 // Create an index of books available at build-time
 var booksDir = 'public/content/books';

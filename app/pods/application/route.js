@@ -161,10 +161,10 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
               "homePage": this.getXapiUserHomepage()
             }
           });
-          resolve(statement_data);
+          return statement_data;
         });
       } else {
-        resolve(statement_data); 
+        return statement_data; 
       }
     });
   },
