@@ -1,4 +1,9 @@
-// Create a copy of this file called `local.js` and customize it
+// Create a copy of this file called `config/custom.js` and modify it for your project.
+// You can also make environment-specific settings (for example, if you want to 
+// use a different xAPI record store for production than development) by
+// creating a `config/custom/prodution.js` (or development.js, or whatever)
+// and running all your ember and cordova commands with 
+// --environment=production (or development, or whatever). 
 module.exports = {
   update_env: function(app) {
     // Basic information for your app
