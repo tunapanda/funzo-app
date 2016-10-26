@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from 'funzo-app/config/environment';
 
 function toArray(list) {
   return Array.prototype.slice.call(list || [], 0);
@@ -69,6 +70,8 @@ function loadCourse(coursesPath, name, store) {
 }
 
 export default Ember.Controller.extend({
+  ENV: ENV,
+
   init() {
     if (window.cordova) {
       if (window.cordova.file.externalRootDirectory) {

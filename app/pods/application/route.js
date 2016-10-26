@@ -68,7 +68,6 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
 
   storeXAPIStatement(user, statement_data) {
     console.log("Storing xapi statement");
-    console.log(statement);
     this.store.createRecord('x-api-statement', {
       content: statement_data,
       user: user
@@ -165,7 +164,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           return statement_data;
         });
       } else {
-        resolve(statement_data); 
+        return statement_data; 
       }
     });
   },

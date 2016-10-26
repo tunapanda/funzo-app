@@ -14,7 +14,6 @@ for (var dev in ifaces) {
 
 module.exports = function(environment) {
   var ENV = {
-    test: "testfoo",
     modulePrefix: 'funzo-app',
     podModulePrefix: 'funzo-app/pods',
     environment: environment,
@@ -28,8 +27,15 @@ module.exports = function(environment) {
     },
 
     APP: {
-      // This should match the version number in cordova/config.xml
-      version: '1.0.4',
+      name: 'My Funzo App (OVERRIDE IN config/custom/default.js)',
+      description: 'Made with Funzo (github.com/tunapanda/funzo-app)',
+      logo: 'assets/funzologo.png',
+      version: '0.0.1',
+      author: {
+        name: "OVERRIDE IN config/custom/default.js",
+        email: "OVERRIDE IN config/custom/default.js",
+        website: "OVERRIDE IN config/custom/default.js"
+      },
       bookOnlyMode: true,
       defaultBook: false,
       // Set this to false to have no default
@@ -37,14 +43,14 @@ module.exports = function(environment) {
         code: 'demo',
         hint: 'enter code "demo" to download an example book'
       },
-      encryptionKeyBase: 'OVERRIDE IN config/local.js',
+      encryptionKeyBase: 'OVERRIDE IN config/custom/default.js',
       // For directories, be sure to include a trailing '/'!
-      bookURLBase: 'OVERRIDE IN config/local.js',
+      bookURLBase: 'OVERRIDE IN config/custom/default.js',
       xAPI: {
         recordStores: [{
-          endpoint: 'OVERRIDE IN config/local.js',
-          username: 'OVERRIDE IN config/local.js',
-          password: 'OVERRIDE IN config/local.js',
+          endpoint: 'OVERRIDE IN config/custom/default.js',
+          username: 'OVERRIDE IN config/custom/default.js',
+          password: 'OVERRIDE IN config/custom/default.js',
           allowFail: false
         }],
         // Number of decimal places to get from lat/long values
@@ -52,7 +58,7 @@ module.exports = function(environment) {
         // 2 would be closer to ~ 1km
         // More details: http://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
         // -1 disables location data in xapi reports
-        gps_accuracy: 2
+        gps_accuracy: -1
       }
     },
 
@@ -102,28 +108,21 @@ module.exports = function(environment) {
   }
 
   if (environment === 'staging') {
-    ENV.apiUrl = 'http://funzo-app-staging.herokuapp.com/api/v1';
     ENV.staging = true;
   }
 
   if (environment === 'production') {
-    ENV.apiUrl = 'http://funzo-app.herokuapp.com/api/v1';
     ENV.production = true;
   }
 
-  try {
-    var override = require('./local.js');
-    if (typeof(override) !== "undefined") {
-      ENV = override.update_env(ENV);
-    }
-  } catch(e) {}
-
-  try {
-    var local  = require('./' + environment + '.js');
-    if (typeof(override) !== "undefined") {
-      ENV = override.update_env(ENV);
-    }
-  } catch(e) {}
+  [ 'default', environment ].forEach((fn) => {
+    try {
+      var override = require('./custom/'+fn+'.js');
+      if (typeof(override) !== "undefined") {
+        ENV.APP = override.update_config(ENV.APP);
+      }
+    } catch(e) {}
+  });
 
   return ENV;
 };
