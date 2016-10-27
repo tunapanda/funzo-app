@@ -1,27 +1,29 @@
 <div class="book-container">
-  <div class="book-navigation book-navigation-left"{{action 'navPrev'}}>
+  <div class="book-loading-overlay {{if hideLoading 'hide'}}">
+      <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+          <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+      </svg>
+  </div>
+  <div class="book-navigation book-navigation-left" onclick={{action 'navPrev'}}>
       <div class="navbar-fixed-left">
           <div class="nav-spacer" />
           <i class="nav-link material-icons">chevron_left</i>
       </div>
   </div>
-  <div class="book-navigation book-navigation-right"{{action 'navNext'}}>
+  <div class="book-navigation book-navigation-right" onclick={{action 'navNext'}}>
       <div class="navbar-fixed-left">
           <div class="nav-spacer" />
           <i class="nav-link material-icons">chevron_right</i>
       </div>
   </div>
-
-  <div class="book-content-container" style={{bookContentStyle}} onscroll={{action 'didScroll'}} onmousewheel={{action 'didMouseWheel'}}>
-    <div class="book-content">
+  <div class="book-content-container" style={{bookContentStyle}} onclick={{action 'clickBook'}}>
+      <div class="book-content">
         {{#each sections as |section|}}
-          <div class="section section-{{section.permalink}}" data-section="{{section.permalink}}">
+          <div class="section section-{{section.permalink}} {{if section.isHidden 'hide'}}" data-section="{{section.permalink}}">
             {{section.html}}
           </div>
         {{/each}}
-    </div>
+      </div>
   </div>
-  <div class="page-numbers">
-
-  </div>
+  <div class="page-numbers"></div>
 </div>

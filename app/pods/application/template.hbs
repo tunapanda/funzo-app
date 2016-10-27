@@ -1,6 +1,8 @@
 {{nav-bar back=(action 'back') logout=(action 'logout') addBook=(action 'addBook')}}
 <main class="container-fluid {{unless nav.hide "pad-container"}}">
-  {{liquid-outlet class="row"}}
+  <div class="row">
+    {{outlet}}
+  </div>
 </main>
 
 {{bootstrap-modal content=modal refreshIndex=(action 'refreshIndex')}}
