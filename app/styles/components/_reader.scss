@@ -301,6 +301,19 @@ sup {
     position: inherit;
 }
 
+.section.hide {
+  visibility: hidden;
+  display: initial !important;
+}
+
 .video_link {
   break-inside: avoid;
+}
+
+.quote {
+  font-style: italic;
+  font-family: monospace;
+  .citation {
+    font-weight: bold;
+  }
 }

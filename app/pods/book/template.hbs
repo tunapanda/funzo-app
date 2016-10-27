@@ -1,30 +1,38 @@
-{{!-- {{outlet}} --}}
 <style>
   .book-content {
     font-size: {{fontSizeString}};
   }
 </style>
 
-{{a-book sections=model.sections currentSection=currentSection nextSection=(action 'nextSection') prevSection=(action 'prevSection') showImage=(action 'showImageModal') changeSection=(action 'changeSection') onOpenLink='xAPIOpenLink'}}
+{{ log-me logger='xAPIOpenBook' }}
+{{a-book
+  sections=sections
+  startingScrollLeft=startingScrollLeft
+  currentRouteModel=currentSection
+  showImage=(action 'showImageModal')
+  changePermalink=(action 'changePermalink')
+  onPageChange=(action 'onPageChange')
+  onOpenLink='xAPIOpenLink'
+}}
 
 <div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
-    <form class="navbar-form">
-      <div class="form-group">
-        <label for="">Jump To:</label>
-        <select name="section" class="change-section form-control" onchange={{action 'changeSection' value="target.value"}}>
-          {{#each model.sections as |section|}}
-            <option value="{{section.permalink}}" selected={{eq section currentSection}}>{{section.title}}</option>
-          {{/each}}
-        </select>
-      </div>
+  <form class="navbar-form">
+    <div class="form-group">
+      <label for="">Jump To:</label>
+      <select name="section" class="change-section form-control" onchange={{action 'changePermalink' value="target.value"}}>
+        {{#each model.sections as |section|}}
+          <option value="{{section.permalink}}" selected={{eq section currentSection}}>{{section.title}}</option>
+        {{/each}}
+      </select>
+    </div>
 
-      <div class="form-group">
-        <label for="">Font Size:</label>
-        <select name="section" class="change-font-size form-control" onchange={{action (mut fontSize) value="target.value"}}>
-          {{#each fontSizes as |fontSizeOption|}}
-            <option value="{{fontSizeOption}}" selected={{eq fontSizeOption fontSize}}>{{fontSizeOption}}</option>
-          {{/each}}
-        </select>
-      </div>
-    </form>
+    <div class="form-group">
+      <label for="">Font Size:</label>
+      <select name="section" class="change-font-size form-control" onchange={{action (mut fontSize) value="target.value"}}>
+        {{#each fontSizes as |fontSizeOption|}}
+          <option value="{{fontSizeOption}}" selected={{eq fontSizeOption fontSize}}>{{fontSizeOption}}</option>
+        {{/each}}
+      </select>
+    </div>
+  </form>
 </div>

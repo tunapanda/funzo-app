@@ -1,20 +1,15 @@
 import Ember from 'ember';
-import TweenLite from 'tweenlite';
 
-let $ = Ember.$;
+const { $, computed, RSVP } = Ember;
 
 export default Ember.Component.extend({
-  liquidFireEvents: Ember.inject.service(),
-  sectionLocations: {},
-  sectionPageCounts: {},
-  currentPageNumber: 1,
+  sectionLocations: [],
+
+  _currentSections: computed.filterBy('sections', 'isCurrentSection', true),
+  currentSection: computed.alias('_currentSections.firstObject'),
 
   elements: {},
 
-  /**
-   * current container scroll position
-   * @type {Number}
-   */
   scrollLeft: 0,
 
   /**
@@ -37,7 +32,6 @@ export default Ember.Component.extend({
    * @param  {Object}
    * @return {void}
    */
-
   touchStart(e) {
     let start = e.originalEvent.touches[0].pageX;
     this.set('touchStartX', start);
@@ -51,7 +45,6 @@ export default Ember.Component.extend({
    * @param  {Object}
    * @return {void}
    */
-
   touchMove(e) {
     // e.preventDefault(); // prevent scrolling
     let current = e.originalEvent.touches[0].pageX;
@@ -68,32 +61,19 @@ export default Ember.Component.extend({
     return false;
   },
 
-  click(e) {
-    let $target = $(e.target);
-
-    if ($target.hasClass('internal-link')) {
-      e.preventDefault();
-      let permalink = $target.data('permalink');
-      return this.attrs.changeSection(permalink);
-    }
-
-    if (!(
-      e.target.tagname === 'A' ||
-      $(e.target).hasClass('book-navigation') ||
-      $(e.target).parents().hasClass('book-navigation')
-      )) {
-      $('.navbar').toggleClass('show');
-    }
-  },
-
+  /**
+   * Touch ended on component, check what direction the touch was and scroll
+   * in that direction
+   *
+   * @param  {Object}
+   * @return {void}
+   */
   touchEnd() {
-
     let start = this.get('touchStartX');
     let current = this.get('touchCurrentX');
 
     let diff = start - current;
 
-    console.log(diff);
     if (this.get('touchStarted') && Math.abs(diff) > 10) {
       this.set('animateScroll', true);
       this.set('scrolling', true);
@@ -103,46 +83,47 @@ export default Ember.Component.extend({
     this.set('touchStarted', false);
   },
 
-  // scrollStart() {
-  //   this.set('touchStarted', true);
-  //   this.set('scrolling', true);
-  //   this.set('touchStartX', $('.book-content-container').scrollLeft());
-  // },
-
-  // scrollMove(e) {
-  //   console.log(e);
-  //   e.preventDefault();
-
-  //   this.set('scrollLeft', $('.book-content-container').scrollLeft());
-  //   this.set('touchCurrentX', $('.book-content-container').scrollLeft());
-  // },
-
-  // scrollEnd() {
-  //   let start = this.get('touchStartX');
-  //   let current = this.get('touchCurrentX');
-
-  //   // if (this.get('touchStarted') && Math.abs(start - current) > 10) {
-  //   //   if (start < current) {
-  //   //     this.scrollTo(start + this.get('pageWidth'));
-  //   //   } else {
-  //   //     this.scrollTo(start - this.get('pageWidth'));
-  //   //   }
-  //   // }
-  //   this.set('scrolling', false);
-  //   this.set('touchStarted', false);
-  // },
-
-  /**
-   * Touch ended on component, check what direction the touch was and scroll
-   * in that direction
-   *
-   * @param  {Object}
-   * @return {void}
-   */
-
-
-
   actions: {
+    clickBook(e) {
+      let $target = $(e.target);
+
+      // internal section links
+      if ($target.hasClass('internal-link')) {
+        e.preventDefault();
+        let permalink = $target.data('permalink');
+        return this.attrs.changeSection(permalink);
+      }
+
+      // Image popups
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+        return this.attrs.showImage($target.attr('src'));
+      }
+
+      // footnote links
+      if ($target.hasClass('ftnt')) {
+        e.preventDefault();
+        return this.scrollToFootnote($target.data('ref'));
+      }
+
+      // External links
+      if (e.target.tagName === 'A') {
+        console.log('DBG CLICK.link');
+        if ($target.attr('href') === undefined) {
+          return;
+        }
+        if ($target.attr('target') === undefined) {
+          $target.attr('target', '_blank');
+        }
+        this.sendAction('onOpenLink', e);
+      }
+
+      // otherwise toggle the navbars
+      if (e.target.tagName !== 'A') {
+        $('.navbar').toggleClass('show');
+      }
+    },
+
     navPrev() {
       this.navPrev();
     },
@@ -151,61 +132,57 @@ export default Ember.Component.extend({
       this.navNext();
     },
 
-    didScroll() {
-      if (!this.get('scrolling')) {
-        // console.log(e);
-        // this.set('scrollLeft', $('.book-content-container').scrollLeft());
+    didScroll(){}
+  },
 
-        // Ember.run.debounce(this, 'scrollStart', e, 300, true);
-        // this.scrollMove(e);
-        // Ember.run.debounce(this, 'scrollEnd', e, 300);
-      }
-      // this.get('elements.page-numbers').css('marginLeft', -this.get('elements.book-content-container').scrollLeft());
-    },
-
-    didMouseWheel(e) {
-      e.preventDefault();
+  animateScrollLeft(position) {
+    if (!this.get('scrolling')) {
+      this.set('scrolling', true);
+      this.set('animateScroll', true);
+      this.set('scrollLeft', position);
     }
+  },
+
+  updateScrollPosition() {
+    var scrollLeft = this.get('scrollLeft');
+    console.log('about to send page change with position', scrollLeft);
+    this.sendAction('onPageChange', scrollLeft);
   },
 
   navPrev() {
-    if (!this.get('scrolling')) {
-      this.set('scrolling', true);
-      this.set('animateScroll', true);
-      this.set('scrollLeft', this.get('scrollLeft') - this.get('pageWidth'));
-    }
+    this.animateScrollLeft(this.get('scrollLeft') - this.get('pageWidth'));
+    this.updateScrollPosition();
   },
 
   navNext() {
-    if (!this.get('scrolling')) {
-      this.set('scrolling', true);
-      this.set('animateScroll', true);
-      this.set('scrollLeft', this.get('scrollLeft') + this.get('pageWidth'));
-    }
+    this.animateScrollLeft(this.get('scrollLeft') + this.get('pageWidth'));
+    this.updateScrollPosition();
   },
 
   /**
-   * Scroll container when scrollLeft changes
+   * Scroll container when scrollLeft changes, triggers didScroll
    *
    * @return {void}
    */
 
   onScrollLeft: Ember.observer('scrollLeft', function() {
-    // if (!this.get('scrolling')) {
     let container = this.$('.book-content-container');
     let current = container.scrollLeft();
     let to = this.get('scrollLeft');
-    // console.log(`from ${current} to ${to}`);
+    let didScroll = () => this.didScroll(to > current ? 'forward' : 'backward');
 
     if (this.get('animateScroll')) {
-      $('html').velocity('scroll', { axis: 'x', offset: to - current, container: container, mobileHA: false, complete: () => {
-        this.didScroll(to > current ? 'forward' : 'backward');
-      } });
+      $('html').velocity('scroll', {
+        axis: 'x',
+        offset: to - current,
+        container: container,
+        mobileHA: false,
+        complete: didScroll,
+      });
     } else {
       container.scrollLeft(to);
-      this.didScroll(to < current ? 'forward' : 'backward');
+      didScroll();
     }
-    // }
   }),
 
   /**
@@ -217,21 +194,43 @@ export default Ember.Component.extend({
    */
 
   didScroll(direction) {
-    $('.section-anchor').each((i, el) => {
-      let $el = $(el);
-      if ($el.position().left === 40 && direction === 'forward') {
-        // console.log('section ' + $el.data('permalink'));
-        this.set('changingSection', true);
-        this.sendAction('nextSection');
-      }
+    let scrollLeft   = this.get('scrollLeft'),
+        newSection   = this.get('sections').find(sec => sec.get('endPosition') > scrollLeft),
+        newPermalink = newSection.get('permalink'),
+        oldPermalink = this.get('currentRouteModel.permalink'),
+        oldSection   = this.get('sections').findBy('permalink', oldPermalink);
 
-      if ($el.position().left === this.get('pageWidth') + 40  && direction === 'backward') {
-        // console.log('section before ' + $el.data('permalink'));
-        this.set('changingSection', true);
-        this.sendAction('prevSection');
-      }
-      this.set('scrolling', false);
-    });
+    this.sendAction('onPageChange', scrollLeft);
+    console.log('checking if we have changed section after scrolling ' + direction);
+    console.log('from ' + oldPermalink + ' to ' + newPermalink);
+    
+
+    if (newPermalink !== oldPermalink) {
+      // TODO: Emit xapi statement saying this section has been started
+      console.log('section changed. updating permalink');
+      oldSection.set('isCurrentSection', false);
+      newSection.set('isCurrentSection', true);
+      // FIXME when paging back from the start of a section, this will force a skip
+      // all the way to the begninning of the section you just entered
+      this.attrs.changePermalink(newPermalink);
+    }
+
+    this.set('scrolling', false);
+  },
+
+  showSection(permalink) {
+    let newSection = this.get('sections').findBy('permalink', permalink);
+
+    this.get('sections').setEach('isHidden', true);
+
+    let index = this.get('sections').indexOf(newSection);
+    if (this.get('sections').objectAt(index - 1)) {
+      this.get('sections').objectAt(index - 1).set('isHidden', false);
+    }
+    newSection.set('isHidden', false);
+    if (this.get('sections').objectAt(index + 1)) {
+      this.get('sections').objectAt(index + 1).set('isHidden', false);
+    }
   },
 
   /**
@@ -241,109 +240,72 @@ export default Ember.Component.extend({
    * @return {void}
    */
   scrollToSection(permalink) {
-    let offset = $('.book-content-container').scrollLeft() + $("#"+permalink).offset().left - 80;
+    let section = this.get('sections').findBy('permalink', permalink);
+    let offset = section ? section.get('startPosition') : 0;
+    console.log(`scrolling to ${permalink} at ${offset}`);
+    this.set('animateScroll', false);
+    this.set('scrollLeft', offset);
+  },
+
+  scrollToFootnote(footnote) {
+    // references can be anywhere on the page, so use parent paragraph to get offset to scroll to
+    let $el = this.$('#' + footnote);
+    if ($el.parent()[0].tagName === 'SUP') {
+      $el = $el.parent().parent();
+    }
+
+    let offset = $el.offset().left - this.get('elements.book-content-container').offset().left + this.get('elements.book-content-container').scrollLeft() - 40;
     this.set('animateScroll', false);
     this.set('scrollLeft', offset);
   },
 
   didInsertElement() {
+    this.set('pageWidth', $('.book-container')[0].clientWidth);
+
+    this.waitForImages().then(() => {
+      this.findSections();
+      Ember.run.scheduleOnce('afterRender', () => {
+        console.log("starting scroll left:", this.get('startingScrollLeft'));
+        if(this.get('startingScrollLeft')) {
+          console.warn("SCROLLING!");
+          this.set('animateScroll', false);
+          this.set('scrollLeft', this.get('startingScrollLeft'));
+        } else if(this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
+          this.scrollToSection(this.get('currentRouteModel.permalink'));
+        }
+
+        this.set('hideLoading', true);
+      });
+    });
+
     this.set('elements.page-numbers', this.$('.page-numbers'));
     this.set('elements.book-content-container', $('.book-content-container'));
-    // $('.book-container').click((e) => {
-    //   if (!(
-    //     e.target.tagname === 'A' ||
-    //     $(e.target).hasClass('book-navigation') ||
-    //     $(e.target).parents().hasClass('book-navigation')
-    //     )) {
-    //     $('.navbar').toggleClass('show');
-    //   }
-    // });
-
-    // $('.book-container').on('click', '.internal-link', (e) => {
-    //   e.preventDefault();
-    //   let permalink = $(e.target).data('permalink');
-    //   this.sendAction('changeSection', permalink);
-    // });
 
     $(window).on('onorientationchange', this.onScreenChange.bind(this));
     $(window).on('resize', this.onScreenChange.bind(this));
 
-    let _this = this;
-    $('.book-content img').click(function() {
-      _this.attrs.showImage($(this).attr('src'));
-    });
-    
-    $('.book-content').on('click', '.ftnt', (e) => {
-      e.preventDefault();
-      this.scrollToSection($(e.target).data("ref"));
-    });
-
     this.$('h3').each((i, el) => $(el).next().andSelf().wrapAll('<div class="keep-together" />'));
-
-    this.set('pageWidth', $('.book-container').width());
-    this.calcPageNumbers();
-
-    $(".book-content").on('click', 'a', (e) => {
-        console.log("DBG CLICK.link");
-        var a = Ember.$(e.target);
-        if (a.attr("href") === undefined) {
-            return;
-        }
-        if (a.attr("target") === undefined) {
-            a.attr("target","_blank");  
-        } 
-        this.sendAction("onOpenLink",e);
-    });
   },
 
   willDestroyElement() {
     $(window).off('onorientationchange', this.onScreenChange.bind(this));
     $(window).off('resize', this.onScreenChange.bind(this));
-    $('.book-content img').off();
   },
 
-  calcPageNumbers() {
-    // console.time('calculate page numbers');
-    // let $pageNumbers = $('.page-numbers');
-    // // Clear all page numbers
-    // $pageNumbers.html('');
-
-    // let lastPosition = 0;
-    // let totalPageCount = 0;
-
-    // let pageNumbersHTML = '';
-
-    // this.$('.book-content .section').each((i, section) => {
-    //   let sectionPageCount = 0;
-
-    //   // for each child element of a section
-    //   $(section).children(':not(a)').each((i, p) => {
-    //     let $p = $(p);
-    //     let left = $p.position().left;
-    //     // Check if the element has a greater x than the last, if it does it
-    //     // means were now on the next page so we can increment the page counts
-    //     // and add a page number
-    //     if (left > lastPosition) {
-    //       sectionPageCount++;
-    //       totalPageCount++;
-    //       pageNumbersHTML += `<div class="page-number" style="left: ${left - 40}px;">Page ${totalPageCount}</div>`;
-    //     }
-    //     lastPosition = left;
-    //   });
-
-    //   console.log($(section).data('section') + ': ' + sectionPageCount);
-
-    //   // Save the section page counts, inside a sync becuase used directly causes
-    //   // performamce degredation
-    //   console.timeEnd('calculate page numbers');
-    //   Ember.run.schedule('sync', () => $(section).data('section') && this.set('sectionPageCounts.' + $(section).data('section'), sectionPageCount));
-    // });
-    Ember.run.schedule('afterRender', () => {
-      // $pageNumbers.append(pageNumbersHTML);
-
-      // TweenLite.fromTo('.cover-img', 0.3, {opacity: 1}, {opacity: 0, lazy: true, delay: 0.3});
+  /**
+   * We have to wait for images to load, because they cause text reflowing and move the sections around.
+   */
+  waitForImages() {
+    return new RSVP.Promise((resolve) => {
+      let imagesLoaded = 0;
+      let images = this.$('p img');
+      images.load(() => {
+        imagesLoaded++;
+        if (images.length === imagesLoaded) {
+          resolve();
+        }
+      });
     });
-
   },
 
   /**
@@ -356,19 +318,17 @@ export default Ember.Component.extend({
    * @return {void}
    */
 
-  onSection: Ember.observer('currentSection', function() {
-    // console.log('SECTION: ' + this.get('currentSection.permalink'));
+  onSection: Ember.observer('currentRouteModel', function() {
+    console.log('SECTION: ' + this.get('currentRouteModel.permalink'));
     Ember.run.schedule('afterRender', () => {
-
       // changing section is true if we have changed section internally and
       // triggered the trasition, this is to avoid a transition loop where
       // scrolling causes a transition and the transition causes scrolling...
-      if (!this.get('changingSection') && this.get('currentSection.permalink')) {
-        this.scrollToSection(this.get('currentSection.permalink'));
+      if (this.get('currentRouteModel.permalink') !== this.get('currentSection.permalink')) {
+        this.scrollToSection(this.get('currentRouteModel.permalink'));
       }
-      this.set('changingSection', false);
     });
-  }).on('init'),
+  }),
 
   /**
    * If the screen resizes or rotates we may have moved page, and the page
@@ -378,40 +338,42 @@ export default Ember.Component.extend({
    */
   onScreenChange() {
     this.scrollToNearestPage();
-    this.calcPageNumbers();
     this.set('pageWidth', $('.book-container').width());
   },
 
   scrollToNearestPage(direction = 'backward') {
-    let container = $('.book-content-container');
+    let container = this.get('elements.book-content-container');
     if (direction === 'backward') {
       this.set('scrollLeft', container.scrollLeft() - container.scrollLeft() % this.get('pageWidth'));
     } else {
       this.set('scrollLeft', container.scrollLeft() + (this.get('pageWidth') - (container.scrollLeft() % this.get('pageWidth'))));
     }
+  },
+
+  findSections() {
+    let scrollLeft = this.get('scrollLeft'),
+        pageWidth  = this.get('pageWidth');
+
+    console.groupCollapsed("finding sections");
+    console.log('scrollLeft:', scrollLeft, 'pageWidth:', pageWidth);
+
+    this.$('.section-anchor').each((i, el) => {
+      let section       = this.get('sections').objectAt(i),
+          prev          = this.get('sections').objectAt(i - 1),
+          left          = el.offsetLeft - 40,
+          startPosition = left + scrollLeft,
+          endPosition   = startPosition - pageWidth;
+
+      console.group("found section #" + i + ": ", el.getAttribute("data-permalink"));
+      console.log("prev:", prev);
+      console.log("left:", left, "start:", startPosition, "end:", endPosition);
+      console.groupEnd();
+
+      if (i !== 0) { prev.set('endPosition', endPosition); }
+      section.set('startPosition', startPosition);
+    });
+    console.groupEnd();
+
+    console.table(this.get('sections').toArray());
   }
-
-  // findSections() {
-  //   this.$('.book-content .section').each((i, el) => {
-  //     if ($(el).data('section')) {
-  //       if (i === 0) {
-  //         this.set('sectionLocations.0', $(el).data('section'));
-  //       } else {
-  //         let pageIndex = Math.floor($(el).find('.page-content > *:first-child').position().left / this.get('pageWidth') * 2);
-  //         this.set('sectionLocations.' + pageIndex, $(el).data('section'));
-  //       }
-  //     }
-  //   });
-  //   this.scrollToSection(this.get('currentSection.permalink'));
-  // },
-
-  // onNavigating: Ember.observer('scrolling', function() {
-  //   console.log(this.get('scrolling') ? 'started scrolling' : 'stopped scrolling');
-  // })
-
-  // onSubsection: Ember.observer('subsection', function() {
-  //   if (this.get('subsection')) {
-  //     this.set('pageIndex', this.get('sectionLocations')[this.get('subsection')]);
-  //   }
-  // })
 });

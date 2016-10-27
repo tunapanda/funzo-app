@@ -1,6 +1,9 @@
   <div>
     <strong>Account Type: </strong> {{if currentUser.model.isTeacher 'Teacher' 'Student'}}
   </div>
+  <div>
+    <strong>App Version: </strong> {{ENV.APP.version}}
+  </div>
   {{#if currentUser.model.isTeacher}}
     <h2>Manage Courses</h2>
     <button class="btn btn-primary btn-raised" {{action 'addCourse'}}>Import From URL</button>

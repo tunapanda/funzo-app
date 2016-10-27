@@ -2,12 +2,13 @@
   <div class="row">
     <div class="col-md-offset-3 col-md-6">
       <div class="certel-logo text-center">
-        <img src="assets/Certell-Logo-2.svg" alt="Logo" >
+        <img src="{{ENV.APP.logo}}" alt="Logo" >
       </div>
       {{!-- <h1 class="text-center">Welcome</h1> --}}
-      {{!-- <h4 class="text-center">Please enter a username to identify yourself to your teacher</h4> --}}
+      <h4 class="text-center"></h4>
+      <form {{ action 'getStarted' on='submit' }}>
       <div class="form-group {{if errors.model.username.length 'has-error'}}">
-        <label class="control-label" for="first_name">Username</label>
+        <label class="control-label" for="first_name">Please enter a username to identify yourself to your teacher</label>
         {{input id="first_name" type="text" value=model.username class="form-control"}}
         <span class="help-block">
         {{#each errors.model.username as |error|}}
@@ -15,9 +16,11 @@
         {{/each}}
         </span>
       </div>
+      </form>
     </div>
   </div>
   <div class="row get-started">
     <div class="col-md-12 text-center"><button class="btn btn-primary btn-raised btn-lg" onclick={{action 'getStarted'}}>Get Started <i class="material-icons">chevron_right</i></button></div>
   </div>
+  <div class="footer">v{{ENV.APP.version}}</div>
 </div>

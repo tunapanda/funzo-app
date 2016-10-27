@@ -11,9 +11,11 @@ export default Ember.Controller.extend({
   }),
 
   init() {
-    this.get('bookManager').on('booksUpdated', (books) => {
-      this.store.pushPayload('book', { books });
-      this.set('model.books', this.store.peekAll('book'));
+    this.get('bookManager').on('booksUpdated', () => {
+      // this.store.pushPayload('book', { books });
+      this.store.unloadAll('book');
+      this.store.findAll('book', { reload: true }).then((books) => this.set('model.books', books));
+      
     });
     return this._super();
   },
@@ -23,6 +25,11 @@ export default Ember.Controller.extend({
       this.set('modal.component', 'add-book');
 
       Ember.$('.modal').modal('show');
+    },
+    deleteBook(book) {
+      if (window.confirm(`Are you sure you want to delete "${book.get('title')}"?`)) {
+        this.get('bookManager').deleteBook(book.get('id'));
+      }
     }
   }
 });
