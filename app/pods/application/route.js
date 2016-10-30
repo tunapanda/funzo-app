@@ -201,7 +201,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         "verb": {
           "id": "http://adlnet.gov/expapi/verbs/launched",
           "display": {
-              "en-US": "launched"
+              "en-US": "Opened the book"
           }
         },
         "object": {
@@ -211,6 +211,31 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
               "en-US": bookTitle,
             },
             "type": "http://funzo.tunapanda.org/xapi/activity/book",
+          },
+        },
+      };
+      this.recordxAPI(statement_data);
+    },
+
+    xAPIStartSection(section) {
+      console.log("xapi logging section start");
+      var sectionTitle = section.get('title');
+      var permaLink = section.get('permalink');
+      var statement_data = {
+        "description": "User opened section '" + sectionTitle + "'",
+        "verb": {
+          "id": "http://adlnet.gov/expapi/verbs/started",
+          "display": {
+              "en-US": "Started the section"
+          }
+        },
+        "object": {
+          "id":  "http://funzo.tunapanda.org/xapi/object/section/" + permaLink,
+          "definition": {
+            "name": {
+              "en-US": sectionTitle,
+            },
+            "type": "http://funzo.tunapanda.org/xapi/activity/book-section",
           },
         },
       };
@@ -230,7 +255,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         "verb": {
           "id": "http://adlnet.gov/expapi/verbs/experienced",
           "display": {
-              "en-US": "experienced"
+              "en-US": "Clicked the link"
           }
         },
         "object": {

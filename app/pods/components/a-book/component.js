@@ -319,7 +319,9 @@ export default Ember.Component.extend({
    */
 
   onSection: Ember.observer('currentRouteModel', function() {
-    console.log('SECTION: ' + this.get('currentRouteModel.permalink'));
+    var section = this.get('currentRouteModel');
+    console.log('SECTION: ' + section.permalink);
+    this.sendAction('onSectionStart',section);
     Ember.run.schedule('afterRender', () => {
       // changing section is true if we have changed section internally and
       // triggered the trasition, this is to avoid a transition loop where
