@@ -5,7 +5,7 @@
 // and running all your ember and cordova commands with 
 // --environment=production (or development, or whatever). 
 module.exports = {
-  update_env: function(app) {
+  update_config: function(app) {
     // Basic information for your app
     app.name = 'My App';
     app.description = 'Powered by Tunapanda Funzo (http://tunapanda.org)'
