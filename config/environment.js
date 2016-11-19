@@ -30,7 +30,7 @@ module.exports = function(environment) {
       name: 'My Funzo App (OVERRIDE IN config/custom/default.js)',
       description: 'Made with Funzo (github.com/tunapanda/funzo-app)',
       logo: 'assets/funzologo.png',
-      version: '0.0.1',
+      version: '0.0.3',
       author: {
         name: "OVERRIDE IN config/custom/default.js",
         email: "OVERRIDE IN config/custom/default.js",
@@ -121,7 +121,14 @@ module.exports = function(environment) {
       if (typeof(override) !== "undefined") {
         ENV.APP = override.update_config(ENV.APP);
       }
-    } catch(e) {}
+    } catch(e) {
+      // type Error means file not found; anything else could indicate
+      // syntax error or other problem in an existing file.
+      if ( e.name !== "Error" ) {
+        console.warn(e.name + " in config/custom/"+fn+".js: '" + e.toString() + "'");
+        // TODO: fail?
+      }
+    }
   });
 
   return ENV;
