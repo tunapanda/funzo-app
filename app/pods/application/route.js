@@ -38,6 +38,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   // lets us get around our weird query issues
   syncStatement(statement) {
     /* global TinCan */
+    if (typeof(ENV.APP.xAPI.enable) == "undefined" || !ENV.APP.xAPI.enable) {
+           return;
+     }
     var xapi = new TinCan(ENV.APP.xAPI);
     var xApiStatements = [];
     console.log("Sending xapi statement to " + ENV.APP.xAPI.recordStores[0].endpoint);
@@ -122,27 +125,28 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       if ( typeof(gps_accuracy) === "undefined" || gps_accuracy < 0 ) {
         // location data disabled in config
         resolve(statement_data);
-      }
-      var gpsKey = "http://tunapanda.org/xapi/extensions/location";
-      if (typeof(statement_data.context.extensions[gpsKey]) === "undefined") {
-        navigator.geolocation.getCurrentPosition((location) => {
-          if (typeof(location) === "undefined") {
-            resolve(statement_data);
-          }
-          setIfUnset(statement_data.context.extensions, gpsKey, {
-            "lat": location.coords.latitude.toFixed(gps_accuracy),
-            "lng": location.coords.longitude.toFixed(gps_accuracy),
-          });
-          resolve(statement_data);
-        }, (err) => {
-          statement_data.context.extensions[debugKey].messages.push("GPS error: " + err.toString());
-          console.log("GPS (nonfatal) error: " + err.toString());
-          // don't reject, just return the statement data sans location
-          resolve(statement_data);
-        }); 
       } else {
-        console.log("GPS skipped");
-        resolve(statement_data);
+        var gpsKey = "http://tunapanda.org/xapi/extensions/location";
+        if (typeof(statement_data.context.extensions[gpsKey]) === "undefined") {
+          navigator.geolocation.getCurrentPosition((location) => {
+            if (typeof(location) === "undefined") {
+              resolve(statement_data);
+            }
+            setIfUnset(statement_data.context.extensions, gpsKey, {
+              "lat": location.coords.latitude.toFixed(gps_accuracy),
+              "lng": location.coords.longitude.toFixed(gps_accuracy),
+            });
+            resolve(statement_data);
+          }, (err) => {
+            statement_data.context.extensions[debugKey].messages.push("GPS error: " + err.toString());
+            console.log("GPS (nonfatal) error: " + err.toString());
+            // don't reject, just return the statement data sans location
+            resolve(statement_data);
+          }); 
+        } else {
+          console.log("GPS skipped");
+          resolve(statement_data);
+        }
       }
     }, (err) => { console.log("Location ERROR:"); console.log(err.toString()) ;}
     ).then((statement_data) => {
