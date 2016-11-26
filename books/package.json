@@ -1,0 +1,27 @@
+{
+  "name": "funzo-cse",
+  "version": "1.0.0",
+  "description": "CSE Book",
+  "main": "encrypt.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usernamenumber/funzo-cse.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/usernamenumber/funzo-cse/issues"
+  },
+  "homepage": "https://github.com/usernamenumber/funzo-cse#readme",
+  "dependencies": {
+    "crypto-js": "^3.1.6",
+    "fs-extra": "",
+    "mkdirp": "^0.5.1",
+    "node-options": "",
+    "rimraf": "^2.5.4",
+    "string": ""
+  }
+}

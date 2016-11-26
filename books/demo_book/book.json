@@ -1,0 +1,16 @@
+{
+  "id": "FUNZODEMO",
+  "title": "Excerpts from Amusements in Math",
+  "institution": "Tunapanda",
+  "encryptionKeyBase": "averysecurekey",
+  "expiration": 20900101,
+  "coverImage": "cover.png",
+  "sections": [
+    { "title" : "Front Matter and Preface",
+      "surce": "00-frontmatter.html" },
+    { "title" : "The Barrel of Beer",
+      "source": "01-barrel_of_beer.html" },
+    { "title" : "The Lockers Problem",
+      "source": "02-the_lockers.html" }
+  ]
+}

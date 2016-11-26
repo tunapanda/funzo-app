@@ -1,0 +1,4 @@
+# Be sure the development packages for your OS for libxslt and libxml2 
+# are installed before running pip install -r requirements.txt
+lxml
+cssselect
