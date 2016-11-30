@@ -298,7 +298,12 @@ export default Ember.Component.extend({
   waitForImages() {
     return new RSVP.Promise((resolve) => {
       let imagesLoaded = 0;
-      let images = this.$('p img');
+      let images = this.$('img');
+
+      if (images.length === 0) {
+        resolve();
+      }
+
       images.load(() => {
         imagesLoaded++;
         if (images.length === imagesLoaded) {
