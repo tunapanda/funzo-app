@@ -36,7 +36,8 @@ module.exports = function(environment) {
       	hint: 'enter code "demo" to download an example book'
       },
       */
-      encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
+      encryptionKeyBase: 'foobarbaz',
+
       // For directories, be sure to include a trailing '/'!
       bookURLBase: 'http://elibrary.certell.org/books/',
       xAPI: {
