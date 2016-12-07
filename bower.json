@@ -20,5 +20,8 @@
     "jquery.nicescroll": "^3.6.8",
     "velocity": "^1.2.3",
     "gsap": "1.18.2"
+  },
+  "resolutions": {
+    "jquery": ">=1.8.3"
   }
 }

@@ -27,26 +27,38 @@ module.exports = function(environment) {
     },
 
     APP: {
-      bookOnlyMode: false,
+      name: 'My Funzo App (OVERRIDE IN config/custom/default.js)',
+      description: 'Made with Funzo (github.com/tunapanda/funzo-app)',
+      logo: 'assets/funzologo.png',
+      version: '0.0.3',
+      author: {
+        name: "OVERRIDE IN config/custom/default.js",
+        email: "OVERRIDE IN config/custom/default.js",
+        website: "OVERRIDE IN config/custom/default.js"
+      },
+      bookOnlyMode: true,
       defaultBook: false,
-      /*
       // Set this to false to have no default
       defaultBook: {
       	code: 'demo',
       	hint: 'enter code "demo" to download an example book'
       },
-      */
-      encryptionKeyBase: 'foobarbaz',
-
+      encryptionKeyBase: 'OVERRIDE IN config/custom/default.js',
       // For directories, be sure to include a trailing '/'!
-      bookURLBase: 'http://elibrary.certell.org/books/',
+      bookURLBase: 'OVERRIDE IN config/custom/default.js',
       xAPI: {
         recordStores: [{
-          endpoint: 'http://lrs.tunapanda.org/data/xAPI/',
-          username: '1017b67da772161ed2889d2a42f7c94780a5e21d',
-          password: '1117ff2bb7674cf58b26177baed7b8f4e5e2e54d',
+          endpoint: 'OVERRIDE IN config/custom/default.js',
+          username: 'OVERRIDE IN config/custom/default.js',
+          password: 'OVERRIDE IN config/custom/default.js',
           allowFail: false
-        }]
+        }],
+        // Number of decimal places to get from lat/long values
+        // 3 decimal places = accuracy to ~ 100 meters
+        // 2 would be closer to ~ 1km
+        // More details: http://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
+        // -1 disables location data in xapi reports
+        gps_accuracy: -1
       }
     },
 
@@ -96,14 +108,28 @@ module.exports = function(environment) {
   }
 
   if (environment === 'staging') {
-    ENV.apiUrl = 'http://funzo-app-staging.herokuapp.com/api/v1';
     ENV.staging = true;
   }
 
   if (environment === 'production') {
-    ENV.apiUrl = 'http://funzo-app.herokuapp.com/api/v1';
     ENV.production = true;
   }
+
+  [ 'default', environment ].forEach((fn) => {
+    try {
+      var override = require('./custom/'+fn+'.js');
+      if (typeof(override) !== "undefined") {
+        ENV.APP = override.update_config(ENV.APP);
+      }
+    } catch(e) {
+      // type Error means file not found; anything else could indicate
+      // syntax error or other problem in an existing file.
+      if ( e.name !== "Error" ) {
+        console.warn(e.name + " in config/custom/"+fn+".js: '" + e.toString() + "'");
+        // TODO: fail?
+      }
+    }
+  });
 
   return ENV;
 };
