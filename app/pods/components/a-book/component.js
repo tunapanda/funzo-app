@@ -100,6 +100,12 @@ export default Ember.Component.extend({
         return this.attrs.showImage($target.attr('src'));
       }
 
+      // H5P popups
+      if (e.target.classList.contains('quiz')) {
+        e.preventDefault();
+        return this.attrs.showH5P($target.attr('src'));
+      }
+
       // footnote links
       if ($target.hasClass('ftnt')) {
         e.preventDefault();

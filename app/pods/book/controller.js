@@ -49,6 +49,13 @@ export default Ember.Controller.extend({
       Ember.$('.modal').modal('show');
     },
 
+    showH5PModal(h5p) {
+      this.set('modal.component', 'book-h5p-modal');
+      this.set('modal.args.h5p', h5p);
+
+      Ember.$('.modal').modal('show');
+    },
+
     onPageChange(scrollLeft) {
       this.send('updateUserBookmark', scrollLeft);
     }
