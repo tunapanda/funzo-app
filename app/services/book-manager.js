@@ -51,7 +51,7 @@ export default Ember.Service.extend(Ember.Evented, {
       })
       .then(() => this.updateIndex())
       .then(() => {
-        //this.set('status', 'complete');
+        // this.set('status', 'complete');
         this.reset();
       }, (err) => {
         this.set('status', 'error');

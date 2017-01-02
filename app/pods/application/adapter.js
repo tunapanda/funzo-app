@@ -24,9 +24,9 @@ export default Adapter.extend({
 
       result[keyForModel] = results[keyForModel].filter(filterFunction);
 
-    console.log("DBG Query returning...");
-    console.log(result);
-    return Ember.RSVP.resolve(result);
-  });
+      console.log("DBG Query returning...");
+      console.log(result);
+      return Ember.RSVP.resolve(result);
+    });
   }
 });
