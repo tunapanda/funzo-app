@@ -16,7 +16,7 @@ export default Ember.Controller.extend({
 
   // this method can take a second argument, but since we're not
   // using it right now jshint will complain if it's references.
-  //sections: computed.map('model.sections', function(model, i) {
+  // sections: computed.map('model.sections', function(model, i) {
   sections: computed.map('model.sections', function(model) {
     return SectionDecorator.create({ content: model });
   }),

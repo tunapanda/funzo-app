@@ -12,8 +12,9 @@ export default Ember.Service.extend(Ember.Evented, {
   },
 
   setup() {
-    return new Ember.RSVP.Promise((resolve) => {
+    return new Ember.RSVP.Promise((resolve, reject) => {
       window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+      if (!window.requestFileSystem) reject('no access to file system');
       window.requestFileSystem(window.PERSISTENT, 0, (fs) => {
         this.fs = fs;
         this.root = fs;
@@ -51,7 +52,7 @@ export default Ember.Service.extend(Ember.Evented, {
       })
       .then(() => this.updateIndex())
       .then(() => {
-        //this.set('status', 'complete');
+        // this.set('status', 'complete');
         this.reset();
       }, (err) => {
         this.set('status', 'error');

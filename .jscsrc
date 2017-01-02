@@ -64,9 +64,5 @@
   "requireSpacesInForStatement": true,
   "requireSpacesInsideObjectBrackets": "all",
   "validateIndentation": 2,
-  "validateParameterSeparator": ", ",
-  "validateQuoteMarks": {
-    "mark": "'",
-    "escape": true
-  }
+  "validateParameterSeparator": ", "
 }

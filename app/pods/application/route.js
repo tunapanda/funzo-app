@@ -3,7 +3,7 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 import ENV from 'funzo-app/config/environment';
 
 var setIfUnset = function(statement_data, setting, value) {
-  if (typeof(statement_data[setting]) === "undefined") {
+  if (typeof statement_data[setting] === "undefined") {
     statement_data[setting] = value;
   }
   return statement_data;
@@ -84,9 +84,9 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   getXapiUserHomepage() {
     var book = this.modelFor('book');
     var uri = book.get('institutionUri');
-    if (typeof(uri) === "undefined") {
+    if (typeof uri === "undefined") {
       uri = "http://funzo.tunapanda.org/xapi/extensions/institution/" + book.get("institution");
-    } 
+    }
     return uri;
   },
 
@@ -103,7 +103,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     var platform = "web";
     var platformVersion = "unknown";
     /* global device */
-    if (typeof(device) !== "undefined") {
+    if (typeof device !== "undefined") {
       platform = device.platform;
       platformVersion = device.version;
     }
@@ -113,25 +113,25 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     // We can use this to store non-fatal error messages for later review
     setIfUnset(statement_data.context.extensions[debugKey], "messages", []);
     var institutionKey = "http://tunapanda.org/xapi/extensions/institution";
-    if (typeof(statement_data.context.extensions[institutionKey]) === "undefined") {
+    if (typeof statement_data.context.extensions[institutionKey] === "undefined") {
       var book = this.modelFor('book');
       statement_data.context.extensions[institutionKey] = book.get('institution');
     }
     return new Ember.RSVP.Promise((resolve,reject) => { // jshint ignore:line
       var gps_accuracy = ENV.APP.xAPI.gps_accuracy;
-      if ( typeof(gps_accuracy) === "undefined" || gps_accuracy < 0 ) {
+      if (typeof gps_accuracy === "undefined" || gps_accuracy < 0) {
         // location data disabled in config
         resolve(statement_data);
       }
       var gpsKey = "http://tunapanda.org/xapi/extensions/location";
-      if (typeof(statement_data.context.extensions[gpsKey]) === "undefined") {
+      if (typeof statement_data.context.extensions[gpsKey] === "undefined") {
         navigator.geolocation.getCurrentPosition((location) => {
-          if (typeof(location) === "undefined") {
+          if (typeof location  === "undefined") {
             resolve(statement_data);
           }
           setIfUnset(statement_data.context.extensions, gpsKey, {
             "lat": location.coords.latitude.toFixed(gps_accuracy),
-            "lng": location.coords.longitude.toFixed(gps_accuracy),
+            "lng": location.coords.longitude.toFixed(gps_accuracy)
           });
           resolve(statement_data);
         }, (err) => {
@@ -139,14 +139,16 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           console.log("GPS (nonfatal) error: " + err.toString());
           // don't reject, just return the statement data sans location
           resolve(statement_data);
-        }); 
+        });
       } else {
         console.log("GPS skipped");
         resolve(statement_data);
       }
-    }, (err) => { console.log("Location ERROR:"); console.log(err.toString()) ;}
-    ).then((statement_data) => {
-      if (typeof(statement_data.actor) === "undefined") {
+    }, (err) => {
+      console.log("Location ERROR:");
+      console.log(err.toString());
+    }).then((statement_data) => {
+      if (typeof statement_data.actor === "undefined") {
         return new Ember.RSVP.Promise(
           this.fetchUser.bind(this)
         ).then((user) => {
@@ -155,8 +157,8 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           var usernameKey =  "http://tunapanda.org/xapi/extensions/username";
           setIfUnset(statement_data.context.extensions, usernameKey, user.get('username'));
           setIfUnset(statement_data, "actor", {
-            "objectType":"Agent",
-            "account":{
+            "objectType": "Agent",
+            "account": {
               "name":   user.get('username'),
               "homePage": this.getXapiUserHomepage()
             }
@@ -164,7 +166,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
           return statement_data;
         });
       } else {
-        return statement_data; 
+        return statement_data;
       }
     });
   },
@@ -201,18 +203,18 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         "verb": {
           "id": "http://adlnet.gov/expapi/verbs/launched",
           "display": {
-              "en-US": "launched"
+            "en-US": "launched"
           }
         },
         "object": {
           "id":  "http://funzo.tunapanda.org/xapi/object/book/" + bookId,
           "definition": {
             "name": {
-              "en-US": bookTitle,
+              "en-US": bookTitle
             },
-            "type": "http://funzo.tunapanda.org/xapi/activity/book",
-          },
-        },
+            "type": "http://funzo.tunapanda.org/xapi/activity/book"
+          }
+        }
       };
       this.recordxAPI(statement_data);
     },
@@ -221,27 +223,27 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       var linkText = event.target.textContent;
       console.log("xapi log link click: " + linkText);
       var statement_data = {
-        "description": "User opened link '"+linkText+"'",
-        "context": { 
+        "description": "User opened link '" + linkText + "'",
+        "context": {
           "contextActivities": {
             "parent": event.target.baseURI
           }
-        },  
+        },
         "verb": {
           "id": "http://adlnet.gov/expapi/verbs/experienced",
           "display": {
-              "en-US": "experienced"
+            "en-US": "experienced"
           }
         },
         "object": {
           "id":  event.target.href,
           "definition": {
             "name": {
-              "en-US": linkText,
+              "en-US": linkText
             },
-            "type": "http://funzo.tunapanda.org/xapi/activity/link",
-          },
-        },
+            "type": "http://funzo.tunapanda.org/xapi/activity/link"
+          }
+        }
       };
       this.recordxAPI(statement_data);
     }
