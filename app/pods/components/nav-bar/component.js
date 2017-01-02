@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'nav',
   classNames: ['navbar', 'navbar-fixed-top'],
-  
+
   session: Ember.inject.service('session'),
   nav: Ember.inject.service('nav'),
 
@@ -12,7 +12,7 @@ export default Ember.Component.extend({
   showBackButton: Ember.computed.alias('nav.showBackButton'),
   hide: Ember.computed.alias('nav.hide'),
   showIcons: Ember.computed.alias('nav.showIcons'),
-  
+
   actions: {
     back() {
       this.sendAction('back');
