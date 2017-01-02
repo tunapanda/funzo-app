@@ -16,7 +16,7 @@ module.exports = function(environment) {
     modulePrefix: 'funzo-app',
     podModulePrefix: 'funzo-app/pods',
     environment: environment,
-    baseURL: '/',
+    rootURL: '/',
     defaultLocationType: 'auto',
     EmberENV: {
       FEATURES: {
@@ -95,7 +95,7 @@ module.exports = function(environment) {
 
   if (environment === 'test') {
     // Testem prefers this...
-    ENV.baseURL = '/';
+    ENV.rootURL = '/';
     ENV.locationType = 'auto';
 
     // keep test console output quieter
