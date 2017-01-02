@@ -1,15 +1,14 @@
 /* jshint node: true */
-/* global TinCan */
 var os     = require('os');
 var ifaces = os.networkInterfaces();
 
 var addresses = [];
 for (var dev in ifaces) {
-  ifaces[dev].forEach(function(details) {
+  for (var details in ifaces[dev]) {
     if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
       addresses.push(details.address);
     }
-  });
+  }
 }
 
 module.exports = function(environment) {
@@ -37,7 +36,6 @@ module.exports = function(environment) {
         website: "OVERRIDE IN config/custom/default.js"
       },
       bookOnlyMode: true,
-      defaultBook: false,
       // Set this to false to have no default
       defaultBook: {
         code: 'demo',
@@ -117,15 +115,15 @@ module.exports = function(environment) {
 
   [ 'default', environment ].forEach((fn) => {
     try {
-      var override = require('./custom/'+fn+'.js');
-      if (typeof(override) !== "undefined") {
+      var override = require('./custom/' + fn + '.js');
+      if (typeof override !== "undefined") {
         ENV.APP = override.update_config(ENV.APP);
       }
     } catch(e) {
       // type Error means file not found; anything else could indicate
       // syntax error or other problem in an existing file.
-      if ( e.name !== "Error" ) {
-        console.warn(e.name + " in config/custom/"+fn+".js: '" + e.toString() + "'");
+      if (e.name !== "Error") {
+        console.warn(e.name + " in config/custom/" + fn + ".js: '" + e.toString() + "'");
         // TODO: fail?
       }
     }
