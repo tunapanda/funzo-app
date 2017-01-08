@@ -11,8 +11,7 @@ export default Ember.Service.extend({
 
         // console.log("Expiration = " + expiration);
         if (expiration && expiration < new Date()) {
-          section.set('html', Ember.String.htmlSafe(`<h1>Expired</h1><p><em>Sorry, this copy of ${section.get('book.title')} 
-          expired on ${expiration}. Please notify your school.</em></p>`));
+          section.set('html', Ember.String.htmlSafe(`<h1>Expired</h1><p><em>Sorry, this copy of ${section.get('book.title')} expired on ${expiration}. Please notify your school.</em></p>`));
         } else if (section.get('content') && encryption === 'aes') {
           let decrypted;
           try {

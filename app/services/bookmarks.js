@@ -7,10 +7,10 @@ export default Ember.Service.extend({
 
   currentPosition: Ember.computed('book', 'user.currentPage', function() {
     console.group('calculating current position for ' + this.get('user.username') + '.' + this.get('propName'));
-    var pos = this.get('user.' + this.get('propName')),
-        result = null;
+    let pos = this.get('user.' + this.get('propName'));
+    let result = null;
     console.log('Starting position:', pos, 'type:', typeof pos);
-    if(typeof pos === 'undefined' || Number.isNaN(pos)) {
+    if (typeof pos === 'undefined' || Number.isNaN(pos)) {
       console.log('no such pos');
       result = 0;
     } else {

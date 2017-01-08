@@ -2,13 +2,13 @@ import DS from 'ember-data';
 
 export default DS.RESTSerializer.extend({
   primaryKey: 'permalink',
-	modelNameFromPayloadKey(key) {
-		if (key === "xApiStatements") {
-			return "x-api-statement";
-		} else {
-			return key;
-		}
-	}
+  modelNameFromPayloadKey(key) {
+    if (key === "xApiStatements") {
+      return "x-api-statement";
+    } else {
+      return key;
+    }
+  }
   // normalize(model, hash, prop) {
   //   if (!hash.id && prop === 'courses') {
   //     let modules = hash.modules;
