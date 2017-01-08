@@ -45,8 +45,8 @@ export default Ember.Service.extend({
     console.log('user: ', this.user.get('username'));
     console.log('propName:', this.get('propName'));
     console.groupEnd();
-    this.user.set(this.get('propName'), scrollLeft);
-    this.user.save();
+    this.get('user').set(this.get('propName'), scrollLeft);
+    this.get('user').save();
   }
 });
 
