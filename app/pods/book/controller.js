@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { $, ObjectProxy, computed } = Ember;
+const { $, ObjectProxy, computed } = Ember; // jshint ignore:line
 
 let SectionDecorator = ObjectProxy.extend({
   isHidden: false,
@@ -12,20 +12,22 @@ let SectionDecorator = ObjectProxy.extend({
 export default Ember.Controller.extend({
   nav: Ember.inject.service(),
   section: Ember.inject.controller('book.section'),
+  bookmarks: Ember.inject.service(),
 
-  sections: computed.map('model.sections', function(model, i) {
+  // this method can take a second argument, but since we're not
+  // using it right now jshint will complain if it's references.
+  // sections: computed.map('model.sections', function(model, i) {
+  sections: computed.map('model.sections', function(model) {
     return SectionDecorator.create({ content: model });
   }),
 
-  fontSize: 12,
+  startingScrollLeft: Ember.computed('bookmarks.currentPosition', function() {
+    console.log("Getting computed position attribute:", this.get("bookmarks.currentPosition"));
+    return this.get("bookmarks.currentPosition");
+  }),
 
-  fontSizes: [
-    10,
-    12,
-    14,
-    16,
-    18
-  ],
+  fontSize: 12,
+  fontSizes: [10, 12, 14, 16, 18],
 
   fontSizeString: Ember.computed('fontSize', function() {
     return Ember.String.htmlSafe(this.get('fontSize') + 'pt');
@@ -34,25 +36,10 @@ export default Ember.Controller.extend({
   modal: Ember.inject.service('bootstrap-modal'),
 
   actions: {
-    // nextSection() {
-    //   let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
-    //   let nextSection = this.get('model.sections').objectAt(index + 1);
-    //   if (nextSection) {
-    //     this.transitionToRoute('book.section', this.get('model'), nextSection);
-    //   }
-    // },
-    // prevSection() {
-    //   let index = this.get('model.sections').lastIndexOf(this.get('section.model'));
-    //   let prevSection = this.get('model.sections').objectAt(index - 1);
-    //   if (prevSection) {
-    //     this.transitionToRoute('book.section', this.get('model'), prevSection);
-    //   }
-    // },
     changePermalink(permalink) {
       Ember.$('.book-loading-overlay').show();
 
       this.send('changeSection', this.get('model.sections').findBy('permalink', permalink));
-      // Ember.run.later(() => this.transitionToRoute('book.section', this.get('model'), ), 100);
     },
 
     showImageModal(image) {
@@ -60,6 +47,10 @@ export default Ember.Controller.extend({
       this.set('modal.args.image', image);
 
       Ember.$('.modal').modal('show');
+    },
+
+    onPageChange(scrollLeft) {
+      this.send('updateUserBookmark', scrollLeft);
     }
   }
 });

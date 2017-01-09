@@ -1,4 +1,3 @@
-/* global CryptoJS */
 import DS from 'ember-data';
 import Ember from 'ember';
 import { Model } from 'ember-pouch';
@@ -11,23 +10,23 @@ export default Model.extend({
   expiration: DS.attr(),
   content: DS.attr(),
   encryption: DS.attr({ defaultValue: 'aes' }),
-  
+
   expirationDate: Ember.computed('expiration', function() {
     let expiration = this.get('expiration');
     var expirationDate;
-    if ( !expiration ) {
+    if (!expiration) {
       expirationDate = false;
     } else {
       expiration = expiration.toString();
       expirationDate = new Date(
-        expiration.slice(0,4), // YYYY
-        expiration.slice(4,6), // MM
-        expiration.slice(6,8)  // DD
+        expiration.slice(0, 4), // YYYY
+        expiration.slice(4, 6), // MM
+        expiration.slice(6, 8)  // DD
       );
     }
-    return expirationDate; 
+    return expirationDate;
   }),
-  
+
   html: DS.attr(),
 
   key: Ember.computed('institution', 'expiration', function() {

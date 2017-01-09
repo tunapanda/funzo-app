@@ -1,4 +1,4 @@
-# Funzo-app 0.2.0
+# Funzo-app 0.5.0
 
 [![Build Status](https://travis-ci.org/tunapanda/funzo-app.svg?branch=master)](https://travis-ci.org/tunapanda/funzo-app) [![Join the chat at https://gitter.im/tunapanda/funzo-app](https://badges.gitter.im/tunapanda/funzo-app.svg)](https://gitter.im/tunapanda/funzo-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
