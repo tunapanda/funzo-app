@@ -103,7 +103,7 @@ export default Ember.Component.extend({
       // H5P popups
       if (e.target.classList.contains('quiz')) {
         e.preventDefault();
-        return this.attrs.showH5P($target.attr('src'));
+        return this.attrs.showH5P($target.data('src'));
       }
 
       // footnote links

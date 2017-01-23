@@ -51,7 +51,7 @@ export default Ember.Controller.extend({
 
     showH5PModal(h5p) {
       this.set('modal.component', 'book-h5p-modal');
-      this.set('modal.args.h5p', `/content/books/${this.get('book.permalink')}h5p`);
+      this.set('modal.args.h5p', `/content/books/${this.get('model.permalink')}${h5p}`);
 
       Ember.$('.modal').modal('show');
     },
