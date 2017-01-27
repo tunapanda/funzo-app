@@ -36,14 +36,18 @@ module.exports = function(environment) {
         website: "OVERRIDE IN config/custom/default.js"
       },
       bookOnlyMode: true,
+      defaultBook: false,
+      /*
       // Set this to false to have no default
       defaultBook: {
-        code: 'demo',
-        hint: 'enter code "demo" to download an example book'
+      	code: 'demo',
+      	hint: 'enter code "demo" to download an example book'
       },
-      encryptionKeyBase: 'OVERRIDE IN config/custom/default.js',
+      */
+      encryptionKeyBase: '0662D004-1871-4614-A16E-EC72DE625E63',
       // For directories, be sure to include a trailing '/'!
-      bookURLBase: 'OVERRIDE IN config/custom/default.js',
+      bookURLBase: 'http://elibrary.certell.org/books/',
+
       xAPI: {
         recordStores: [{
           endpoint: 'OVERRIDE IN config/custom/default.js',

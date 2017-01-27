@@ -26,10 +26,12 @@ export default Ember.Route.extend(NavBarTitleMixin, {
 
   hideNavBar: function() {
     this.set('nav.hide', true);
+    this.set('nav.bookMode', true);
   }.on('activate'),
 
   showNavBar: function() {
     this.set('nav.hide', false);
+    this.set('nav.bookMode', false);
   }.on('deactivate'),
 
   hideStatusBar: function() {
