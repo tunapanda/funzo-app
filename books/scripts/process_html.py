@@ -17,8 +17,6 @@ from lxml.cssselect import CSSSelector
 import re
 import sys
 
-dstdir = "../sections"
-dstpath = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]),dstdir))
 def usage():
     sys.stderr.write("""
 USAGE: {myname} file.html...
@@ -232,7 +230,13 @@ if len(sys.argv) == 1:
 parser = argparse.ArgumentParser(description='Clean up HTML')
 parser.add_argument('-s',nargs=1,dest='sectionId',default=False,help='Section ID number')
 parser.add_argument('files',nargs="*",help="One or more files to convert")
+parser.add_argument('outdir', help='Directory to output processed files', default='../build')
 args = parser.parse_args()
+
+if args.outdir.startswith("/"):
+    dstpath = args.outdir
+else:
+    dstpath = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]),args.outdir))
 
 for fn in args.files:
     if args.sectionId:
@@ -247,7 +251,7 @@ for fn in args.files:
         else:
             sys.stderr.write("\nCould not determine section number for {fn}. Either rename the file to something like 1-{fn}, or pass a starting section number with -s.\n".format(fn=fn))
             sys.exit(1)
-    
+
     permalink = re.sub("\W+","",os.path.basename(outfn).replace(".html",""))
     h = lxml.etree.HTML(open(fn,"r").read()).find("body")
     # Modify and clean up HTML
@@ -259,14 +263,7 @@ for fn in args.files:
     fix_google_links(h)
     video_links(h)
     clean(h)
-    #convert_tags(h)
-    # Add slick-carousel tags
-    # outer = h.makeelement("div")
-    # outer.set("class","page")
     h.tag = "div"
-    # h.set("class","page-content")
-    # outer.append(h)
-    # Write the whole thing out to a new file
     if not os.path.exists(dstpath):
         os.mkdir(dstpath)
     outpath = os.path.join(dstpath,outfn)
