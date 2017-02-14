@@ -19,6 +19,12 @@ export default Ember.Component.extend({
   animateScroll: true,
 
   /**
+   * disable animating scroll, for ease of testing, and possibly for lower end devices
+   * @type {Boolean}
+   */
+  disableScrollAnimation: false,
+
+  /**
    * if scrolling is currently happening
    * @type {Boolean}
    */
@@ -171,7 +177,7 @@ export default Ember.Component.extend({
     let to = this.get('scrollLeft');
     let didScroll = () => this.didScroll(to > current ? 'forward' : 'backward');
 
-    if (this.get('animateScroll')) {
+    if (this.get('animateScroll') && !this.get('disableScrollAnimation')) {
       $('html').velocity('scroll', {
         axis: 'x',
         offset: to - current,
@@ -196,6 +202,11 @@ export default Ember.Component.extend({
   didScroll(direction) {
     let scrollLeft   = this.get('scrollLeft');
     let newSection   = this.get('sections').find(sec => sec.get('endPosition') > scrollLeft);
+
+    if (!newSection) {
+      return this.set('scrolling', false);
+    }
+
     let newPermalink = newSection.get('permalink');
     let oldPermalink = this.get('currentRouteModel.permalink');
     let oldSection   = this.get('sections').findBy('permalink', oldPermalink);
