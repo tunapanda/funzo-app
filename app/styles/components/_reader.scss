@@ -36,24 +36,29 @@
   .book-content {
     column-fill: auto;
     -webkit-column-fill: auto;
+    -moz-column-fill: auto;
     height: 100%;
     box-sizing: border-box;
     column-width: 400px; // basically breakpoint between 2 or 1 pages per screen
     -webkit-column-width: 400px;
+    -moz-column-width: 400px;
     column-gap: 80px;
     -webkit-column-gap: 80px;
+    -moz-column-gap: 80px;
   }
 
   .section, .page {
     break-after: column;
     -webkit-break-after: column;
     -webkit-column-break-after: always;
+    -moz-column-break-after: always;
   }
 
   .page-break {
     break-after: column;
     -webkit-break-after: column;
     -webkit-column-break-after: always;
+    -moz-column-break-after: always;
     height: 0;
     margin: 0;
     border: 0;

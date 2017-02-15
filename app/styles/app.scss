@@ -250,7 +250,7 @@ a.video_link, .quiz {
         z-index: 1;
         -webkit-transform: rotate(360deg);
     }
-
+/*
     &:after {
         position: absolute;
         content: '';
@@ -263,7 +263,7 @@ a.video_link, .quiz {
         margin-top: -0.52em;
         margin-left: 0.46em;
     }
-    
+ */  
     &:hover, &:focus{
         background: #DDE8EC;
     }
