@@ -218,6 +218,8 @@ export default Ember.Component.extend({
       // FIXME when paging back from the start of a section, this will force a skip
       // all the way to the begninning of the section you just entered
       this.attrs.changePermalink(newPermalink);
+    } else {
+      oldSection.set('isCurrentSection', true);
     }
 
     this.set('scrolling', false);
@@ -277,6 +279,8 @@ export default Ember.Component.extend({
           this.set('scrollLeft', this.get('startingScrollLeft'));
         } else if (this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
           this.scrollToSection(this.get('currentRouteModel.permalink'));
+        } else {
+          this.get('currentSection', this.get('sections').findBy('content', this.get('currentRouteModel')));
         }
 
         this.set('hideLoading', true);
@@ -378,8 +382,14 @@ export default Ember.Component.extend({
       console.group("found section #" + i + ": ", el.getAttribute("data-permalink"));
       console.log("prev:", prev);
       console.log("left:", left, "start:", startPosition, "end:", endPosition);
+      console.log("subsections: " + $(el).parents('.section').find('.subsection-anchor').length);
       console.groupEnd();
 
+      $(el).parents('.section').find('.subsection-anchor').each((i2, el2) => {
+        this.get('sections').objectAt(i).get('subsections').pushObject({ title: $($(el2).siblings('.keep-together')[i2]).text(), position: el2.offsetLeft - 40 });
+      });
+
+      $(el).find('.subsection-anchor');
       if (i !== 0) {
         prev.set('endPosition', endPosition);
       }

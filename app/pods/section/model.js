@@ -33,6 +33,8 @@ export default Model.extend({
     return this.get('institution') + this.get('expiration') + ENV.APP.encryptionKeyBase;
   }),
 
+  subsections: DS.attr({ defaultValue: () => Ember.A() }),
+
   paginated: DS.attr(),
   book: DS.belongsTo('book', { async: true })
 });

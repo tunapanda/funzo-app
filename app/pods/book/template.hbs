@@ -3,6 +3,7 @@
     font-size: {{fontSizeString}};
   }
 </style>
+
 <div class="modal fade" id="chapters" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -12,8 +13,15 @@
       </div>
       <div class="modal-body">
         <ul class="list-group">
-            {{#each model.sections as |section index|}}
-              {{#link-to 'book.section' model section class="list-group-item"}}{{index}}. {{section.title}}{{/link-to}}
+            {{#each sections as |section index|}}
+              <li class="list-group-item list-section-{{index}}">
+                {{#if section.subsections.length}}<i class="material-icons" {{action 'toggleSection' index}}>{{if section.isCurrentSection 'keyboard_arrow_down' 'chevron_right'}}</i>{{/if}} {{#link-to 'book.section' model section}}{{index}}. {{section.title}}{{/link-to}}
+                <ul class="{{unless section.isCurrentSection 'hide'}}">
+                  {{#each section.subsections as |subsection index2|}}
+                    <li data-position="{{subsection.position}}" {{action "goToSubsection" subsection.position}}>{{subsection.title}}</li>
+                  {{/each}}
+                </ul>
+              </li>
             {{/each}}
         </ul>
       </div>
@@ -24,26 +32,21 @@
 <div class="navbar navbar-fixed-top {{if nav.hide 'hide'}}">
 
   <div class="container-fluid">
-
       <ul class="nav navbar-nav navbar-left">
         <li><a href="#" {{action 'back'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
       </ul>
-
     <a class="navbar-brand">{{model.title}}</a>
-
         <ul class="nav navbar-nav navbar-right">
-          <li><button data-toggle="modal" data-target="#chapters"><i class="material-icons">toc</i></button></li>
+          <li><a data-toggle="modal" data-target="#chapters"><i class="material-icons">toc</i></a></li>
           <li><a href=""><i class="material-icons">format_size</i></a></li>
         </ul>
-
-
   </div>
 </div>
 
 {{ log-me logger='xAPIOpenBook' }}
 {{a-book
+  scrollLeft=scrollLeft
   sections=sections
-  startingScrollLeft=startingScrollLeft
   currentRouteModel=currentSection
   showImage=(action 'showImageModal')
   showH5P=(action 'showH5PModal')
@@ -54,15 +57,6 @@
 
 <div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
   <form class="navbar-form">
-    <div class="form-group">
-      <label for="">Jump To:</label>
-      <select name="section" class="change-section form-control" onchange={{action 'changePermalink' value="target.value"}}>
-        {{#each model.sections as |section|}}
-          <option value="{{section.permalink}}" selected={{eq section currentSection}}>{{section.title}}</option>
-        {{/each}}
-      </select>
-    </div>
-
     <div class="form-group">
       <label for="">Font Size:</label>
       <select name="section" class="change-font-size form-control" onchange={{action (mut fontSize) value="target.value"}}>
