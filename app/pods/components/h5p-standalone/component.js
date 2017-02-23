@@ -5,8 +5,11 @@ export default Ember.Component.extend({
   currentUser: Ember.inject.service('currentUser'),
 
   didInsertElement() {
-    let h5pContent = `content/courses/${this.get('coursePath')}/modules/${this.get('modulePath')}`;
-    h5pContent += `/${this.get('activityPath')}`;
+    let h5pContent = this.get('external');
+    if (!h5pContent) {
+      h5pContent = `content/courses/${this.get('coursePath')}/modules/${this.get('modulePath')}`;
+      h5pContent += `/${this.get('activityPath')}`;
+    }
 
     let frameJs = 'assets/h5p-standalone-frame.js';
     let frameCss = 'assets/h5p.css';

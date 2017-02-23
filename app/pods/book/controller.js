@@ -13,6 +13,7 @@ export default Ember.Controller.extend({
   nav: Ember.inject.service(),
   section: Ember.inject.controller('book.section'),
   bookmarks: Ember.inject.service(),
+  scrollLeft: 0,
 
   // this method can take a second argument, but since we're not
   // using it right now jshint will complain if it's references.
@@ -49,8 +50,29 @@ export default Ember.Controller.extend({
       Ember.$('.modal').modal('show');
     },
 
+    showH5PModal(h5p) {
+      this.set('modal.component', 'book-h5p-modal');
+      this.set('modal.args.h5p', `/content/books/${this.get('model.permalink')}${h5p}`);
+
+      Ember.$('.modal').modal('show');
+    },
+
     onPageChange(scrollLeft) {
       this.send('updateUserBookmark', scrollLeft);
+    },
+
+    goToSubsection(position) {
+      this.set('scrollLeft', position);
+      Ember.$('.modal').modal('hide');
+    },
+
+    toggleSection(i) {
+      $('#chapters .list-group-item ul').addClass('hide');
+      $('#chapters .list-group-item .material-icons').text('chevron_right');
+
+      $(`#chapters .list-section-${i} ul`).removeClass('hide');
+      $(`#chapters .list-section-${i} .material-icons`).text('keyboard_arrow_down');
+
     }
   }
 });

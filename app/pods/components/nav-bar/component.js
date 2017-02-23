@@ -13,6 +13,9 @@ export default Ember.Component.extend({
   hide: Ember.computed.alias('nav.hide'),
   showIcons: Ember.computed.alias('nav.showIcons'),
 
+
+  bookMode: Ember.computed.alias('nav.hide'),
+
   actions: {
     back() {
       this.sendAction('back');

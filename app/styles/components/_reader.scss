@@ -215,6 +215,7 @@
 
 .modal {
   padding: 40px;
+
 }
 
 .paginator {
@@ -311,7 +312,7 @@ sup {
   display: initial !important;
 }
 
-.video_link {
+.video_link, .quiz {
   break-inside: avoid;
 }
 
@@ -320,5 +321,57 @@ sup {
   font-family: monospace;
   .citation {
     font-weight: bold;
+  }
+}
+
+#chapters {
+  .modal-content .modal-body {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .list-group .list-group-item {
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+  }
+  .list-group-item:last-child {
+      border-bottom-right-radius: inherit;
+      border-bottom-left-radius: inherit;
+  }
+
+  .list-group .list-group-item.active, .list-group .list-group-item.active:hover, .list-group .list-group-item.active:focus {
+    background: #31708f;
+    outline: none;
+  }
+
+  li ul {
+    li {
+      list-style-type: none;
+      line-height: 26px;
+      border-bottom: 1px solid #c1c1c1;
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .modal-dialog {
+    max-height: 80%;
+    overflow: hidden;
+
+    .modal-content {
+      max-height: 100%;
+
+      .modal-body {
+        max-height: 420px;
+        overflow-y: scroll;
+      }
+    }
   }
 }
