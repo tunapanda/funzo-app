@@ -15,7 +15,6 @@ export default Ember.Controller.extend({
       // this.store.pushPayload('book', { books });
       this.store.unloadAll('book');
       this.store.findAll('book', { reload: true }).then((books) => this.set('model.books', books));
-      
     });
     return this._super();
   },

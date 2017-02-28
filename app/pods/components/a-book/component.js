@@ -132,7 +132,7 @@ export default Ember.Component.extend({
       this.navNext();
     },
 
-    didScroll(){}
+    didScroll() {}
   },
 
   animateScrollLeft(position) {
@@ -177,7 +177,7 @@ export default Ember.Component.extend({
         offset: to - current,
         container: container,
         mobileHA: false,
-        complete: didScroll,
+        complete: didScroll
       });
     } else {
       container.scrollLeft(to);
@@ -194,16 +194,15 @@ export default Ember.Component.extend({
    */
 
   didScroll(direction) {
-    let scrollLeft   = this.get('scrollLeft'),
-        newSection   = this.get('sections').find(sec => sec.get('endPosition') > scrollLeft),
-        newPermalink = newSection.get('permalink'),
-        oldPermalink = this.get('currentRouteModel.permalink'),
-        oldSection   = this.get('sections').findBy('permalink', oldPermalink);
+    let scrollLeft   = this.get('scrollLeft');
+    let newSection   = this.get('sections').find(sec => sec.get('endPosition') > scrollLeft);
+    let newPermalink = newSection.get('permalink');
+    let oldPermalink = this.get('currentRouteModel.permalink');
+    let oldSection   = this.get('sections').findBy('permalink', oldPermalink);
 
     this.sendAction('onPageChange', scrollLeft);
     console.log('checking if we have changed section after scrolling ' + direction);
     console.log('from ' + oldPermalink + ' to ' + newPermalink);
-    
 
     if (newPermalink !== oldPermalink) {
       // TODO: Emit xapi statement saying this section has been started
@@ -266,11 +265,11 @@ export default Ember.Component.extend({
       this.findSections();
       Ember.run.scheduleOnce('afterRender', () => {
         console.log("starting scroll left:", this.get('startingScrollLeft'));
-        if(this.get('startingScrollLeft')) {
+        if (this.get('startingScrollLeft')) {
           console.warn("SCROLLING!");
           this.set('animateScroll', false);
           this.set('scrollLeft', this.get('startingScrollLeft'));
-        } else if(this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
+        } else if (this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
           this.scrollToSection(this.get('currentRouteModel.permalink'));
         }
 
@@ -298,7 +297,12 @@ export default Ember.Component.extend({
   waitForImages() {
     return new RSVP.Promise((resolve) => {
       let imagesLoaded = 0;
-      let images = this.$('p img');
+      let images = this.$('img');
+
+      if (images.length === 0) {
+        resolve();
+      }
+
       images.load(() => {
         imagesLoaded++;
         if (images.length === imagesLoaded) {
@@ -353,25 +357,27 @@ export default Ember.Component.extend({
   },
 
   findSections() {
-    let scrollLeft = this.get('scrollLeft'),
-        pageWidth  = this.get('pageWidth');
+    let scrollLeft = this.get('scrollLeft');
+    let pageWidth  = this.get('pageWidth');
 
     console.groupCollapsed("finding sections");
     console.log('scrollLeft:', scrollLeft, 'pageWidth:', pageWidth);
 
     this.$('.section-anchor').each((i, el) => {
-      let section       = this.get('sections').objectAt(i),
-          prev          = this.get('sections').objectAt(i - 1),
-          left          = el.offsetLeft - 40,
-          startPosition = left + scrollLeft,
-          endPosition   = startPosition - pageWidth;
+      let section       = this.get('sections').objectAt(i);
+      let prev          = this.get('sections').objectAt(i - 1);
+      let left          = el.offsetLeft - 40;
+      let startPosition = left + scrollLeft;
+      let endPosition   = startPosition - pageWidth;
 
       console.group("found section #" + i + ": ", el.getAttribute("data-permalink"));
       console.log("prev:", prev);
       console.log("left:", left, "start:", startPosition, "end:", endPosition);
       console.groupEnd();
 
-      if (i !== 0) { prev.set('endPosition', endPosition); }
+      if (i !== 0) {
+        prev.set('endPosition', endPosition);
+      }
       section.set('startPosition', startPosition);
     });
     console.groupEnd();

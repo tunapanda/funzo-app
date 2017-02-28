@@ -19,10 +19,10 @@ export default Ember.Component.extend({
   isError: Ember.computed.equal('status', 'error'),
 
   title: 'Add A Book',
-  
+
   code: dftCode,
   hint: dftHint,
-  
+
   didInsertElement() {
     this.get('bookManager').reset();
   },
