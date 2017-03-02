@@ -21,6 +21,17 @@ export default Ember.Controller.extend({
     refreshIndex(books) {
       this.store.pushPayload('book', books);
     },
+
+    openEPUB(sections) {
+      let book = this.store.createRecord('book', { title: "Test EPUB", permalink: "test-epub" });
+
+      sections = sections.map((section, i) => {
+        return this.store.createRecord('section', { title: i, permalink: i, content: section, encryption: false, book: book });
+      });
+
+      book.set('sections', sections);
+    },
+  
     addBook() {
       this.set('modal.component', 'add-book');
 

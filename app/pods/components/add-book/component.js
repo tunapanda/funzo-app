@@ -1,3 +1,4 @@
+/* global zip */
 import Ember from 'ember';
 import ENV from 'funzo-app/config/environment';
 
@@ -43,6 +44,45 @@ export default Ember.Component.extend({
       //   console.log('upload error code' + error.code);
       // });
     },
+
+    submitFile() {
+      zip.workerScriptsPath = "/zip/";
+      let file = this.$('.book-file')[0].files[0];
+
+      var reader = new FileReader();
+
+      reader.readAsDataURL(file);
+
+      let sections = [];
+      reader.addEventListener("load", () => {
+        zip.createReader(new zip.Data64URIReader(reader.result), (reader) => {
+          reader.getEntries((entries) => {
+            if (entries.length) {
+              // entries[0].getData(new zip.TextWriter(), (text) => {
+              //   console.log(text);
+              // });
+              new Ember.RSVP.Promise((resolve1) => {
+                entries.forEach((entry) => {
+                  if (entry.filename.substr(-4) === "html") {
+                    sections.push(new Ember.RSVP.Promise((resolve) => entry.getData(new zip.TextWriter(), function(text) {
+                      resolve(text);
+                    })));
+                  }
+                });
+                resolve1();
+              }).then(() => {
+                Ember.RSVP.all(sections).then((sections) => {
+                  console.log(sections);
+                  this.attrs.openEPUB(sections);
+                });
+              });
+            }
+          });
+          // reader.close();
+        });
+      }, false);
+    },
+
     cancel() {
       if (this.get('bookManager.download') && this.get('isDownloading')) {
         this.get('bookManager.download').abort();

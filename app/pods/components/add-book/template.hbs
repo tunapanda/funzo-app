@@ -15,6 +15,13 @@
             {{input class="form-control" name="book-code" value=code}}
           </div>
         </form>
+        <p> Or pick a file (EPUB):</p>
+        <form action="#">
+          <div class="form-group">
+            <input type="text" readonly="" class="form-control" placeholder="Browse...">
+            <input type="file" class="book-file" {{action "submitFile" on="change"}}>
+          </div>
+        </form>
       {{/if}}
       {{#if isDownloading}}
         <p class="text-center">Downloading {{downloadProgress}}%</p>
