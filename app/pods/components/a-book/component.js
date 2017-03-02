@@ -12,6 +12,8 @@ export default Ember.Component.extend({
 
   scrollLeft: 0,
 
+  isEPUB: computed.equal('bookType', 'epub'),
+
   /**
    * if changing scrollLeft programmatically, whether to animate the change
    * @type {Boolean}
@@ -261,21 +263,25 @@ export default Ember.Component.extend({
   didInsertElement() {
     this.set('pageWidth', $('.book-container')[0].clientWidth);
 
-    this.waitForImages().then(() => {
-      this.findSections();
-      Ember.run.scheduleOnce('afterRender', () => {
-        console.log("starting scroll left:", this.get('startingScrollLeft'));
-        if (this.get('startingScrollLeft')) {
-          console.warn("SCROLLING!");
-          this.set('animateScroll', false);
-          this.set('scrollLeft', this.get('startingScrollLeft'));
-        } else if (this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
-          this.scrollToSection(this.get('currentRouteModel.permalink'));
-        }
+    // if (!this.get('isEPUB')) {
+      this.waitForImages().then(() => {
+        this.findSections();
+        Ember.run.scheduleOnce('afterRender', () => {
+          console.log("starting scroll left:", this.get('startingScrollLeft'));
+          if (this.get('startingScrollLeft')) {
+            console.warn("SCROLLING!");
+            this.set('animateScroll', false);
+            this.set('scrollLeft', this.get('startingScrollLeft'));
+          } else if (this.get('currentSection.permalink') !== this.get('currentRouteModel.permalink')) {
+            this.scrollToSection(this.get('currentRouteModel.permalink'));
+          }
 
-        this.set('hideLoading', true);
+          this.set('hideLoading', true);
+        });
       });
-    });
+    // } else {
+    //   this.set('hideLoading', true);
+    // }
 
     this.set('elements.page-numbers', this.$('.page-numbers'));
     this.set('elements.book-content-container', $('.book-content-container'));
@@ -299,7 +305,7 @@ export default Ember.Component.extend({
       let imagesLoaded = 0;
       let images = this.$('img');
 
-      if (images.length === 0) {
+      if (images.length === 0 || this.get('isEPUB')) {
         resolve();
       }
 
@@ -361,7 +367,7 @@ export default Ember.Component.extend({
     console.groupCollapsed("finding sections");
     console.log('scrollLeft:', scrollLeft, 'pageWidth:', pageWidth);
 
-    this.$('.section-anchor').each((i, el) => {
+    this.$('.section').each((i, el) => {
       let section       = this.get('sections').objectAt(i);
       let prev          = this.get('sections').objectAt(i - 1);
       let left          = el.offsetLeft - 40;

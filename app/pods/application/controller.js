@@ -23,10 +23,12 @@ export default Ember.Controller.extend({
     },
 
     openEPUB(sections) {
-      let book = this.store.createRecord('book', { title: "Test EPUB", permalink: "test-epub" });
+      let book = this.store.createRecord('book', {
+        title: "Test EPUB", permalink: "test-epub", id: "test-epub", type: 'epub'
+      });
 
       sections = sections.map((section, i) => {
-        return this.store.createRecord('section', { title: i, permalink: i, content: section, encryption: false, book: book });
+        return this.store.createRecord('section', { id: i, title: i, permalink: i, content: section, encryption: false, book: book });
       });
 
       book.set('sections', sections);

@@ -9,6 +9,7 @@ export default Model.extend({
   institution: DS.attr(),
   institutionUri: DS.attr(),
   subject: DS.attr(),
+  type: DS.attr({ defaultValue: 'tepup' }), // TEPUB - Tunapanda EPUB
   sections: DS.hasMany('section', { async: true }),
   cover: Ember.computed('id', function() {
     return window.cordova ? window.cordova.file.dataDirectory + 'content/books/' + this.get('id') + '/cover.png' : 'content/books/' + this.get('id') + '/cover.png';
