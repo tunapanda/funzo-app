@@ -46,7 +46,11 @@ export default Ember.Component.extend({
     },
 
     submitFile() {
-      zip.workerScriptsPath = "/zip/";
+      zip.workerScripts = {
+        deflater: ['/zip/z-worker.js', '/zip/zlib.js', '/zip/zlib-asm/codecs.js'],
+        inflater: ['/zip/z-worker.js', '/zip/zlib.js', '/zip/zlib-asm/codecs.js']
+      };
+
       let file = this.$('.book-file')[0].files[0];
 
       var reader = new FileReader();
@@ -63,7 +67,8 @@ export default Ember.Component.extend({
               // });
               new Ember.RSVP.Promise((resolve1) => {
                 entries.forEach((entry) => {
-                  if (entry.filename.substr(-4) === "html") {
+                  if (entry.filename.indexOf('__MACOSX') === -1 && entry.filename.substr(-4) === "html") {
+                    console.log(entry.filename);
                     sections.push(new Ember.RSVP.Promise((resolve) => entry.getData(new zip.TextWriter(), function(text) {
                       resolve(text);
                     })));
@@ -74,6 +79,7 @@ export default Ember.Component.extend({
                 Ember.RSVP.all(sections).then((sections) => {
                   console.log(sections);
                   this.attrs.openEPUB(sections);
+                  Ember.$('.modal').modal('hide');
                 });
               });
             }

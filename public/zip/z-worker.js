@@ -2,6 +2,8 @@
 (function main(global) {
 	"use strict";
 
+	var window = {};
+
 	if (global.zWorkerInitialized)
 		throw new Error('z-worker.js should be run only once');
 	global.zWorkerInitialized = true;
