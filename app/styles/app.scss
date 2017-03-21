@@ -26,6 +26,7 @@ body {
 
 main {
   height: 100vh;
+  overflow-y: scroll;
 
   &.pad-container {
     padding-top: 15px;
