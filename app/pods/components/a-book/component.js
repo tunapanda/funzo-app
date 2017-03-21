@@ -34,9 +34,12 @@ export default Ember.Component.extend({
    */
   touchStart(e) {
     let start = e.originalEvent.touches[0].pageX;
+    this.set('scrolling', true);
+    this.set('touchStarted', true);
     this.set('touchStartX', start);
     this.set('touchPrevX', start);
     this.set('touchCurrentX', start);
+    console.log('touchStart');
   },
 
   /**
@@ -48,17 +51,18 @@ export default Ember.Component.extend({
   touchMove(e) {
     // e.preventDefault(); // prevent scrolling
     let current = e.originalEvent.touches[0].pageX;
-    this.set('touchStarted', true);
-    let diff = this.get('touchPrevX') - current;
+    // this.set('touchStarted', true);
+    // let diff = this.get('touchPrevX') - current;
 
-    this.set('touchPrevX', current);
+    // this.set('touchPrevX', current);
     this.set('touchCurrentX', current);
 
-    this.set('animateScroll', false);
-    this.set('scrolling', true);
-    this.set('scrollLeft', this.get('scrollLeft') + diff);
+    // this.set('animateScroll', false);
+    // this.set('scrolling', true);
+    // this.set('scrollLeft', this.get('scrollLeft') + diff);
+    // console.log('touchMove');
 
-    return false;
+    // return false;
   },
 
   /**
@@ -69,6 +73,8 @@ export default Ember.Component.extend({
    * @return {void}
    */
   touchEnd() {
+    $('.book-content-container').css('overflowX', 'hidden');
+    // $('.book-content-container').css('overflowX', 'scroll');
     let start = this.get('touchStartX');
     let current = this.get('touchCurrentX');
 
@@ -76,9 +82,12 @@ export default Ember.Component.extend({
 
     if (this.get('touchStarted') && Math.abs(diff) > 10) {
       this.set('animateScroll', true);
-      this.set('scrolling', true);
+      this.set('scrolling', false);
       this.scrollToNearestPage(start < current ? 'backward' : 'forward');
     }
+    console.log('touchEnd');
+
+
 
     this.set('touchStarted', false);
   },
@@ -171,17 +180,19 @@ export default Ember.Component.extend({
     let to = this.get('scrollLeft');
     let didScroll = () => this.didScroll(to > current ? 'forward' : 'backward');
 
-    if (this.get('animateScroll')) {
-      $('html').velocity('scroll', {
-        axis: 'x',
-        offset: to - current,
-        container: container,
-        mobileHA: false,
-        complete: didScroll
-      });
-    } else {
-      container.scrollLeft(to);
-      didScroll();
+    if (!this.get('scrolling')) {
+      if (this.get('animateScroll')) {
+        $('html').velocity('scroll', {
+          axis: 'x',
+          offset: to - current,
+          container: container,
+          mobileHA: false,
+          complete: didScroll
+        });
+      } else {
+        container.scrollLeft(to);
+        didScroll();
+      }
     }
   }),
 
@@ -214,6 +225,7 @@ export default Ember.Component.extend({
       this.attrs.changePermalink(newPermalink);
     }
 
+    $('.book-content-container').css('overflowX', 'scroll');
     this.set('scrolling', false);
   },
 
