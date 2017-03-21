@@ -5,7 +5,7 @@
 </style>
 
 {{ log-me logger='xAPIOpenBook' }}
-{{a-book
+{{!a-book
   sections=sections
   bookType=model.type
   startingScrollLeft=startingScrollLeft
@@ -16,7 +16,7 @@
   onOpenLink='xAPIOpenLink'
 }}
 
-<div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
+{{!--<div class="navbar navbar-fixed-bottom {{if nav.hide 'hide'}}">
   <form class="navbar-form">
     <div class="form-group">
       <label for="">Jump To:</label>
@@ -36,4 +36,6 @@
       </select>
     </div>
   </form>
-</div>
+</div>--}}
+
+{{epub-reader}}

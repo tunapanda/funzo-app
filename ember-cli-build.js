@@ -95,7 +95,13 @@ module.exports = function(defaults) {
   app.import('bower_components/velocity/velocity.js');
   app.import('vendor/aes.js');
 
+  app.import('vendor/epub.js');
+  // app.import('vendor/hooks.js');
+
   app.import('vendor/zip/zip.js');
+
+  app.import('bower_components/video.js/dist/video.js');
+  app.import('bower_components/video.js/dist/video-js.css');
 
   // Use `app.import` to add additional libraries to the generated
   // output files.

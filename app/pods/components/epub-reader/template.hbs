@@ -1,0 +1,15 @@
+<div class="book-navigation book-navigation-left" onclick={{action 'navPrev'}}>
+  <div class="navbar-fixed-left">
+    <div class="nav-spacer" />
+    <i class="nav-link material-icons">chevron_left</i>
+  </div>
+</div>
+<div class="book-navigation book-navigation-right" onclick={{action 'navNext'}}>
+  <div class="navbar-fixed-left">
+    <div class="nav-spacer" />
+    <i class="nav-link material-icons">chevron_right</i>
+  </div>
+</div>
+
+<div class="book-content-container" ontouchmove={{action 'touchMove'}} ontouchstart={{action 'touchStart'}} ontouchend={{action 'touchEnd'}}></div>
+{{!--{{epub-renderer path=path navNext=(action 'navNext')}}--}}

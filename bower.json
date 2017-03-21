@@ -16,7 +16,8 @@
     "bootstrap-material-design": "~0.5.8",
     "jquery.nicescroll": "^3.6.8",
     "velocity": "^1.2.3",
-    "gsap": "1.18.2"
+    "gsap": "1.18.2",
+    "video.js": "^5.18.4"
   },
   "resolutions": {
     "jquery": ">=1.8.3"
