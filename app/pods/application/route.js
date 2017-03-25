@@ -38,9 +38,13 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
   // lets us get around our weird query issues
   syncStatement(statement) {
     /* global TinCan */
+    if ( ! (ENV.APP.xAPI && ENV.APP.xAPI.recordStores.length) ) {
+      return; 
+    }
     var xapi = new TinCan(ENV.APP.xAPI);
     var xApiStatements = [];
-    console.log("Sending xapi statement to " + ENV.APP.xAPI.recordStores[0].endpoint);
+    let endpoints_list = ENV.APP.xAPI.recordStores.map(r => {return r.endpoint;}).join(", ");
+    console.log("Sending xapi statement to " + endpoints_list);
     console.log(statement);
     xApiStatements.addObject(statement);
     xapi.sendStatements(xApiStatements, (res) => {
@@ -122,6 +126,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       if (typeof gps_accuracy === "undefined" || gps_accuracy < 0) {
         // location data disabled in config
         resolve(statement_data);
+        return;
       }
       var gpsKey = "http://tunapanda.org/xapi/extensions/location";
       if (typeof statement_data.context.extensions[gpsKey] === "undefined") {
