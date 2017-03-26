@@ -24,7 +24,7 @@ export default Ember.Component.extend({
    */
   scrolling: false,
 
-  touchStarted: false,
+  touching: false,
 
   /**
    * Touch started on component
@@ -34,8 +34,7 @@ export default Ember.Component.extend({
    */
   touchStart(e) {
     let start = e.originalEvent.touches[0].pageX;
-    this.set('scrolling', true);
-    this.set('touchStarted', true);
+    this.set('touching', true);
     this.set('touchStartX', start);
     this.set('touchPrevX', start);
     this.set('touchCurrentX', start);
@@ -73,23 +72,24 @@ export default Ember.Component.extend({
    * @return {void}
    */
   touchEnd() {
+    // this is a hack to cancel the element scrolling preventing
+    // any "momentum" continuing the scrolling unwantedly,
+    // and disable user scrolling until we let them again
     $('.book-content-container').css('overflowX', 'hidden');
-    // $('.book-content-container').css('overflowX', 'scroll');
+
     let start = this.get('touchStartX');
     let current = this.get('touchCurrentX');
 
     let diff = start - current;
 
-    if (this.get('touchStarted') && Math.abs(diff) > 10) {
+    if (this.get('touching') && Math.abs(diff) > 10) {
+      this.set('touching', false);
       this.set('animateScroll', true);
-      this.set('scrolling', false);
       this.scrollToNearestPage(start < current ? 'backward' : 'forward');
     }
     console.log('touchEnd');
 
-
-
-    this.set('touchStarted', false);
+    this.set('touching', false);
   },
 
   actions: {
@@ -145,8 +145,8 @@ export default Ember.Component.extend({
   },
 
   animateScrollLeft(position) {
-    if (!this.get('scrolling')) {
-      this.set('scrolling', true);
+    if (!this.get('touching')) {
+      // this.set('scrolling', true);
       this.set('animateScroll', true);
       this.set('scrollLeft', position);
     }
@@ -180,7 +180,7 @@ export default Ember.Component.extend({
     let to = this.get('scrollLeft');
     let didScroll = () => this.didScroll(to > current ? 'forward' : 'backward');
 
-    if (!this.get('scrolling')) {
+    if (!this.get('touching')) {
       if (this.get('animateScroll')) {
         $('html').velocity('scroll', {
           axis: 'x',
@@ -205,6 +205,10 @@ export default Ember.Component.extend({
    */
 
   didScroll(direction) {
+    this.set('touching', false);
+    // this undoes the hack mentioned above allowing the user to scroll again
+    $('.book-content-container').css('overflowX', 'scroll');
+
     let scrollLeft   = this.get('scrollLeft');
     let newSection   = this.get('sections').find(sec => sec.get('endPosition') > scrollLeft);
     let newPermalink = newSection.get('permalink');
@@ -224,9 +228,6 @@ export default Ember.Component.extend({
       // all the way to the begninning of the section you just entered
       this.attrs.changePermalink(newPermalink);
     }
-
-    $('.book-content-container').css('overflowX', 'scroll');
-    this.set('scrolling', false);
   },
 
   showSection(permalink) {
