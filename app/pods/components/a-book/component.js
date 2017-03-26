@@ -180,20 +180,21 @@ export default Ember.Component.extend({
     let to = this.get('scrollLeft');
     let didScroll = () => this.didScroll(to > current ? 'forward' : 'backward');
 
-    if (this.get('animateScroll')) {
-      $('html').velocity('scroll', {
-        axis: 'x',
-        offset: to - current,
-        container: container,
-        mobileHA: false,
-        complete: didScroll
-      });
-    } else {
-      container.scrollLeft(to);
-      didScroll();
+    if (!this.get('scrolling')) {
+      if (this.get('animateScroll')) {
+        $('html').velocity('scroll', {
+          axis: 'x',
+          offset: to - current,
+          container: container,
+          mobileHA: false,
+          complete: didScroll
+        });
+      } else {
+        container.scrollLeft(to);
+        didScroll();
+      }
     }
-  }
-  ),
+  }),
 
   /**
    * Called after the container has been scrolled, checks if we have scrolled
