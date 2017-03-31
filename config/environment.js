@@ -16,7 +16,7 @@ module.exports = function(environment) {
     modulePrefix: 'funzo-app',
     podModulePrefix: 'funzo-app/pods',
     environment: environment,
-    rootURL: '/',
+    rootURL: '',
     defaultLocationType: 'auto',
     EmberENV: {
       FEATURES: {
