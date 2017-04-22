@@ -148,18 +148,14 @@ export default Ember.Component.extend({
 
     navNext() {
       this.navNext();
-    },
+    }
 
-    didScroll() {}
   },
 
   animateScrollLeft(position) {
     if (!this.get('touching')) {
       // this.set('scrolling', true);
-      this.set('animateScroll', true);
-      this.set('scrollLeft', position);
-      this.get('elements.book-content')[0].style.transition = `transform 0.2s ease`;
-      this.get('elements.book-content')[0].style.transform = `translateX(${-position}px)`;
+      this.scrollTo(position, true);
     }
   },
 
@@ -170,13 +166,15 @@ export default Ember.Component.extend({
   },
 
   navPrev() {
-    this.animateScrollLeft(this.get('scrollLeft') - this.get('pageWidth'));
-    this.updateScrollPosition();
+    this.scrollTo(this.get('scrollLeft') - this.get('pageWidth'), true);
+    // this.animateScrollLeft(this.get('scrollLeft') - this.get('pageWidth'));
+    // this.updateScrollPosition();
   },
 
   navNext() {
-    this.animateScrollLeft(this.get('scrollLeft') + this.get('pageWidth'));
-    this.updateScrollPosition();
+    this.scrollTo(this.get('scrollLeft') + this.get('pageWidth'), true);
+    // this.animateScrollLeft(this.get('scrollLeft') + this.get('pageWidth'));
+    // this.updateScrollPosition();
   },
 
   /**
@@ -283,8 +281,7 @@ export default Ember.Component.extend({
     let section = this.get('sections').findBy('permalink', permalink);
     let offset = section ? section.get('startPosition') : 0;
     console.log(`scrolling to ${permalink} at ${offset}`);
-    this.set('animateScroll', false);
-    this.set('scrollLeft', offset);
+    this.scrollTo(offset, false);
   },
 
   scrollToFootnote(footnote) {
@@ -295,8 +292,7 @@ export default Ember.Component.extend({
     }
 
     let offset = $el.offset().left - this.get('elements.book-content-container').offset().left + this.get('elements.book-content-container').scrollLeft() - 40;
-    this.set('animateScroll', false);
-    this.set('scrollLeft', offset);
+    this.scrollTo(offset, false);
   },
 
   didInsertElement() {
@@ -352,6 +348,16 @@ export default Ember.Component.extend({
         }
       });
     });
+  },
+
+  scrollTo(position = 0, animate = false) {
+    this.set('scrollLeft', position);
+
+    this.get('elements.book-content')[0].style.transition = `none`;
+    if (animate) {
+      this.get('elements.book-content')[0].style.transition = `transform 0.2s ease`;
+    }
+    this.get('elements.book-content')[0].style.transform = `translateX(${-position}px)`;
   },
 
   /**
