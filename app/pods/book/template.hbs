@@ -3,6 +3,42 @@
     font-size: {{fontSizeString}};
   }
 </style>
+<div class="modal fade" id="chapters" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{model.title}} Sections</h4>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+            {{#each model.sections as |section index|}}
+              {{#link-to 'book.section' model section class="list-group-item"}}{{index}}. {{section.title}}{{/link-to}}
+            {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="navbar navbar-fixed-top {{if nav.hide 'hide'}}">
+
+  <div class="container-fluid">
+
+      <ul class="nav navbar-nav navbar-left">
+        <li><a href="#" {{action 'back'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
+      </ul>
+
+    <a class="navbar-brand">{{model.title}}</a>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li><button data-toggle="modal" data-target="#chapters"><i class="material-icons">toc</i></button></li>
+          <li><a href=""><i class="material-icons">format_size</i></a></li>
+        </ul>
+
+
+  </div>
+</div>
 
 {{ log-me logger='xAPIOpenBook' }}
 {{!a-book
