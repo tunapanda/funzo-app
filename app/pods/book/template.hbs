@@ -12,8 +12,9 @@
       </div>
       <div class="modal-body">
         <ul class="list-group">
-            {{#each model.sections as |section index|}}
-              {{#link-to 'book.section' model section class="list-group-item"}}{{index}}. {{section.title}}{{/link-to}}
+            {{#each toc as |section index|}}
+              <a class="list-group-item" onclick={{action 'sectionClick' section.href}}>{{index}}. {{section.label}}</a>
+              {{!-- {{#link-to 'book.section' model section class="list-group-item"}}{{index}}. {{section.title}}{{/link-to}} --}}
             {{/each}}
         </ul>
       </div>
@@ -21,18 +22,18 @@
   </div>
 </div>
 
-<div class="navbar navbar-fixed-top {{if nav.hide 'hide'}}">
+<div class="navbar navbar-fixed-top hide">
 
   <div class="container-fluid">
 
       <ul class="nav navbar-nav navbar-left">
-        <li><a href="#" {{action 'back'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
+        <li><a href="#" {{action 'backToIndex'}}><i class="material-icons">keyboard_arrow_left</i></a></li>
       </ul>
 
     <a class="navbar-brand">{{model.title}}</a>
 
         <ul class="nav navbar-nav navbar-right">
-          <li><button data-toggle="modal" data-target="#chapters"><i class="material-icons">toc</i></button></li>
+          <li><a data-toggle="modal" data-target="#chapters"><i class="material-icons">toc</i></a></li>
           <li><a href=""><i class="material-icons">format_size</i></a></li>
         </ul>
 
@@ -74,4 +75,4 @@
   </form>
 </div>--}}
 
-{{epub-reader}}
+{{epub-reader epubLocation=model.location toc=toc locationChanged=(action 'locationChanged') externalLocation=location }}

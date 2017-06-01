@@ -3,7 +3,7 @@
     {{#each model.books as |book|}}
       <div class="col-xs-6 col-sm-4 col-md-2">
           <div class="panel panel-default">
-            {{#link-to 'book.section' book book.sections.firstObject}}
+            {{#link-to 'book' book}}
               <img class="img-responsive" src="{{book.cover}}" alt="">
             {{/link-to}}
             <div class="panel-body">
@@ -13,7 +13,7 @@
                     <li><a href="#" onclick={{action "deleteBook" book}}>Delete</a></li>
                   </ul>
                 </div>
-              {{#link-to 'book.section' book book.sections.firstObject}}
+              {{#link-to 'book' book}}
                 <div class="book-title">{{book.title}}</div>
                 <div class="book-author">{{book.author}}</div>
               {{/link-to}}

@@ -34,7 +34,7 @@ export default Ember.Component.extend({
         return alert('only works in app');
       }
 
-      this.get('bookManager').addBook(this.get('code'))
+      this.get('bookManager').addEPUB(this.get('code'))
         .then(() => {
           Ember.$('.modal').modal('hide');
         });
@@ -46,47 +46,56 @@ export default Ember.Component.extend({
     },
 
     submitFile() {
-      zip.workerScripts = {
-        deflater: ['/zip/z-worker.js', '/zip/zlib.js', '/zip/zlib-asm/codecs.js'],
-        inflater: ['/zip/z-worker.js', '/zip/zlib.js', '/zip/zlib-asm/codecs.js']
-      };
-
       let file = this.$('.book-file')[0].files[0];
 
       var reader = new FileReader();
 
-      reader.readAsDataURL(file);
+      reader.readAsArrayBuffer(file);
 
-      let sections = [];
-      reader.addEventListener("load", () => {
-        zip.createReader(new zip.Data64URIReader(reader.result), (reader) => {
-          reader.getEntries((entries) => {
-            if (entries.length) {
-              // entries[0].getData(new zip.TextWriter(), (text) => {
-              //   console.log(text);
-              // });
-              new Ember.RSVP.Promise((resolve1) => {
-                entries.forEach((entry) => {
-                  if (entry.filename.indexOf('__MACOSX') === -1 && entry.filename.substr(-4) === "html") {
-                    console.log(entry.filename);
-                    sections.push(new Ember.RSVP.Promise((resolve) => entry.getData(new zip.TextWriter(), function(text) {
-                      resolve(text);
-                    })));
-                  }
-                });
-                resolve1();
-              }).then(() => {
-                Ember.RSVP.all(sections).then((sections) => {
-                  console.log(sections);
-                  this.attrs.openEPUB(sections);
-                  Ember.$('.modal').modal('hide');
-                });
-              });
-            }
-          });
-          // reader.close();
+      reader.onload = () => {
+        this.get('bookManager').addEPUBFromFile(reader.result).then(() => {
+          Ember.$('.modal').modal('hide');
         });
-      }, false);
+      };
+
+      // zip.workerScripts = {
+      //   deflater: ['/zip/z-worker.js', '/zip/zlib.js', '/zip/zlib-asm/codecs.js'],
+      //   inflater: ['/zip/z-worker.js', '/zip/zlib.js', '/zip/zlib-asm/codecs.js']
+      // };
+
+      // let file = this.$('.book-file')[0].files[0];
+
+      // var reader = new FileReader();
+
+      // reader.readAsDataURL(file);
+
+      // let sections = [];
+      // reader.addEventListener("load", () => {
+      //   zip.createReader(new zip.Data64URIReader(reader.result), (reader) => {
+      //     reader.getEntries((entries) => {
+      //       if (entries.length) {
+      //         new Ember.RSVP.Promise((resolve1) => {
+      //           entries.forEach((entry) => {
+      //             if (entry.filename.indexOf('__MACOSX') === -1 && entry.filename.substr(-4) === "html") {
+      //               console.log(entry.filename);
+      //               sections.push(new Ember.RSVP.Promise((resolve) => entry.getData(new zip.TextWriter(), function(text) {
+      //                 resolve(text);
+      //               })));
+      //             }
+      //           });
+      //           resolve1();
+      //         }).then(() => {
+      //           Ember.RSVP.all(sections).then((sections) => {
+      //             console.log(sections);
+      //             this.attrs.openEPUB(sections);
+      //             Ember.$('.modal').modal('hide');
+      //           });
+      //         });
+      //       }
+      //     });
+      //     // reader.close();
+      //   });
+      // }, false);
     },
 
     cancel() {

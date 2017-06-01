@@ -18,7 +18,7 @@ Router.map(function() {
   this.route('profile');
 
   this.route('book', { path: '/book/:book_id' }, function() {
-    this.route('section', { path: '/section/:section_id' });
+    // this.route('section', { path: '/section/:section_id' });
   });
 });
 

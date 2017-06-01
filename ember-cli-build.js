@@ -20,7 +20,7 @@ function createIfNotExists(directory, callback) {
 }
 
 // Update cordova version to match APP.version from config
-var cordovaCfgXml = fs.readFileSync("cordova/TEMPLATE-config.xml");
+var cordovaCfgXml = fs.readFileSync("ember-cordova/cordova/TEMPLATE-config.xml");
 var cordovaCfg = libxml.parseXml(cordovaCfgXml);
 cordovaCfg.root().attr("version").value(env.APP.version);
 cordovaCfg.get("/n:widget/n:name", { n:"http://www.w3.org/ns/widgets"} ).text(env.APP.name);
@@ -29,10 +29,10 @@ var author = cordovaCfg.get("/n:widget/n:author", { n:"http://www.w3.org/ns/widg
 author.text(env.APP.author.name);
 author.attr("email").value(env.APP.author.email);
 author.attr("href").value(env.APP.author.website);
-fs.writeFileSync("cordova/config.xml", cordovaCfg.toString());
+fs.writeFileSync("ember-cordova/cordova/config.xml", cordovaCfg.toString());
 
 // Create an index of books available at build-time
-var booksDir = 'public/content/books';
+var booksDir = 'public/content/epubs';
 
 createIfNotExists(booksDir, () => {
   var bookList = fs.readdirSync(booksDir).map(dir => {
@@ -98,7 +98,7 @@ module.exports = function(defaults) {
   app.import('vendor/epub.js');
   // app.import('vendor/hooks.js');
 
-  app.import('vendor/zip/zip.js');
+  // app.import('vendor/zip/zip.js');
 
   app.import('bower_components/video.js/dist/video.js');
   app.import('bower_components/video.js/dist/video-js.css');

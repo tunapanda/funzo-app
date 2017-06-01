@@ -4,6 +4,20 @@ export default Ember.Component.extend({
   classNames: [],
 
   didInsertElement() {
+    EPUBJS.Hooks.register('beforeChapterDisplay').funzoIframe = (cb, renderer) => {
+      // var script = renderer.doc.createElement("script");
+
+      // script.src = '/assets/epub-iframe.js';
+
+      // renderer.doc.body.appendChild(script);
+
+      $(renderer.doc).on('click', () => $('main .navbar').toggleClass('show'));
+
+      if (cb) {
+        cb();
+      }
+    };
+
     EPUBJS.cssPath = "css/";
     EPUBJS.Hooks.register('beforeChapterDisplay').videoJs = function(callback, renderer) {
       var style = renderer.doc.createElement("link");
@@ -38,13 +52,42 @@ export default Ember.Component.extend({
       this.docEl.style[this.transform] = 'translate(' + (-leftPos) + 'px, 0)';
     };
 
-    let book = ePub({ bookPath: 'content/epubs/sample-epub/' });
+    let book = ePub({ bookPath: this.get('epubLocation') });
 
-    book.renderTo(this.$('.book-content-container')[0]);
+    book.on('renderer:locationChanged', (cfi) => {
+      // this.set('currentCfi', cfi);
+      this.sendAction('locationChanged', cfi);
+      console.log('current CFI: ' + cfi);
+    });
+
+    book.on('renderer:chapterDisplayed', (cfi) => {
+      // this.set('currentCfi', cfi);
+      Ember.$('.book-loading-overlay').hide();
+    });
+
+    book.on('book:ready', () => {
+      if (this.get('externalLocation')) {
+        book.gotoCfi(this.get('externalLocation'));
+      }
+    });
+
+    book.renderTo(this.$('.book-content-container')[0]).then(() => {
+      // if (this.get('externalLocation')) {
+      //   book.gotoCfi(this.get('externalLocation'));
+      // }
+      this.set('toc', book.contents.toc);
+    });
+
 
     window.book = book;
     this.book = window.book = book;
+
+
   },
+
+  onExternalLocationChange: Ember.observer('externalLocation', function() {
+    this.book.gotoHref(this.get('externalLocation'));
+  }),
 
   scrollToNearestPage(direction) {
     if (direction === 'forward') {

@@ -11,15 +11,19 @@ let SectionDecorator = ObjectProxy.extend({
 
 export default Ember.Controller.extend({
   nav: Ember.inject.service(),
-  section: Ember.inject.controller('book.section'),
+  // section: Ember.inject.controller('book.section'),
   bookmarks: Ember.inject.service(),
+
+  queryParams: {
+    location: 'section'
+  },
 
   // this method can take a second argument, but since we're not
   // using it right now jshint will complain if it's references.
   // sections: computed.map('model.sections', function(model, i) {
-  sections: computed.map('model.sections', function(model) {
-    return SectionDecorator.create({ content: model });
-  }),
+  // sections: computed.map('model.sections', function(model) {
+  //   return SectionDecorator.create({ content: model });
+  // }),
 
   startingScrollLeft: Ember.computed('bookmarks.currentPosition', function() {
     console.log("Getting computed position attribute:", this.get("bookmarks.currentPosition"));
@@ -51,6 +55,17 @@ export default Ember.Controller.extend({
 
     onPageChange(scrollLeft) {
       this.send('updateUserBookmark', scrollLeft);
+    },
+
+    locationChanged(href) {
+      this.set('location', href);
+    },
+
+    sectionClick(href) {
+      $('#chapters').modal('hide');
+      Ember.$('.book-loading-overlay').show();
+      this.set('location', href);
     }
+
   }
 });

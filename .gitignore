@@ -33,3 +33,11 @@ cordova/plugins
 # funzo
 public/content/courses
 public/content/epubs
+
+ember-cordova/tmp-livereload
+ember-cordova/cordova/www/*
+!ember-cordova/cordova/www/.gitkeep
+ember-cordova/cordova/plugins/*
+!ember-cordova/cordova/plugins/.gitkeep
+ember-cordova/cordova/platforms/*
+!ember-cordova/cordova/platforms/.gitkeep

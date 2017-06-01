@@ -27,9 +27,11 @@ export default Ember.Service.extend(Ember.Evented, {
         })).then(() => Ember.RSVP.all([
           this.createDirectory('tmp'),
           this.createDirectory('content')
-            .then(() => this.createDirectory('content/books')),
+            .then(() => this.createDirectory('content/books'))
+            .then(() => this.createDirectory('content/epubs')),
           this.createDirectory('downloads')
             .then(() => this.createDirectory('downloads/books'))
+            .then(() => this.createDirectory('downloads/epubs'))
         ])));
       });
     });
@@ -62,18 +64,55 @@ export default Ember.Service.extend(Ember.Evented, {
       });
   },
 
+  addEPUB(code) {
+    this.set('status', 'downloading');
+    return this.downloadEPUB(code)
+      .then(() => {
+        this.set('status', 'unzipping');
+        return this.unzipEPUB(code);
+      })
+      .then(() => this.updateIndex())
+      .then(() => {
+        // this.set('status', 'complete');
+        this.reset();
+      }, (err) => {
+        this.set('status', 'error');
+        this.set('error', err);
+      });
+  },
+
+  addEPUBFromFile(content) {
+    this.set('status', 'downloading');
+    let code = Math.random().toString(36).substring(7);
+    return this.getDirectory(`downloads/epubs/`).then((dir) =>
+      this.createFile(dir, `${code}.zip`).then((file) =>
+        this.writeEPUB(file, content)
+          .then(() => {
+            this.set('status', 'unzipping');
+            return this.unzipEPUB(code);
+          })
+          .then(() => this.updateIndex())
+          .then(() => {
+            // this.set('status', 'complete');
+            this.reset();
+          }, (err) => {
+            this.set('status', 'error');
+            this.set('error', err);
+          })));
+  },
+
   deleteBook(id) {
     this.removeDirectory(`content/books/${id}`)
       .then(() => this.updateIndex());
   },
 
   updateIndex() {
-    return this.getDirectory('content/books')
+    return this.getDirectory('content/epubs')
       .then((bookDir) => {
         return this.readFolderContents(bookDir)
         .then((bookFolders) => {
           return Ember.RSVP.all(bookFolders.filterBy('isDirectory', true).map((bookFolder) => {
-            return this.getFile(`content/books/${bookFolder.name}/book.json`).then(file => this.readFileContents(file));
+            return this.getFile(`content/epubs/${bookFolder.name}/book.json`).then(file => this.readFileContents(file));
           }));
         }).then((bookMetas) => {
           return Ember.RSVP.resolve(`[${bookMetas.join(',')}]`);
@@ -120,6 +159,22 @@ export default Ember.Service.extend(Ember.Evented, {
   },
 
   /**
+   * Start download of a book
+   *
+   * @param code {String}
+   * @return {Promise}
+   **/
+
+    downloadEPUB(code) {
+      let url = this.urlForBook(code);
+      console.log("Downloading " + url);
+      if (code === 'demo-ndl') {
+        return Ember.RSVP.resolve();
+      }
+      return this.fileTransfer(url, `downloads/epubs/${code}.zip`);
+    },
+
+  /**
    * Unzip the book
    * unzip to a tmp location
    * read permalink
@@ -138,6 +193,32 @@ export default Ember.Service.extend(Ember.Evented, {
 
         return Ember.RSVP.hash({
           destFolder: this.getDirectory('content/books'),
+          unzipFolder: this.getDirectory(`tmp/${code}`)
+        }).then((res) => {
+          return this.moveFile(res.unzipFolder, res.destFolder, permalink);
+        });
+      });
+  },
+
+  /**
+ * Unzip the book
+ * unzip to a tmp location
+ * read permalink
+ * move to books/permalink
+ **/
+  unzipEPUB(code) {
+    let zipPath = `${this.root.toURL()}downloads/books/${code}.zip`;
+    let unzipDest = `${this.root.toURL()}tmp/${code}`;
+    return this.createDirectory('tmp/' + code)
+      .then(() => this.unzip(zipPath, unzipDest))
+      .then(() => this.getFile(`tmp/${code}/book.json`))
+      .then((file) => this.readFileContents(file))
+      .then((bookJSON) => {
+        let bookMeta = JSON.parse(bookJSON);
+        let permalink = bookMeta.permalink;
+
+        return Ember.RSVP.hash({
+          destFolder: this.getDirectory('content/epubs'),
           unzipFolder: this.getDirectory(`tmp/${code}`)
         }).then((res) => {
           return this.moveFile(res.unzipFolder, res.destFolder, permalink);
@@ -200,7 +281,13 @@ export default Ember.Service.extend(Ember.Evented, {
   },
 
   unzip(source, dest) {
-    return new Ember.RSVP.Promise((resolve, reject) => window.zip.unzip(source, dest, (result) => (result < 0) ? reject() : resolve(), (e) => {
+    return new Ember.RSVP.Promise((resolve, reject) => window.zip.unzip(source, dest, (result) => {
+      if (result < 0) {
+        window.alert('Unzip Error');
+        return reject();
+      }
+      return resolve();
+    }, (e) => {
       if (e.lengthComputable) {
         this.set('zipProgress', Math.ceil(100 * e.loaded / e.total));
       } else {
@@ -276,6 +363,24 @@ export default Ember.Service.extend(Ember.Evented, {
     return new Ember.RSVP.Promise((res, rej) => {
       file.createWriter((fileWriter) => {
         let blob = new Blob([content], { type: 'text/plain' });
+
+        fileWriter.onwriteend = () => {
+          res(content);
+        };
+
+        file.onerror = (e) => {
+          rej(e.toString());
+        };
+
+        fileWriter.write(blob);
+      });
+    });
+  },
+
+  writeEPUB(file, content) {
+    return new Ember.RSVP.Promise((res, rej) => {
+      file.createWriter((fileWriter) => {
+        let blob = new Blob([content], { type: 'application/zip' });
 
         fileWriter.onwriteend = () => {
           res(content);

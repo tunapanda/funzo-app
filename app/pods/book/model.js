@@ -11,7 +11,13 @@ export default Model.extend({
   subject: DS.attr(),
   type: DS.attr({ defaultValue: 'tepup' }), // TEPUB - Tunapanda EPUB
   sections: DS.hasMany('section', { async: true }),
-  cover: Ember.computed('id', function() {
-    return window.cordova ? window.cordova.file.dataDirectory + 'content/books/' + this.get('id') + '/cover.png' : 'content/books/' + this.get('id') + '/cover.png';
+  cover: Ember.computed('coverLocation', function() {
+    return `content/epubs/${this.get('id')}/OEBPS/image/${this.get('coverLocation')}`;
+    // return window.cordova ? window.cordova.file.dataDirectory + 'content/books/' + this.get('id') + '/cover.png' : 'content/books/' + this.get('id') + '/cover.png';
+  }),
+  coverLocation: DS.attr(),
+  location: Ember.computed('id', function() {
+    return `content/epubs/${this.get('id')}/`;
   })
+  // cover: DS.attr()
 });
