@@ -24,14 +24,9 @@
     </platform>
     <allow-navigation href="http://192.168.1.102:4200/*"/>
     <preference name="DisallowOverscroll" value="true"/>
-    <preference name="xwalkVersion" value="19+"/>
-    <preference name="xwalkCommandLine" value="--disable-pull-to-refresh-effect"/>
-    <preference name="xwalkMode" value="embedded"/>
-    <preference name="xwalkMultipleApk" value="true"/>
     <preference name="AndroidPersistentFileLocation" value="Compatibility"/>
     <preference name="StatusBarBackgroundColor" value="#1E4A5D"/>
     <plugin name="cordova-plugin-whitelist" spec="1"/>
-    <plugin name="cordova-plugin-crosswalk-webview" spec="~1.8.0"/>
     <plugin name="cordova-plugin-background-download" spec="https://github.com/sgrebnov/cordova-plugin-background-download"/>
     <plugin name="cordova-plugin-statusbar" spec="~2.1.3"/>
     <engine name="android" spec="~5.2.0"/>
