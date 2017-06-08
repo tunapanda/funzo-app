@@ -207,7 +207,7 @@ export default Ember.Service.extend(Ember.Evented, {
  * move to books/permalink
  **/
   unzipEPUB(code) {
-    let zipPath = `${this.root.toURL()}downloads/books/${code}.zip`;
+    let zipPath = `${this.root.toURL()}downloads/epubs/${code}.zip`;
     let unzipDest = `${this.root.toURL()}tmp/${code}`;
     return this.createDirectory('tmp/' + code)
       .then(() => this.unzip(zipPath, unzipDest))
