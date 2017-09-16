@@ -1,6 +1,6 @@
 /* global zip */
-import Ember from 'ember';
-import ENV from 'funzo-app/config/environment';
+import Ember from "ember";
+import ENV from "funzo-app/config/environment";
 
 var dftCode = ENV.APP.defaultBook.code || "";
 var dftHint = ENV.APP.defaultBook.hint || "";
@@ -8,35 +8,36 @@ var dftHint = ENV.APP.defaultBook.hint || "";
 export default Ember.Component.extend({
   bookManager: Ember.inject.service(),
 
-  classNames: ['modal-dialog'],
-  downloadProgress: Ember.computed.alias('bookManager.downloadProgress'),
-  zipProgress: Ember.computed.alias('bookManager.zipProgress'),
-  status: Ember.computed.alias('bookManager.status'),
+  classNames: ["modal-dialog"],
+  downloadProgress: Ember.computed.alias("bookManager.downloadProgress"),
+  zipProgress: Ember.computed.alias("bookManager.zipProgress"),
+  status: Ember.computed.alias("bookManager.status"),
 
-  isIdle: Ember.computed.equal('status', 'idle'),
-  isDownloading: Ember.computed.equal('status', 'downloading'),
-  isUnzipping: Ember.computed.equal('status', 'unzipping'),
-  isComplete: Ember.computed.equal('status', 'complete'),
-  isError: Ember.computed.equal('status', 'error'),
+  isIdle: Ember.computed.equal("status", "idle"),
+  isDownloading: Ember.computed.equal("status", "downloading"),
+  isUnzipping: Ember.computed.equal("status", "unzipping"),
+  isComplete: Ember.computed.equal("status", "complete"),
+  isError: Ember.computed.equal("status", "error"),
 
-  title: 'Add A Book',
+  title: "Add A Book",
 
   code: dftCode,
   hint: dftHint,
 
   didInsertElement() {
-    this.get('bookManager').reset();
+    this.get("bookManager").reset();
   },
 
   actions: {
     submit() {
       if (!window.cordova) {
-        return alert('only works in app');
+        return alert("only works in app");
       }
 
-      this.get('bookManager').addEPUB(this.get('code'))
+      this.get("bookManager")
+        .addEPUB(this.get("code"))
         .then(() => {
-          Ember.$('.modal').modal('hide');
+          Ember.$(".modal").modal("hide");
         });
       // }, (error) => {
       //   console.log('download error source ' + error.source);
@@ -46,17 +47,11 @@ export default Ember.Component.extend({
     },
 
     submitFile() {
-      let file = this.$('.book-file')[0].files[0];
+      let file = this.$(".book-file")[0].files[0];
 
-      var reader = new FileReader();
-
-      reader.readAsArrayBuffer(file);
-
-      reader.onload = () => {
-        this.get('bookManager').addEPUBFromFile(reader.result).then(() => {
-          Ember.$('.modal').modal('hide');
-        });
-      };
+      this.get('bookManager').addEPUBFromFile(file).then(() => {
+        Ember.$('.modal').modal('hide');
+      });
 
       // zip.workerScripts = {
       //   deflater: ['/zip/z-worker.js', '/zip/zlib.js', '/zip/zlib-asm/codecs.js'],
@@ -99,10 +94,10 @@ export default Ember.Component.extend({
     },
 
     cancel() {
-      if (this.get('bookManager.download') && this.get('isDownloading')) {
-        this.get('bookManager.download').abort();
+      if (this.get("bookManager.download") && this.get("isDownloading")) {
+        this.get("bookManager.download").abort();
       }
-      this.get('bookManager').reset();
+      this.get("bookManager").reset();
     }
   }
 });

@@ -1,20 +1,20 @@
-import DS from 'ember-data';
+import DS from "ember-data";
 
 export default DS.RESTAdapter.extend({
   urlForFindAll() {
-    let url = 'content/epubs/index.json';
+    let url = "content/epubs/index.json";
     if (window.cordova) {
-      url = window.cordova.file.dataDirectory + url;
+      return window.cordova.file.dataDirectory + url;
     }
-    return url;
+    return `filesystem:http://localhost:4200/persistent/${url}`;
   },
 
   urlForFindRecord(permalink) {
     let url = `content/epubs/${permalink}/book.json`;
     if (window.cordova) {
-      url = window.cordova.file.dataDirectory + url;
+      return window.cordova.file.dataDirectory + url;
     }
-    return url;
+    return `filesystem:http://localhost:4200/persistent/${url}`;
   },
 
   urlForFindHasMany(id, modelName, snapshot) {
