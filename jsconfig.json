@@ -6,22 +6,25 @@
 		"module": "commonjs",
 		"allowSyntheticDefaultImports": true
 	},
-	"exclude": [
-		"node_modules",
-		"bower_components",
-		"jspm_packages",
-		"tmp",
-		"temp",
-		"dist",
-		"cordova"
-	],
-	"watcherExclude": [
-		"node_modules",
-		"bower_components",
-		"jspm_packages",
-		"tmp",
-		"temp",
-		"dist",
-		"cordova"
+	"include": [
+		"app"
 	]
+	// "exclude": [
+	// 	"node_modules",
+	// 	"bower_components",
+	// 	"jspm_packages",
+	// 	"tmp",
+	// 	"temp",
+	// 	"dist",
+	// 	"ember-cordova"
+	// ],
+	// "watcherExclude": [
+	// 	"node_modules",
+	// 	"bower_components",
+	// 	"jspm_packages",
+	// 	"tmp",
+	// 	"temp",
+	// 	"dist",
+	// 	"ember-cordova"
+	// ]
 }
