@@ -23,7 +23,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
         .then(() => this.get('bookManager').setup())
         .then(() => this.get('bookManager').updateIndex()).then(this._super);
     }
-    return () => this.get('bookManager').setup()
+    return this.get('bookManager').setup()
     .then(() => this.get('bookManager').updateIndex()).then(this._super);
   },
 

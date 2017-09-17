@@ -24,51 +24,43 @@ export default Ember.Service.extend(Ember.Evented, {
       }
       window.navigator.webkitPersistentStorage.requestQuota(
         100 * 1024 * 1024,
-        grantedBytes => {
-          window.requestFileSystem(
-            window.PERSISTENT,
-            grantedBytes,
-            fs => {
-              this.fs = fs;
-              this.root = fs;
+        grantedBytes =>
+          window.requestFileSystem(window.PERSISTENT, grantedBytes, fs => {
+            this.fs = fs;
+            this.root = fs;
 
-              let resolveRootDir = () => {
-                return new Ember.RSVP.Promise(res => {
-                  if (window.cordova) {
-                    window.resolveLocalFileSystemURL(
-                      window.cordova.file.dataDirectory,
-                      baseDir => {
-                        this.root = baseDir;
-                        return res();
-                      }
-                    );
-                  } else {
-                    this.root = fs.root;
-                    window.root = fs.root;
-                    return res();
-                  }
-                });
-              };
+            let resolveRootDir = () => {
+              return new Ember.RSVP.Promise(res => {
+                if (window.cordova) {
+                  window.resolveLocalFileSystemURL(
+                    window.cordova.file.dataDirectory,
+                    baseDir => {
+                      this.root = baseDir;
+                      return res();
+                    }
+                  );
+                } else {
+                  this.root = fs.root;
+                  window.root = fs.root;
+                  return res();
+                }
+              });
+            };
 
-              resolveRootDir()
-                .then(() =>
-                  Ember.RSVP.all([
-                    this.createDirectory("tmp"),
-                    this.createDirectory("content")
-                      .then(() => this.createDirectory("content/books"))
-                      .then(() => this.createDirectory("content/epubs")),
-                    this.createDirectory("downloads")
-                      .then(() => this.createDirectory("downloads/books"))
-                      .then(() => this.createDirectory("downloads/epubs"))
-                  ])
-                )
-                .catch(errs => console.log(errs));
-            },
-            function(e) {
-              console.log("Error", e);
-            }
-          );
-        }
+            resolveRootDir()
+              .then(() =>
+                Ember.RSVP.all([
+                  this.createDirectory("tmp"),
+                  this.createDirectory("content")
+                    .then(() => this.createDirectory("content/books"))
+                    .then(() => this.createDirectory("content/epubs")),
+                  this.createDirectory("downloads")
+                    .then(() => this.createDirectory("downloads/books"))
+                    .then(() => this.createDirectory("downloads/epubs"))
+                ])
+              )
+              .then(resolve, reject);
+          })
       );
     });
   },
@@ -81,26 +73,6 @@ export default Ember.Service.extend(Ember.Evented, {
       download: null,
       code: ""
     });
-  },
-
-  addBook(code) {
-    this.set("status", "downloading");
-    return this.downloadBook(code)
-      .then(() => {
-        this.set("status", "unzipping");
-        return this.unzipBook(code);
-      })
-      .then(() => this.updateIndex())
-      .then(
-        () => {
-          // this.set('status', 'complete');
-          this.reset();
-        },
-        err => {
-          this.set("status", "error");
-          this.set("error", err);
-        }
-      );
   },
 
   addEPUB(code) {
@@ -143,41 +115,87 @@ export default Ember.Service.extend(Ember.Evented, {
   },
 
   deleteBook(id) {
-    this.removeDirectory(`content/books/${id}`).then(() => this.updateIndex());
+    this.removeDirectory(`content/epub/${id}`).then(() => this.updateIndex());
+  },
+
+  deleteAll: async function() {
+    const bookFolders = await this.readFolderContents(
+      await this.getDirectory("content/epubs")
+    );
+
+    await Ember.RSVP.all(
+      bookFolders.map(folder => {
+        if (folder.isDirectory) {
+          return new Ember.RSVP.Promise((res, rej) =>
+            folder.removeRecursively(res, rej)
+          );
+        }
+        return Ember.RSVP.resolve();
+      })
+    );
+
+    this.updateIndex();
   },
 
   updateIndex: async function() {
     const bookDir = await this.getDirectory("content/epubs");
     const bookFolders = await this.readFolderContents(bookDir);
 
-    const bookXMLs = await Ember.RSVP.all(
-      bookFolders.filterBy("isDirectory", true).map(bookFolder => {
-        return this.getFile(
-          `content/epubs/${bookFolder.name}/OEBPS/content.opf`
+    const bookMetas = await Ember.RSVP.all(
+      bookFolders.filterBy("isDirectory", true).map(async bookFolder => {
+        const containerFile = await this.getFile(
+          `content/epubs/${bookFolder.name}/META-INF/container.xml`
         ).then(file => this.readFileContents(file));
+
+        let parser = new DOMParser();
+        let container = parser.parseFromString(containerFile, "text/xml");
+
+        const contentFileName = container
+          .getElementsByTagName("rootfile")[0]
+          .getAttribute("full-path");
+
+        const contentFileLocation = contentFileName
+          .split("/")
+          .slice(0, -1)
+          .join("/") + "/";
+
+        const bookXML = await this.getFile(
+          `content/epubs/${bookFolder.name}/${contentFileName}`
+        ).then(file => this.readFileContents(file));
+
+        let bookDOM = parser.parseFromString(bookXML, "text/xml");
+
+        let json = {
+          title: bookDOM.getElementsByTagName("dc:title")[0].innerHTML,
+          permalink: bookFolder.name,
+          institution: bookDOM.getElementsByTagName("dc:creator")[0].innerHTML,
+          coverLocation:
+            contentFileLocation +
+            bookDOM
+              .getElementById(
+                bookDOM
+                  .querySelector('meta[name="cover"]')
+                  .getAttribute("content")
+              )
+              .getAttribute("href")
+        };
+        console.log(json);
+
+        return json;
       })
     );
 
-    const bookMetas = bookXMLs.map((bookXML, index) => {
-      let parser = new DOMParser();
-      let bookDOM = parser.parseFromString(bookXML, "text/xml");
-      window.$BOOK = bookDOM;
-
-      let json = {
-        title: bookDOM.getElementsByTagName("dc:title")[0].innerHTML,
-        permalink: `content/epubs/${bookFolders[index].name}`,
-        institution: bookDOM.getElementsByTagName("dc:creator")[0].innerHTML,
-        coverLocation: bookDOM.querySelector('meta[name="cover"]').getAttribute('content')
-      };
-      console.log(json);
-      return JSON.stringify(json);
-    });
-
-    let indexContent = `[${bookMetas.join(",")}]`;
+    let indexContent = JSON.stringify(bookMetas);
 
     let content = await this.createFile(bookDir, "index.json").then(indexFile =>
       this.writeFileContents(indexFile, indexContent)
     );
+
+    await  Ember.RSVP.all(bookMetas.map(async (bookMeta) => {
+      await this.createFile(bookDir, `${bookMeta.permalink}.json`).then(file =>
+        this.writeFileContents(file, JSON.stringify(bookMeta))
+      );
+    }))
 
     let json = JSON.parse(content);
     this.trigger("booksUpdated", json);
@@ -206,22 +224,6 @@ export default Ember.Service.extend(Ember.Evented, {
    * @return {Promise}
    **/
 
-  downloadBook(code) {
-    let url = this.urlForBook(code);
-    console.log("Downloading " + url);
-    if (code === "demo-ndl") {
-      return Ember.RSVP.resolve();
-    }
-    return this.fileTransfer(url, `downloads/books/${code}.zip`);
-  },
-
-  /**
-   * Start download of a book
-   *
-   * @param code {String}
-   * @return {Promise}
-   **/
-
   downloadEPUB(code) {
     let url = this.urlForBook(code);
     console.log("Downloading " + url);
@@ -229,62 +231,6 @@ export default Ember.Service.extend(Ember.Evented, {
       return Ember.RSVP.resolve();
     }
     return this.fileTransfer(url, `downloads/epubs/${code}.zip`);
-  },
-
-  /**
-   * Unzip the book
-   * unzip to a tmp location
-   * read permalink
-   * move to books/permalink
-   **/
-  unzipBook(code) {
-    let zipPath = `downloads/books/${code}.zip`;
-    let unzipDest = `tmp/${code}`;
-    return this.createDirectory("tmp/" + code)
-      .then(() => this.unzip(zipPath, unzipDest))
-      .then(() => this.getFile(`tmp/${code}/book.json`))
-      .then(file => this.readFileContents(file))
-      .then(bookJSON => {
-        let bookMeta = JSON.parse(bookJSON);
-        let permalink = bookMeta.permalink;
-
-        return Ember.RSVP
-          .hash({
-            destFolder: this.getDirectory("content/books"),
-            unzipFolder: this.getDirectory(`tmp/${code}`)
-          })
-          .then(res => {
-            return this.moveFile(res.unzipFolder, res.destFolder, permalink);
-          });
-      });
-  },
-
-  /**
- * Unzip the book
- * unzip to a tmp location
- * read permalink
- * move to books/permalink
- **/
-  unzipEPUB(code) {
-    let zipPath = `downloads/epubs/${code}.zip`;
-    let unzipDest = `tmp/${code}`;
-    return this.createDirectory("tmp/" + code)
-      .then(() => this.unzip(zipPath, unzipDest))
-      .then(() => this.getFile(`tmp/${code}/book.json`))
-      .then(file => this.readFileContents(file))
-      .then(bookJSON => {
-        let bookMeta = JSON.parse(bookJSON);
-        let permalink = bookMeta.permalink;
-
-        return Ember.RSVP
-          .hash({
-            destFolder: this.getDirectory("content/epubs"),
-            unzipFolder: this.getDirectory(`tmp/${code}`)
-          })
-          .then(res => {
-            return this.moveFile(res.unzipFolder, res.destFolder, permalink);
-          });
-      });
   },
 
   createDirectory(folder) {
@@ -334,20 +280,6 @@ export default Ember.Service.extend(Ember.Evented, {
       fileTransfer.download(uri, this.root.toURL() + destPath, res, rej, false);
       this.set("download", fileTransfer);
     });
-    // let downloader = new BackgroundTransfer.BackgroundDownloader();
-    // let onprogress = (e) => {
-    //   this.set('downloadProgress', Math.ceil(100 * e.bytesReceived / e.totalBytesToReceive));
-    // };
-
-    // return this.resolveFileURL(destDir)
-    //   .then(dir => this.createFile(dir, destFileName))
-    //   .then(file => {
-    //     let download = downloader.createDownload(uri, file);
-    //     this.set('download', download);
-    //     return new Ember.RSVP.Promise((res, rej) => {
-    //       download.startAsync().then(res, rej, onprogress);
-    //     });
-    //   });
   },
 
   unzip(source, dest) {
@@ -369,25 +301,6 @@ export default Ember.Service.extend(Ember.Evented, {
       this.resolveFileURL(source).then(file => {
         console.log(file);
       });
-
-      // window.zip.fs(
-      //   source,
-      //   dest,
-      //   result => {
-      //     if (result < 0) {
-      //       window.alert("Unzip Error");
-      //       return reject();
-      //     }
-      //     return resolve();
-      //   },
-      //   e => {
-      //     if (e.lengthComputable) {
-      //       this.set("zipProgress", Math.ceil(100 * e.loaded / e.total));
-      //     } else {
-      //       this.incrementProperty("zipProgress");
-      //     }
-      //   }
-      // );
     });
   },
 

@@ -1,5 +1,6 @@
 import DS from 'ember-data';
 
+
 export default DS.RESTSerializer.extend({
   primaryKey: 'permalink',
   normalizeFindAllResponse(store, primaryModelClass, payload, id, requestType) {

@@ -10,7 +10,7 @@ export default DS.RESTAdapter.extend({
   },
 
   urlForFindRecord(permalink) {
-    let url = `content/epubs/${permalink}/book.json`;
+    let url = `content/epubs/${permalink}.json`;
     if (window.cordova) {
       return window.cordova.file.dataDirectory + url;
     }
