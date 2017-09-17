@@ -21,17 +21,17 @@ export default Ember.Component.extend({
     EPUBJS.cssPath = "css/";
     EPUBJS.Hooks.register('beforeChapterDisplay').videoJs = function(callback, renderer) {
       var style = renderer.doc.createElement("link");
-      var script = renderer.doc.createElement("script");
+      // var script = renderer.doc.createElement("script");
 
-      style.href = '/assets/videojs/video-js.css';
+      style.href = 'http://localhost:4200/assets/epub.css';
       style.rel = 'stylesheet';
       style.type = 'text/css';
 
-      script.type = 'text/javascript';
-      script.src = '/assets/videojs/video.js';
+      // script.type = 'text/javascript';
+      // script.src = '/assets/videojs/video.js';
 
       renderer.doc.body.appendChild(style);
-      renderer.doc.body.appendChild(script);
+      // renderer.doc.body.appendChild(script);
       if (callback) {
         callback();
       }
