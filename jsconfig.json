@@ -8,7 +8,10 @@
 	},
 	"include": [
 		"app"
-	]
+	],
+	"watcherInclude": [
+		"app"
+	],
 	// "exclude": [
 	// 	"node_modules",
 	// 	"bower_components",
@@ -18,13 +21,13 @@
 	// 	"dist",
 	// 	"ember-cordova"
 	// ],
-	// "watcherExclude": [
-	// 	"node_modules",
-	// 	"bower_components",
-	// 	"jspm_packages",
-	// 	"tmp",
-	// 	"temp",
-	// 	"dist",
-	// 	"ember-cordova"
-	// ]
+	"watcherExclude": [
+		"node_modules",
+		"bower_components",
+		"jspm_packages",
+		"tmp",
+		"temp",
+		"dist",
+		"ember-cordova"
+	]
 }

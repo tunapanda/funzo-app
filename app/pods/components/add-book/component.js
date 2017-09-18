@@ -10,7 +10,7 @@ export default Ember.Component.extend({
 
   classNames: ["modal-dialog"],
   downloadProgress: Ember.computed.alias("bookManager.downloadProgress"),
-  zipProgress: Ember.computed.alias("bookManager.zipProgress"),
+  unzipProgress: Ember.computed.alias("bookManager.unzipProgress"),
   status: Ember.computed.alias("bookManager.status"),
 
   isIdle: Ember.computed.equal("status", "idle"),

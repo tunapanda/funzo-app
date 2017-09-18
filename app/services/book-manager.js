@@ -23,7 +23,7 @@ export default Ember.Service.extend(Ember.Evented, {
         reject("no access to file system");
       }
       window.navigator.webkitPersistentStorage.requestQuota(
-        100 * 1024 * 1024,
+        5 * 1024 * 1024 * 1024,
         grantedBytes =>
           window.requestFileSystem(window.PERSISTENT, grantedBytes, fs => {
             this.fs = fs;
@@ -96,7 +96,7 @@ export default Ember.Service.extend(Ember.Evented, {
   },
 
   addEPUBFromFile: async function(file) {
-    this.set("status", "downloading");
+    this.set("status", "unzipping");
     let code = Math.random()
       .toString(36)
       .substring(7);
@@ -104,9 +104,11 @@ export default Ember.Service.extend(Ember.Evented, {
     await new Ember.RSVP.Promise((resolve, reject) => {
       let ZIPFS = new window.zip.fs.FS();
 
+      const progress = (progress, max) => this.set('unzipProgress', Math.floor((progress / max) * 100));
+
       ZIPFS.importBlob(file, () =>
         this.root.getDirectory(`content/epubs/${code}`, { create: true }, dir =>
-          ZIPFS.root.getFileEntry(dir, resolve, null, reject)
+          ZIPFS.root.getFileEntry(dir, resolve, progress, reject)
         )
       );
     });
@@ -115,7 +117,8 @@ export default Ember.Service.extend(Ember.Evented, {
   },
 
   deleteBook(id) {
-    this.removeDirectory(`content/epub/${id}`).then(() => this.updateIndex());
+    this.removeDirectory(`content/epubs/${id}`).then(() => this.updateIndex());
+    this.removeFile(`content/epubs/${id}.json`);
   },
 
   deleteAll: async function() {
@@ -125,12 +128,12 @@ export default Ember.Service.extend(Ember.Evented, {
 
     await Ember.RSVP.all(
       bookFolders.map(folder => {
-        if (folder.isDirectory) {
-          return new Ember.RSVP.Promise((res, rej) =>
-            folder.removeRecursively(res, rej)
-          );
-        }
-        return Ember.RSVP.resolve();
+        return new Ember.RSVP.Promise((res, rej) => {
+          if (folder.isDirectory) {
+            folder.removeRecursively(res, rej);
+          }
+          folder.remove(res, rej);
+        });
       })
     );
 
@@ -154,10 +157,11 @@ export default Ember.Service.extend(Ember.Evented, {
           .getElementsByTagName("rootfile")[0]
           .getAttribute("full-path");
 
-        const contentFileLocation = contentFileName
-          .split("/")
-          .slice(0, -1)
-          .join("/") + "/";
+        const contentFileLocation =
+          contentFileName
+            .split("/")
+            .slice(0, -1)
+            .join("/") + "/";
 
         const bookXML = await this.getFile(
           `content/epubs/${bookFolder.name}/${contentFileName}`
@@ -187,15 +191,18 @@ export default Ember.Service.extend(Ember.Evented, {
 
     let indexContent = JSON.stringify(bookMetas);
 
-    let content = await this.createFile(bookDir, "index.json").then(indexFile =>
+    let content = await this.removeFile("content/epubs/index.json").then(() => this.createFile(bookDir, "index.json")).then(indexFile =>
       this.writeFileContents(indexFile, indexContent)
     );
 
-    await  Ember.RSVP.all(bookMetas.map(async (bookMeta) => {
-      await this.createFile(bookDir, `${bookMeta.permalink}.json`).then(file =>
-        this.writeFileContents(file, JSON.stringify(bookMeta))
-      );
-    }))
+    await Ember.RSVP.all(
+      bookMetas.map(async bookMeta => {
+        await this.createFile(
+          bookDir,
+          `${bookMeta.permalink}.json`
+        ).then(file => this.writeFileContents(file, JSON.stringify(bookMeta)));
+      })
+    );
 
     let json = JSON.parse(content);
     this.trigger("booksUpdated", json);
@@ -260,6 +267,25 @@ export default Ember.Service.extend(Ember.Evented, {
           }
         },
         reject
+      );
+    });
+  },
+
+  removeFile(fileName) {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      this.root.getFile(
+        fileName,
+        { create: false },
+        file => {
+          file.remove(resolve, reject);
+        },
+        (err) => {
+          // ignore if file doesnt exist anyway
+          if(err.name === "NotFoundError") {
+            return resolve();
+          }
+          reject();
+        }
       );
     });
   },

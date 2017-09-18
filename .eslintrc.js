@@ -9,5 +9,6 @@ module.exports = {
     browser: true
   },
   rules: {
+    "newline-in-function-parens": ["error", "never"]
   }
 };
