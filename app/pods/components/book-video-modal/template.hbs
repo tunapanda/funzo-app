@@ -1,0 +1,16 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" onclick={{action 'close'}}><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">{{args.video.title}}</h4>
+  </div>
+  <div class="modal-body">
+    {{#if video}}
+    <video class="video-js vjs-big-play-centered" poster="{{thumbnailLocation}}">
+      <source src="{{videoLocation}}" type="video/mp4">
+    </video>
+    {{/if}}
+  </div>
+  <div class="modal-footer">
+  </div>
+</div><!-- /.modal-content -->
+

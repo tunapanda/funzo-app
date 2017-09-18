@@ -3,3 +3,16 @@ body {
   font-size: 18px;
   line-height: 25px;
 }
+
+.video_link {
+  text-align: center;
+  margin-bottom: 20px;
+
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+       break-inside: avoid;
+}
+
+img.video-thumb {
+  max-width: 70%;
+}

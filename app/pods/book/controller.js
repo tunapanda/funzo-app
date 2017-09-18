@@ -1,10 +1,10 @@
-import Ember from 'ember';
+import Ember from "ember";
 const { $, ObjectProxy, computed } = Ember; // jshint ignore:line
 
 let SectionDecorator = ObjectProxy.extend({
   isHidden: false,
   isCurrentSection: false,
-  isVisible: Ember.computed.not('isHidden'),
+  isVisible: Ember.computed.not("isHidden"),
   startPosition: 0,
   endPosition: 0
 });
@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   bookmarks: Ember.inject.service(),
 
   queryParams: {
-    location: 'section'
+    location: "section"
   },
 
   // this method can take a second argument, but since we're not
@@ -25,47 +25,59 @@ export default Ember.Controller.extend({
   //   return SectionDecorator.create({ content: model });
   // }),
 
-  startingScrollLeft: Ember.computed('bookmarks.currentPosition', function() {
-    console.log("Getting computed position attribute:", this.get("bookmarks.currentPosition"));
+  startingScrollLeft: Ember.computed("bookmarks.currentPosition", function() {
+    console.log(
+      "Getting computed position attribute:",
+      this.get("bookmarks.currentPosition")
+    );
     return this.get("bookmarks.currentPosition");
   }),
 
   fontSize: 12,
   fontSizes: [10, 12, 14, 16, 18],
 
-  fontSizeString: Ember.computed('fontSize', function() {
-    return Ember.String.htmlSafe(this.get('fontSize') + 'pt');
+  fontSizeString: Ember.computed("fontSize", function() {
+    return Ember.String.htmlSafe(this.get("fontSize") + "pt");
   }),
 
-  modal: Ember.inject.service('bootstrap-modal'),
+  modal: Ember.inject.service("bootstrap-modal"),
 
   actions: {
     changePermalink(permalink) {
-      Ember.$('.book-loading-overlay').show();
+      Ember.$(".book-loading-overlay").show();
 
-      this.send('changeSection', this.get('model.sections').findBy('permalink', permalink));
+      this.send(
+        "changeSection",
+        this.get("model.sections").findBy("permalink", permalink)
+      );
+    },
+
+    showVideoModal(video) {
+      this.set("modal.component", "book-video-modal");
+      this.set("modal.args.video", video);
+
+      Ember.$(".modal.book-video-modal").modal("show");
     },
 
     showImageModal(image) {
-      this.set('modal.component', 'book-image-modal');
-      this.set('modal.args.image', image);
+      this.set("modal.component", "book-image-modal");
+      this.set("modal.args.image", image);
 
-      Ember.$('.modal').modal('show');
+      Ember.$(".modal.book-image-modal").modal("show");
     },
 
     onPageChange(scrollLeft) {
-      this.send('updateUserBookmark', scrollLeft);
+      this.send("updateUserBookmark", scrollLeft);
     },
 
     locationChanged(href) {
-      this.set('location', href);
+      this.set("location", href);
     },
 
     sectionClick(href) {
-      $('#chapters').modal('hide');
-      Ember.$('.book-loading-overlay').show();
-      this.set('location', href);
+      $("#chapters").modal("hide");
+      Ember.$(".book-loading-overlay").show();
+      this.set("location", href);
     }
-
   }
 });

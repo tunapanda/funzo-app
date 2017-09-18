@@ -1,17 +1,31 @@
-import Ember from 'ember';
+import Ember from "ember";
+
+/* global EPUBJS, ePub, $ */
 
 export default Ember.Component.extend({
   classNames: [],
 
   didInsertElement() {
-    EPUBJS.Hooks.register('beforeChapterDisplay').funzoIframe = (cb, renderer) => {
+    EPUBJS.Hooks.register("beforeChapterDisplay").funzoIframe = (
+      cb,
+      renderer
+    ) => {
       // var script = renderer.doc.createElement("script");
 
       // script.src = '/assets/epub-iframe.js';
 
       // renderer.doc.body.appendChild(script);
 
-      $(renderer.doc).on('click', () => $('main .navbar').toggleClass('show'));
+      $(renderer.doc).on("click", e => {
+        if ($(e.target).hasClass("video-thumb")) {
+          let video = $(e.target).data();
+          Ember.set(video, "title", $(e.target).attr("alt"));
+          Ember.set(video, "bookLocation", this.get('epubLocation'));
+          Ember.set(video, "thumbnail", $(e.target).attr('src'));
+          return this.attrs.showVideo(video);
+        }
+        $("main .navbar").toggleClass("show");
+      });
 
       if (cb) {
         cb();
@@ -19,13 +33,16 @@ export default Ember.Component.extend({
     };
 
     EPUBJS.cssPath = "css/";
-    EPUBJS.Hooks.register('beforeChapterDisplay').videoJs = function(callback, renderer) {
+    EPUBJS.Hooks.register("beforeChapterDisplay").videoJs = function(
+      callback,
+      renderer
+    ) {
       var style = renderer.doc.createElement("link");
       // var script = renderer.doc.createElement("script");
 
-      style.href = 'http://localhost:4200/assets/epub.css';
-      style.rel = 'stylesheet';
-      style.type = 'text/css';
+      style.href = "http://localhost:4200/assets/epub.css";
+      style.rel = "stylesheet";
+      style.type = "text/css";
 
       // script.type = 'text/javascript';
       // script.src = '/assets/videojs/video.js';
@@ -36,61 +53,62 @@ export default Ember.Component.extend({
         callback();
       }
     };
-    EPUBJS.Hooks.register('beforeChapterDisplay').pageAnimation = function(callback, renderer) {
-      window.setTimeout(function() {
-        var style = renderer.doc.createElement("style");
-        style.innerHTML = "*{-webkit-transition: transform {t} ease;-moz-transition: tranform {t} ease;-o-transition: transform {t} ease;-ms-transition: transform {t} ease;transition: transform {t} ease;}";
-        style.innerHTML = style.innerHTML.split("{t}").join("0.5s");
-        renderer.doc.body.appendChild(style);
-      }, 100);
-      if (callback) {
-        callback();
-      }
-    };
+    // EPUBJS.Hooks.register("beforeChapterDisplay").pageAnimation = function(
+    //   callback,
+    //   renderer
+    // ) {
+    //   window.setTimeout(function() {
+    //     var style = renderer.doc.createElement("style");
+    //     style.innerHTML =
+    //       "*{-webkit-transition: transform {t} ease;-moz-transition: tranform {t} ease;-o-transition: transform {t} ease;-ms-transition: transform {t} ease;transition: transform {t} ease;}";
+    //     style.innerHTML = style.innerHTML.split("{t}").join("0.5s");
+    //     renderer.doc.body.appendChild(style);
+    //   }, 100);
+    //   if (callback) {
+    //     callback();
+    //   }
+    // };
 
     EPUBJS.Render.Iframe.prototype.setLeft = function(leftPos) {
-      this.docEl.style[this.transform] = 'translate(' + (-leftPos) + 'px, 0)';
+      this.docEl.style[this.transform] = "translate(" + -leftPos + "px, 0)";
     };
 
-    let book = ePub({ bookPath: this.get('epubLocation') });
+    let book = ePub({ bookPath: this.get("epubLocation") });
 
-    book.on('renderer:locationChanged', (cfi) => {
+    book.on("renderer:locationChanged", cfi => {
       // this.set('currentCfi', cfi);
-      this.sendAction('locationChanged', cfi);
-      console.log('current CFI: ' + cfi);
+      this.sendAction("locationChanged", cfi);
+      console.log("current CFI: " + cfi);
     });
 
-    book.on('renderer:chapterDisplayed', (cfi) => {
+    book.on("renderer:chapterDisplayed", cfi => {
       // this.set('currentCfi', cfi);
-      Ember.$('.book-loading-overlay').hide();
+      Ember.$(".book-loading-overlay").hide();
     });
 
-    book.on('book:ready', () => {
-      if (this.get('externalLocation')) {
-        book.gotoCfi(this.get('externalLocation'));
+    book.on("book:ready", () => {
+      if (this.get("externalLocation")) {
+        book.gotoCfi(this.get("externalLocation"));
       }
     });
 
-    book.renderTo(this.$('.book-content-container')[0]).then(() => {
+    book.renderTo(this.$(".book-content-container")[0]).then(() => {
       // if (this.get('externalLocation')) {
       //   book.gotoCfi(this.get('externalLocation'));
       // }
-      this.set('toc', book.contents.toc);
+      this.set("toc", book.contents.toc);
     });
-
 
     window.book = book;
     this.book = window.book = book;
-
-
   },
 
-  onExternalLocationChange: Ember.observer('externalLocation', function() {
-    this.book.gotoHref(this.get('externalLocation'));
+  onExternalLocationChange: Ember.observer("externalLocation", function() {
+    this.book.gotoHref(this.get("externalLocation"));
   }),
 
   scrollToNearestPage(direction) {
-    if (direction === 'forward') {
+    if (direction === "forward") {
       return this.book.nextPage();
     }
     return this.book.prevPage();
@@ -113,9 +131,9 @@ export default Ember.Component.extend({
  */
     touchStart(e) {
       let start = e.originalEvent.touches[0].pageX;
-      this.set('touchStartX', start);
-      this.set('touchPrevX', start);
-      this.set('touchCurrentX', start);
+      this.set("touchStartX", start);
+      this.set("touchPrevX", start);
+      this.set("touchCurrentX", start);
     },
 
     /**
@@ -127,14 +145,14 @@ export default Ember.Component.extend({
     touchMove(e) {
       // e.preventDefault(); // prevent scrolling
       let current = e.originalEvent.touches[0].pageX;
-      this.set('touchStarted', true);
+      this.set("touchStarted", true);
       // let diff = this.get('touchPrevX') - current;
 
-      this.set('touchPrevX', current);
-      this.set('touchCurrentX', current);
+      this.set("touchPrevX", current);
+      this.set("touchCurrentX", current);
 
-      this.set('animateScroll', false);
-      this.set('scrolling', true);
+      this.set("animateScroll", false);
+      this.set("scrolling", true);
       // this.set('scrollLeft', this.get('scrollLeft') + diff);
 
       return false;
@@ -148,18 +166,18 @@ export default Ember.Component.extend({
      * @return {void}
      */
     touchEnd() {
-      let start = this.get('touchStartX');
-      let current = this.get('touchCurrentX');
+      let start = this.get("touchStartX");
+      let current = this.get("touchCurrentX");
 
       let diff = start - current;
 
-      if (this.get('touchStarted') && Math.abs(diff) > 10) {
-        this.set('animateScroll', true);
-        this.set('scrolling', true);
-        this.scrollToNearestPage(start < current ? 'backward' : 'forward');
+      if (this.get("touchStarted") && Math.abs(diff) > 10) {
+        this.set("animateScroll", true);
+        this.set("scrolling", true);
+        this.scrollToNearestPage(start < current ? "backward" : "forward");
       }
 
-      this.set('touchStarted', false);
-    },
+      this.set("touchStarted", false);
+    }
   }
 });

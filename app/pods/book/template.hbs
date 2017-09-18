@@ -75,4 +75,11 @@
   </form>
 </div>--}}
 
-{{epub-reader epubLocation=model.location toc=toc locationChanged=(action 'locationChanged') externalLocation=location }}
+{{epub-reader 
+  epubLocation=model.location
+  toc=toc
+  locationChanged=(action 'locationChanged')
+  externalLocation=location
+  showImage=(action 'showImageModal')
+  showVideo=(action 'showVideoModal')
+}}
